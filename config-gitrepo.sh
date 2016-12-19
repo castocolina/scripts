@@ -11,10 +11,10 @@ if [ $# -eq 0 ] || [ -z "$1" ]  || [ -z "$2" ]; then
     echo "No arguments supplied or incompleted"
     #echo -n "Enter your name > "
     #read -a username
-    read -p "Enter your name (current: '$username') > " iusername
+    read -p "Enter your name (default: '$username') > " iusername
     #echo -n "Enter your email > "
     #read useremail
-    read -p "Enter your email (current: '$useremail')> " iuseremail
+    read -p "Enter your email (default: '$useremail')> " iuseremail
 
     [ ! -z "$iusername" ] && username=$iusername
     [ ! -z "$iuseremail" ] && useremail=$iuseremail

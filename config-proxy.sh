@@ -10,6 +10,7 @@ scape_str_replace(){
     echo "$safe_replacement"
 }
 
+#Define globals defauls in your ~/.profile or ~/.bashrc
 proxy=true
 host="$DEF_PROXY_HOST"
 port="$DEF_PROXY_PORT"
