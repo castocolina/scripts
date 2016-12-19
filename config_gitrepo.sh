@@ -21,7 +21,7 @@ git config --local --unset-all user.name
 git config --local --unset-all user.email
 git config --local --replace-all user.name "$username"
 git config --local --replace-all user.email "$useremail"
-#git config --local core.filemode false
+git config --local core.filemode true
 git config --global core.editor nano
 #git config --global --unset core.editor
 git config --global core.longpaths true
