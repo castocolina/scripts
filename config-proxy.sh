@@ -175,7 +175,7 @@ if [ "$USE_PROXY" = true ] && [ "$DOCKER_PROXY" = true ]; then
         sudo mkdir -p /etc/systemd/system/docker.service.d
     fi
 
-    if [ ! -f "$cfile" ]; then
+    if [ ! -f "$cfile" ] || [ -s $cfile ] ; then
         echo "svn file ($cfile) creation for proxy"
         DOCKER_PROXY_CONF="[Service]\nEnvironment=\"HTTP_PROXY=$HTTP_PROXY\" \"HTTPS_PROXY=$HTTPS_PROXY\" \"NO_PROXY=$NO_PROXY\" \n"
         printf "$DOCKER_PROXY_CONF" | sudo tee $cfile
@@ -195,7 +195,7 @@ if [ "$USE_PROXY" = true ] && [ "$DOCKER_PROXY" = true ]; then
     fi
 elif [ "$USE_PROXY" = false ] && [ -f "$cfile" ]; then
     echo "docker file ($cfile) clean proxy"
-    printf "" | sudo tee $cfile
+    sudo rm -f $cfile
     #sed -i -r 's/("HTTP_PROXY=).*(".*)/\1\2/U' $cfile
     #sed -i -r 's/("HTTPS_PROXY=).*(".*)/\1\2/U' $cfile
     #sed -i -r 's/("NO_PROXY=).*(".*)/\1\2/U' $cfile
@@ -216,9 +216,7 @@ elif [ "$USE_PROXY" = false ] && [ -f "$cfile" ]; then
     #     }" $cfile
 fi
 
-if [ -f "$cfile" ]; then
-    cat $cfile/etc/environment/etc/environment/etc/environment
-else
+if [ ! -f "$cfile" ]; then
     echo "$cfile NOT EXIST"
 fi
 
