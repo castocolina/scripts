@@ -47,9 +47,16 @@ if ! grep -q "github" $sshcfile; then
     echo "    Port 443" >> $sshcfile
     echo "" >> $sshcfile
 fi
+if ! grep -q "bitbucket" $sshcfile; then
+    echo "Host bitbucket.org" >> $sshcfile
+    echo "    Hostname altssh.bitbucket.org" >> $sshcfile
+    echo "    Port 443" >> $sshcfile
+    echo "" >> $sshcfile
+fi
 
 cat $sshcfile
 echo
 
 ssh -T git@github.com
+ssh -T git@bitbucket.org
 echo
