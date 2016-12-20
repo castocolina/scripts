@@ -195,6 +195,7 @@ if [ "$USE_PROXY" = true ] && [ "$DOCKER_PROXY" = true ]; then
     fi
 elif [ "$USE_PROXY" = false ] && [ -f "$cfile" ]; then
     echo "docker file ($cfile) clean proxy"
+    printf "" | sudo tee $cfile
     #sed -i -r 's/("HTTP_PROXY=).*(".*)/\1\2/U' $cfile
     #sed -i -r 's/("HTTPS_PROXY=).*(".*)/\1\2/U' $cfile
     #sed -i -r 's/("NO_PROXY=).*(".*)/\1\2/U' $cfile
@@ -216,12 +217,12 @@ elif [ "$USE_PROXY" = false ] && [ -f "$cfile" ]; then
 fi
 
 if [ -f "$cfile" ]; then
-    cat $cfile
+    cat $cfile/etc/environment/etc/environment/etc/environment
 else
     echo "$cfile NOT EXIST"
 fi
 
-if [ "$DOCKER_PROXY" = "pepe" ]; then
+if [ "$DOCKER_PROXY" = true ]; then
     echo "RELOAD DOCKER"
     sudo systemctl daemon-reload
     sudo systemctl show --property=Environment docker
