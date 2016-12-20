@@ -45,12 +45,14 @@ if ! grep -q "github" $sshcfile; then
     echo "Host github.com" >> $sshcfile
     echo "    Hostname ssh.github.com" >> $sshcfile
     echo "    Port 443" >> $sshcfile
+    echo "#   ProxyCommand corkscrew %h %p" >> $sshcfile
     echo "" >> $sshcfile
 fi
 if ! grep -q "bitbucket" $sshcfile; then
     echo "Host bitbucket.org" >> $sshcfile
     echo "    Hostname altssh.bitbucket.org" >> $sshcfile
     echo "    Port 443" >> $sshcfile
+    echo "#   ProxyCommand corkscrew %h %p" >> $sshcfile
     echo "" >> $sshcfile
 fi
 

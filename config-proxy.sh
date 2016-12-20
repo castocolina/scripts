@@ -53,11 +53,14 @@ export HTTPS_PROXY="$HTTP_PROXY"
 export NO_PROXY=$excep
 
 #/etc/environment
+#~/.ssh/config
+export SSH_PROXY=true
 #~/.subversion/servers
 export SVN_PROXY=true
 #/etc/default/docker
 #/etc/systemd/system/docker.service.d/http-proxy.conf
 export DOCKER_PROXY=true
+
 
 echo 
 echo $SEPARATOR
@@ -113,8 +116,23 @@ else
     sudo sed -i -r 's/((export)?\s*HTTPS_PROXY\s?=\s?.*)/# \0/gi' $cfile
     sudo sed -i -r 's/((export)?\s*NO_PROXY\s?=\s?.*)/# \0/i' $cfile
 fi
-
 source $cfile
+
+echo
+echo $SEPARATOR
+printf "\t\SSH\n"
+
+cfile=~/.ssh/config
+if [ "$USE_PROXY" = true ] && [ "$SSH_PROXY" = true ]; then
+    if [ -f "$cfile" ] ; then
+        echo "ssh file ($cfile) replacing proxy info"
+        
+        sed -i -r "s/(([ #]*)ProxyCommand.*)/    ProxyCommand corkscrew $PROXY_HOST $PROXY_PORT %h %p/" $cfile
+    fi
+elif [ "$USE_PROXY" = false ] && [ -f "$cfile" ]; then
+    echo "ssh file ($cfile) clean proxy"
+    sed -i -r "s/\n(( *)ProxyCommand.*)/\n#   ProxyCommand corkscrew %h %p/" $cfile
+fi
 
 echo
 echo $SEPARATOR
@@ -176,7 +194,7 @@ if [ "$USE_PROXY" = true ] && [ "$DOCKER_PROXY" = true ]; then
     fi
 
     if [ ! -f "$cfile" ] || [ -s $cfile ] ; then
-        echo "svn file ($cfile) creation for proxy"
+        echo "docker file ($cfile) creation for proxy"
         DOCKER_PROXY_CONF="[Service]\nEnvironment=\"HTTP_PROXY=$HTTP_PROXY\" \"HTTPS_PROXY=$HTTPS_PROXY\" \"NO_PROXY=$NO_PROXY\" \n"
         printf "$DOCKER_PROXY_CONF" | sudo tee $cfile
     # else
@@ -223,7 +241,7 @@ fi
 if [ "$DOCKER_PROXY" = true ]; then
     echo "RELOAD DOCKER"
     sudo systemctl daemon-reload
-    sudo systemctl show --property=Environment docker
+    #sudo systemctl show --property=Environment docker
     sudo systemctl restart docker
 
     sudo docker rmi -f hello-world
