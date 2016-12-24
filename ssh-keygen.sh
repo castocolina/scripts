@@ -1,8 +1,11 @@
 #!/bin/bash
 
+SEPARATOR="---------------------"
 SSH_KEYNAME="myemail@example.com"
 if [ $# -eq 0 ] || [ -z "$1" ]; then
     echo "No arguments supplied"
+    read -p "Enter your key name (default: '$SSH_KEYNAME' > " key
+    [ ! -z "$key" ] && SSH_KEYNAME=$key
 else
     SSH_KEYNAME="$1"
 fi
@@ -36,12 +39,14 @@ echo
 
 #https://help.github.com/articles/using-ssh-over-the-https-port/
 sshcfile="$HOME/.ssh/config"
-if [ ! -f "$sshfile" ] ; then
+if [ ! -f "$sshcfile" ] ; then
+    echo "NOT EXIST ... $sshcfile"
     touch $sshcfile
     printf "" > $sshcfile
 fi
 
 if ! grep -q "github" $sshcfile; then
+    echo "CFG GH"
     echo "Host github.com" >> $sshcfile
     echo "    Hostname ssh.github.com" >> $sshcfile
     echo "    Port 443" >> $sshcfile
@@ -49,6 +54,7 @@ if ! grep -q "github" $sshcfile; then
     echo "" >> $sshcfile
 fi
 if ! grep -q "bitbucket" $sshcfile; then
+    echo "CFG BB"
     echo "Host bitbucket.org" >> $sshcfile
     echo "    Hostname altssh.bitbucket.org" >> $sshcfile
     echo "    Port 443" >> $sshcfile
@@ -56,9 +62,18 @@ if ! grep -q "bitbucket" $sshcfile; then
     echo "" >> $sshcfile
 fi
 
+echo $SEPARATOR
 cat $sshcfile
+echo $SEPARATOR
 echo
 
+echo
+echo "TEST GH"
+echo $SEPARATOR
 ssh -T git@github.com
+
+echo
+echo "TEST BB"
+echo $SEPARATOR
 ssh -T git@bitbucket.org
 echo
