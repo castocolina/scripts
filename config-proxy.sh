@@ -28,6 +28,7 @@ if [ "$proxy" = true ] || [ "$proxy" = "true" ] || [ "$proxy" = "1" ] || [ "$pro
     export USE_PROXY=true
 else
     export USE_PROXY=false
+    unset host port excep
 fi
 
 if [ "$USE_PROXY" = true ]; then
@@ -71,7 +72,7 @@ cfile=/etc/environment
 if [ ! -f "$cfile" ]; then
     sudo touch $cfile
 fi
-echo "svn file ($cfile) replacing proxy info"
+echo "environment file ($cfile) replacing proxy info"
 if [ "$USE_PROXY" = true ] ; then
     
     export http_proxy="$HTTP_PROXY"
@@ -106,10 +107,11 @@ else
     if ! grep -q "unset HTTP_PROXY HTTPS_PROXY NO_PROXY" "$cfile"; then
         #echo 'deb blah ... blah'  /etc/apt/sources.list
         echo "" | sudo tee --append $cfile
-        echo "unset HTTP_PROXY HTTPS_PROXY NO_PROXY" | sudo tee --append $cfile
-        echo "unset http_proxy https_proxy no_proxy" | sudo tee --append $cfile
+        echo "unset HTTP_PROXY HTTPS_PROXY NO_PROXY SOCKS_PROXY FTP_PROXY ALL_PROXY" | sudo tee --append $cfile
+        echo "unset http_proxy https_proxy no_proxy socks_proxy ftp_proxy all_proxy" | sudo tee --append $cfile
     else
-        sudo sed -i -r "s/.*unset HTTP_PROXY HTTPS_PROXY NO_PROXY/unset HTTP_PROXY HTTPS_PROXY NO_PROXY/gi" $cfile
+        sudo sed -i -r "s/.*unset HTTP_PROXY HTTPS_PROXY NO_PROXY SOCKS_PROXY FTP_PROXY ALL_PROXY/unset HTTP_PROXY HTTPS_PROXY NO_PROXY SOCKS_PROXY FTP_PROXY ALL_PROXY/gi" $cfile
+        sudo sed -i -r "s/.*unset http_proxy https_proxy no_proxy socks_proxy ftp_proxy all_proxy/unset http_proxy https_proxy no_proxy socks_proxy ftp_proxy all_proxy/gi" $cfile
     fi
 
     sudo sed -i -r 's/((export)?\s*HTTP_PROXY\s?=\s?.*)/# \0/gi' $cfile
@@ -120,22 +122,6 @@ source $cfile
 
 echo
 echo $SEPARATOR
-printf "\t\SSH\n"
-
-cfile=~/.ssh/config
-if [ "$USE_PROXY" = true ] && [ "$SSH_PROXY" = true ]; then
-    if [ -f "$cfile" ] ; then
-        echo "ssh file ($cfile) replacing proxy info"
-        
-        sed -i -r "s/(([ #]*)ProxyCommand.*)/    ProxyCommand corkscrew $PROXY_HOST $PROXY_PORT %h %p/" $cfile
-    fi
-elif [ "$USE_PROXY" = false ] && [ -f "$cfile" ]; then
-    echo "ssh file ($cfile) clean proxy"
-    sed -i -r "s/\n(( *)ProxyCommand.*)/\n#   ProxyCommand corkscrew %h %p/" $cfile
-fi
-
-echo
-echo $SEPARATOR
 printf "\t\tSVN\n"
 
 cfile=~/.subversion/servers
@@ -143,7 +129,7 @@ if [ "$USE_PROXY" = true ] && [ "$SVN_PROXY" = true ]; then
     if [ -f "$cfile" ] ; then
         echo "svn file ($cfile) replacing proxy info"
 
-        sed -i "/\[.*\]/h
+        sed -i "/^\[.*\]/h
         /http-proxy-exceptions/{x;/\[global\]/!{x;b;};x;c\
         http-proxy-exceptions = ${NO_PROXY}
         }
@@ -169,6 +155,23 @@ elif [ "$USE_PROXY" = false ] && [ -f "$cfile" ]; then
     sed -i -r 's/^\s*http-proxy-port\s?=\s?.*/# \0/' $cfile
     sed -i -r 's/^\s*http-proxy-exceptions\s?=\s?.*/# \0/' $cfile
 fi
+
+echo
+echo $SEPARATOR
+printf "\t\tSSH\n"
+
+cfile=~/.ssh/config
+if [ "$USE_PROXY" = true ] && [ "$SSH_PROXY" = true ]; then
+    if [ -f "$cfile" ] ; then
+        echo "ssh file ($cfile) replacing proxy info"
+        
+        sed -i -r "s/(([ #]*)ProxyCommand.*)/    ProxyCommand corkscrew $PROXY_HOST $PROXY_PORT %h %p/" $cfile
+    fi
+elif [ "$USE_PROXY" = false ] && [ -f "$cfile" ]; then
+    echo "ssh file ($cfile) clean proxy"
+    sed -i -r "s/\n(( *)ProxyCommand.*)/\n#   ProxyCommand corkscrew %h %p/" $cfile
+fi
+
 
 echo
 echo $SEPARATOR
