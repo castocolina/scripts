@@ -8,9 +8,23 @@ SEPARATOR="======================================================"
 VERSION_HAROOPAD=-v0.13.1-x64
 FILE_HAROOPAD="haroopad$VERSION_HAROOPAD.deb"
 URL_HAROOPAD="https://bitbucket.org/rhiokim/haroopad-download/downloads/$FILE_HAROOPAD"
+
 VERSION_REMARKABLE=_1.87_all
 FILE_REMARKABLE="remarkable$VERSION_REMARKABLE.deb"
 URL_REMARKABLE="https://remarkableapp.github.io/files/$FILE_REMARKABLE"
+
+VERSION_REMARKABLE=_1.87_all
+FILE_REMARKABLE="remarkable$VERSION_REMARKABLE.deb"
+URL_REMARKABLE="https://remarkableapp.github.io/files/$FILE_REMARKABLE"
+
+#https://atom-installer.github.com/v1.13.0/atom-amd64.deb
+FILE_ATOM=atom-amd64.deb
+URL_ATOM="https://atom.io/download/deb"
+
+#https://www.getpostman.com/app/download/linux64
+VERSION_POSTMAN=4.9.x
+FILE_POSTMAN=postman-linux-x64.tar.gz
+URL_POSTMAN="https://dl.pstmn.io/download/latest/linux64"
 
 #source /etc/os-release
 source /etc/lsb-release
@@ -55,8 +69,17 @@ echo $SEPARATOR
 echo "UPDATE ................"
 echo $SEPARATOR
 
-sudo apt-get update -y
+read -p "UPDATE? (y/n) > " to_update
 
+export USE_UPDATE=false
+
+if [ "$to_update" = true ] || [ "$to_update" = "true" ] || [ "$to_update" = "1" ] || [ "$to_update" = "y" ]|| [ "$to_update" = "yes" ]; then
+    export USE_UPDATE=true
+fi
+
+if [ "$USE_UPDATE" = true ]; then
+    sudo apt-get update -y
+fi
 
 #if hash gdate 2>/dev/null; then
 if [ ! -d "/usr/lib/jvm/java-8-oracle" ]; then
@@ -235,6 +258,68 @@ if ! hash haroopad 2>/dev/null; then
         curl -o $FILE_HAROOPAD -fSL $URL_HAROOPAD
     fi
     sudo dpkg -i $FILE_HAROOPAD
+fi
+
+if ! hash atom 2>/dev/null; then
+    echo "ATOM ............."
+
+    if [ ! -f "$FILE_ATOM" ]; then
+        echo "    $URL_ATOM"
+        touch $FILE_ATOM.tmp && chmod 400 $FILE_ATOM.tmp && rm -f $FILE_ATOM.tmp
+        curl -o $FILE_ATOM.tmp -fSL $URL_ATOM
+        mv -f $FILE_ATOM.tmp $FILE_ATOM
+    fi
+
+    if [ -f "$FILE_ATOM" ]; then
+        sudo dpkg -i $FILE_ATOM
+    fi
+fi
+
+if [ ! -d "$HOME/opt/postman" ] ; then
+    echo "POSTMAN ............."
+
+    if [ ! -f "$FILE_POSTMAN" ]; then
+        echo "    $URL_POSTMAN"
+        touch $FILE_POSTMAN.tmp && chmod 400 $FILE_POSTMAN.tmp && rm -f $FILE_POSTMAN.tmp
+        curl -o $FILE_POSTMAN.tmp -fSL $URL_POSTMAN
+        mv -f $FILE_POSTMAN.tmp $FILE_POSTMAN
+    fi
+
+    if [ -f "$FILE_POSTMAN" ] ; then
+        tar -zxf $FILE_POSTMAN
+        mv -f Postman postman
+        mv -f postman/Postman postman/postman
+        mv -f postman/ $HOME/opt
+
+        DESKTOP_FILE=postman-$VERSION_POSTMAN.desktop
+
+cat << EOF > $DESKTOP_FILE
+[Desktop Entry]
+Version=$VERSION_POSTMAN
+Encoding=UTF-8
+Name=POSTMAN
+Keywords=post;json, rest
+GenericName=POSTMAN
+Type=Application
+Categories=Development
+Terminal=false
+StartupNotify=true
+Exec="$HOME/opt/postman/postman"
+MimeType=x-directory/normal
+Icon="$HOME/opt/postman/resources/app/assets/icon.png"
+X-Ayatana-Desktop-Shortcuts=NewWindow;
+EOF
+
+# seems necessary to refresh immediately:
+chmod 644 $DESKTOP_FILE
+
+xdg-desktop-menu install $DESKTOP_FILE
+xdg-icon-resource install --size 128 "$HOME/opt/postman/resources/app/assets/icon.png" "postman-$VERSION_POSTMAN"
+
+rm $DESKTOP_FILE
+
+    fi
+
 fi
 
 # if ! hash remarkable 2>/dev/null; then
