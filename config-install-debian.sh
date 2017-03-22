@@ -26,10 +26,25 @@ VERSION_POSTMAN=4.9.x
 FILE_POSTMAN=postman-linux-x64.tar.gz
 URL_POSTMAN="https://dl.pstmn.io/download/latest/linux64"
 
-#source /etc/os-release
+#https://archive.apache.org/dist/maven/maven-3/3.2.5/binaries/apache-maven-3.2.5-bin.tar.gz
+VERSION_MVN32=3.2.5
+FILE_MVN32=apache-maven-$VERSION_MVN32-bin.tar.gz
+URL_MVN32="https://archive.apache.org/dist/maven/maven-3/$VERSION_MVN32/binaries/$FILE_MVN32"
+
+#http://www-us.apache.org/dist/axis/axis2/java/core/1.7.4/axis2-1.7.4-bin.zip
+VERSION_AXIS2=1.7.4
+FILE_AXIS2=axis2-$VERSION_AXIS2-bin.zip
+URL_AXIS2="http://www-us.apache.org/dist/axis/axis2/java/core/$VERSION_AXIS2/$FILE_AXIS2"
+
+#http://www.smartsvn.com/static/svn/download/smartsvn/smartsvn-linux-9_1_3.tar.gz
+VERSION_SMARTSVN=9_1_3
+FILE_SMARTSVN=smartsvn-linux-$VERSION_SMARTSVN.tar.gz
+URL_SMARTSVN="http://www.smartsvn.com/static/svn/download/smartsvn/$FILE_SMARTSVN"
+
+source /etc/os-release
 source /etc/lsb-release
 
-echo 
+echo
 echo $SEPARATOR
 echo "ADD REPOSITORIES ......"
 echo $SEPARATOR
@@ -38,8 +53,13 @@ echo $SEPARATOR
 test -f "/etc/apt/sources.list.d/webupd8team-ubuntu-java-xenial.list" || sudo add-apt-repository ppa:webupd8team/java -y
 #VIRTUAL BOX
 if [ ! -f "/etc/apt/sources.list.d/virtualbox.list" ]; then
-    VBOX_REPO="deb http://download.virtualbox.org/virtualbox/debian $DISTRIB_CODENAME contrib"
+    if [ $ID == "ubuntu" ] || [ $ID == "debian" ]; then
+      VBOX_REPO="deb http://download.virtualbox.org/virtualbox/debian $DISTRIB_CODENAME contrib"
+    else
+      VBOX_REPO="deb http://download.virtualbox.org/virtualbox/debian $UBUNTU_CODENAME contrib"
+    fi
     echo "$VBOX_REPO" | sudo tee /etc/apt/sources.list.d/virtualbox.list
+
     wget -q https://www.virtualbox.org/download/oracle_vbox_2016.asc -O- | sudo apt-key add -
     wget -q https://www.virtualbox.org/download/oracle_vbox.asc -O- | sudo apt-key add -
 fi
@@ -49,7 +69,13 @@ if [ ! -f "/etc/apt/sources.list.d/docker.list" ]; then
     sudo apt-key adv \
                    --keyserver hkp://ha.pool.sks-keyservers.net:80 \
                    --recv-keys 58118E89F3A912897C070ADBF76221572C52609D
-    DOCKER_REPO="deb https://apt.dockerproject.org/repo $ID-$DISTRIB_CODENAME main"
+
+    if [ $ID == "ubuntu" ] || [ $ID == "debian" ]; then
+      DOCKER_REPO="deb https://apt.dockerproject.org/repo $ID-$DISTRIB_CODENAME main"
+    else
+      DOCKER_REPO="deb https://apt.dockerproject.org/repo $ID_LIKE-$UBUNTU_CODENAME main"
+    fi
+    
     echo "$DOCKER_REPO" | sudo tee /etc/apt/sources.list.d/docker.list
 fi
 
@@ -77,19 +103,20 @@ if [ "$to_update" = true ] || [ "$to_update" = "true" ] || [ "$to_update" = "1" 
     export USE_UPDATE=true
 fi
 
+type aptitude >/dev/null 2>&1 || { sudo apt install -y aptitude; }
 if [ "$USE_UPDATE" = true ]; then
-    sudo apt-get update -y
+    sudo aptitude update -y
 fi
 
 #if hash gdate 2>/dev/null; then
 if [ ! -d "/usr/lib/jvm/java-8-oracle" ]; then
-    echo 
+    echo
     echo $SEPARATOR
     echo "INSTALL JAVA .........."
     echo $SEPARATOR
 
     # oracle-java9-installer
-    sudo apt-get install -y python-software-properties oracle-java6-installer oracle-java8-installer oracle-java8-set-default
+    sudo aptitude install -y python-software-properties oracle-java6-installer oracle-java8-installer
     sudo update-alternatives --list java
     sudo update-alternatives --list javac
     java -version
@@ -106,12 +133,14 @@ if [ ! -d "/usr/lib/jvm/java-8-oracle" ]; then
     fi
 fi
 
+sudo aptitude install -y oracle-java6-set-default
+
 echo
 echo $SEPARATOR
 echo "COMMONS ..............."
 echo $SEPARATOR
 
-type unzip >/dev/null 2>&1 || { sudo apt install -y unzip; echo "UNZIP INSTALLED"; }
+type unzip >/dev/null 2>&1 || { sudo apt install -y unzip; }
 type git >/dev/null 2>&1 || { sudo apt install -y git; }
 type svn >/dev/null 2>&1 || { sudo apt install -y subversion;  svn --version | head -2; }
 type pip >/dev/null 2>&1 || { sudo apt install -y python-pip; sudo pip install --upgrade pip; }
@@ -120,9 +149,9 @@ type corkscrew >/dev/null 2>&1 || { sudo apt install -y corkscrew; }
 type meld >/dev/null 2>&1 || { sudo apt install -y meld; }
 type filezilla >/dev/null 2>&1 || { sudo apt install -y filezilla; }
 
-#sudo apt-get install -y rabbitvcs-core rabbitvcs-cli
-#sudo apt-get install rabbitvcs-nautilus
-#sudo apt-get install rabbitvcs-gedit
+#sudo aptitude install -y rabbitvcs-core rabbitvcs-cli
+#sudo aptitude install rabbitvcs-nautilus
+#sudo aptitude install rabbitvcs-gedit
 
 echo
 echo $SEPARATOR
@@ -132,25 +161,15 @@ echo $SEPARATOR
 type dkms >/dev/null 2>&1 || { sudo apt install -y dkms; }
 type virtualbox >/dev/null 2>&1 || { sudo apt install -y virtualbox-5.1; }
 
-if ! hash vagrant 2>/dev/null; then
-    echo
-    echo $SEPARATOR
-    echo "VAGRANT .............."
-    echo $SEPARATOR
-    #TODO: Download
-    sudo dpkg -i $CURR_DIR/vagrant_1.9.0_x86_64.deb
-    vagrant plugin install vagrant-proxyconf
-fi
-
-
 if ! hash docker 2>/dev/null; then
     echo
     echo $SEPARATOR
     echo "DOCKER ................"
     echo $SEPARATOR
-    sudo apt-get install linux-image-extra-$(uname -r) linux-image-extra-virtual
-    sudo apt-get install -y apt-transport-https ca-certificates
-    sudo apt-get install -y docker-engine
+
+    sudo aptitude install -y linux-image-extra-$(uname -r) linux-image-extra-virtual
+    sudo aptitude install -y apt-transport-https ca-certificates
+    sudo aptitude install -y docker-engine
     sudo service docker start
     sudo systemctl daemon-reload
     sudo systemctl restart docker
@@ -162,7 +181,7 @@ if ! hash docker 2>/dev/null; then
     sudo systemctl enable docker
     sudo pip install docker-compose
 
-    # /etc/default/ufw /etc/sysconfig/ufw 
+    # /etc/default/ufw /etc/sysconfig/ufw
     #       DEFAULT_FORWARD_POLICY="ACCEPT"
     #sudo ufw allow 2376/tcp
     #sudo ufw reload
@@ -178,36 +197,55 @@ if ! hash docker 2>/dev/null; then
 fi
 
 CURR_DIR=$(pwd)
+TMP_INSTALL_DIR=/tmp/installers
 
-mkdir -p /tmp/installers; cd /tmp/installers
+mkdir -p $TMP_INSTALL_DIR; cd $TMP_INSTALL_DIR
 
 if [ ! -d "$HOME/opt" ] ; then
     mkdir -p "$HOME/opt"
 fi
 
-echo
-echo $SEPARATOR
-echo "SMART SVN ............."
-echo $SEPARATOR
-
-
-if [ ! -d "$HOME/opt/smartsvn" ] ; then
+if ! hash vagrant 2>/dev/null; then
+    echo
+    echo $SEPARATOR
+    echo "VAGRANT .............."
+    echo $SEPARATOR
     #TODO: Download
-    tar -zxf $CURR_DIR/smartsvn-linux-9_1_3.tar.gz
-    mv smartsvn/ $HOME/opt
+    sudo dpkg -i vagrant_1.9.0_x86_64.deb
+    vagrant plugin install vagrant-proxyconf
 fi
 
-echo
-echo $SEPARATOR
-echo "MAVEN ................."
-echo $SEPARATOR
-if [ ! -d "$HOME/opt/apache-maven-3.2.5" ] ; then
-    #TODO: DOWNLOAD at https://archive.apache.org/dist/maven/maven-3/3.2.5/binaries/apache-maven-3.2.5-bin.tar.gz
-    tar -zxf $CURR_DIR/apache-maven-3.2.5-bin.tar.gz
-    mv apache-maven-3.2.5/ $HOME/opt
+if [ ! -d "$HOME/opt/smartsvn" ] ; then
+  echo
+  echo $SEPARATOR
+  echo "SMART SVN ............."
+  echo $SEPARATOR
+    if [ ! -f "$FILE_SMARTSVN" ]; then
+        echo "    $URL_SMARTSVN"
+        curl -o $FILE_SMARTSVN -fSL $URL_SMARTSVN
+    fi
+    tar -zxf $FILE_SMARTSVN
+    mv smartsvn/ $HOME/opt
+    cd $HOME/opt/smartsvn/bin/
+    bash add-menuitem.sh
+    cd $TMP_INSTALL_DIR
+fi
+
+if [ ! -d "$HOME/opt/apache-maven-$VERSION_MVN32" ] ; then
+  echo
+  echo $SEPARATOR
+  echo "MAVEN ................."
+  echo $SEPARATOR
+
+    if [ ! -f "$FILE_MVN32" ]; then
+        echo "    $URL_MVN32"
+        curl -o $FILE_MVN32 -fSL $URL_MVN32
+    fi
+    tar -zxf $FILE_MVN32
+    mv apache-maven-$VERSION_MVN32/ $HOME/opt
 
     ## ADD
-    MVN="MVN_HOME=~/opt/apache-maven-3.2.5"
+    MVN="MVN_HOME=~/opt/apache-maven-$VERSION_MVN32"
     if ! grep -q "$MVN" ~/.profile; then
         echo "" >> ~/.profile
         echo "export $MVN" >> ~/.profile
@@ -220,18 +258,22 @@ if [ ! -d "$HOME/opt/apache-maven-3.2.5" ] ; then
     mvn -version
 fi
 
-echo
-echo $SEPARATOR
-echo "AXIS 2 ................"
-echo $SEPARATOR
-if [ ! -d "$HOME/opt/axis2-1.7.4" ] ; then
-    #TODO: Download 
+if [ ! -d "$HOME/opt/axis2-$VERSION_AXIS2" ] ; then
+  echo
+  echo $SEPARATOR
+  echo "AXIS 2 ................"
+  echo $SEPARATOR
+
     #curl -o $file -fSL $url
-    unzip -q $CURR_DIR/axis2-1.7.4-bin.zip
+    if [ ! -f "$FILE_AXIS2" ]; then
+        echo "    $URL_AXIS2"
+        curl -o $FILE_AXIS2 -fSL $URL_AXIS2
+    fi
+    unzip -q $FILE_AXIS2
     mv axis2-1.7.4/ $HOME/opt
 
     ## ADD
-    AXIS2="AXIS2_HOME=~/opt/axis2-1.7.4"
+    AXIS2="AXIS2_HOME=~/opt/axis2-$VERSION_AXIS2"
     if ! grep -q "$AXIS2" ~/.profile; then
         echo "" >> ~/.profile
         echo "export $AXIS2" >> ~/.profile
@@ -306,7 +348,7 @@ Terminal=false
 StartupNotify=true
 Exec="$HOME/opt/postman/postman"
 MimeType=x-directory/normal
-Icon="$HOME/opt/postman/resources/app/assets/icon.png"
+Icon=$HOME/opt/postman/resources/app/assets/icon.png
 X-Ayatana-Desktop-Shortcuts=NewWindow;
 EOF
 
@@ -322,25 +364,25 @@ rm $DESKTOP_FILE
 
 fi
 
-# if ! hash remarkable 2>/dev/null; then
-#     echo "REMARKABLE ..........."
-#     if [ ! -f "$FILE_REMARKABLE" ]; then
-#         echo "    $URL_REMARKABLE"
-#         curl -o $FILE_REMARKABLE -fSL $URL_REMARKABLE
-#     fi
-#     sudo dpkg -i $FILE_REMARKABLE
-# fi
+if ! hash remarkable 2>/dev/null; then
+     echo "REMARKABLE ..........."
+     if [ ! -f "$FILE_REMARKABLE" ]; then
+         echo "    $URL_REMARKABLE"
+         curl -o $FILE_REMARKABLE -fSL $URL_REMARKABLE
+     fi
+     sudo dpkg -i $FILE_REMARKABLE
+fi
 
 if ! hash subl 2>/dev/null; then
     #TODO: Download
-    sudo dpkg -i $CURR_DIR/sublime-text_build-3126_amd64.deb
+    sudo dpkg -i sublime-text_build-3126_amd64.deb
 fi
 
 SOAP_UI_DIR="$HOME/opt/SmartBear/SoapUI-5.2.1"
 if [ ! -d "$SOAP_UI_DIR" ] ; then
     #TODO: Download
-    echo $CURR_DIR/SoapUI-x64-5.2.1.sh
-    sh $CURR_DIR/SoapUI-x64-5.2.1.sh -q -Dinstall4j.noProxyAutoDetect=true -splash "SOAPUI 5"\
+    echo SoapUI-x64-5.2.1.sh
+    sh SoapUI-x64-5.2.1.sh -q -Dinstall4j.noProxyAutoDetect=true -splash "SOAPUI 5"\
      -dir $SOAP_UI_DIR
 fi
 
@@ -348,5 +390,5 @@ fi
 #CLEAN ALL
 cd $CURR_DIR
 #rm -rf /tmp/installers
-sudo apt-get clean
+sudo aptitude clean
 sudo apt autoremove -y -f
