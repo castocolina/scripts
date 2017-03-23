@@ -5,12 +5,12 @@
 SEPARATOR="======================================================"
 
 #Download versions
-VERSION_HAROOPAD=-v0.13.1-x64
-FILE_HAROOPAD="haroopad$VERSION_HAROOPAD.deb"
+VERSION_HAROOPAD=v0.13.1-x64
+FILE_HAROOPAD="haroopad-$VERSION_HAROOPAD.deb"
 URL_HAROOPAD="https://bitbucket.org/rhiokim/haroopad-download/downloads/$FILE_HAROOPAD"
 
-VERSION_REMARKABLE=_1.87_all
-FILE_REMARKABLE="remarkable$VERSION_REMARKABLE.deb"
+VERSION_REMARKABLE=1.87_all
+FILE_REMARKABLE="remarkable_$VERSION_REMARKABLE.deb"
 URL_REMARKABLE="https://remarkableapp.github.io/files/$FILE_REMARKABLE"
 
 VERSION_REMARKABLE=_1.87_all
@@ -40,6 +40,28 @@ URL_AXIS2="http://www-us.apache.org/dist/axis/axis2/java/core/$VERSION_AXIS2/$FI
 VERSION_SMARTSVN=9_1_3
 FILE_SMARTSVN=smartsvn-linux-$VERSION_SMARTSVN.tar.gz
 URL_SMARTSVN="http://www.smartsvn.com/static/svn/download/smartsvn/$FILE_SMARTSVN"
+
+#https://releases.hashicorp.com/vagrant/1.9.3/vagrant_1.9.3_x86_64.deb
+VERSION_VAGRANT=1.9.3
+FILE_VAGRANT="vagrant_${VERSION_VAGRANT}_x86_64.deb"
+URL_VAGRANT="https://releases.hashicorp.com/vagrant/$VERSION_VAGRANT/$FILE_VAGRANT"
+
+#https://download.sublimetext.com/sublime-text_build-3126_amd64.deb
+VERSION_SUBLIME=3126_amd64
+FILE_SUBLIME=sublime-text_build-$VERSION_SUBLIME.deb
+URL_SUBLIME="https://download.sublimetext.com/$FILE_SUBLIME"
+
+#http://cdn01.downloads.smartbear.com/soapui/5.3.0/SoapUI-x64-5.3.0.sh
+VERSION_SOAPUI5=5.3.0
+FILE_SOAPUI5=SoapUI-x64-$VERSION_SOAPUI5.sh
+URL_SOAPUI5="http://cdn01.downloads.smartbear.com/soapui/$VERSION_SOAPUI5/$FILE_SOAPUI5"
+
+#https://www.soapui.org/downloads/soapui/soapui-os-older-versions.html
+#https://www.soapui.org/articles/older-versions.html
+#http://smartbearsoftware.com/distrib/soapui/4.0.1/soapUI-x32-4_0_1.sh
+VERSION_SOAPUI4=4.0.1
+FILE_SOAPUI4=soapUI-x32-4_0_1.sh
+URL_SOAPUI4="http://smartbearsoftware.com/distrib/soapui/$VERSION_SOAPUI4/$FILE_SOAPUI4"
 
 source /etc/os-release
 source /etc/lsb-release
@@ -75,7 +97,7 @@ if [ ! -f "/etc/apt/sources.list.d/docker.list" ]; then
     else
       DOCKER_REPO="deb https://apt.dockerproject.org/repo $ID_LIKE-$UBUNTU_CODENAME main"
     fi
-    
+
     echo "$DOCKER_REPO" | sudo tee /etc/apt/sources.list.d/docker.list
 fi
 
@@ -88,7 +110,7 @@ if [ ! -f "/etc/apt/sources.list.d/spotify.list" ]; then
 fi
 
 #RabbitVCS
-#sudo add-apt-repository ppa:rabbitvcs/ppa -y
+sudo add-apt-repository ppa:rabbitvcs/ppa -y
 
 echo ""
 echo $SEPARATOR
@@ -149,9 +171,12 @@ type corkscrew >/dev/null 2>&1 || { sudo apt install -y corkscrew; }
 type meld >/dev/null 2>&1 || { sudo apt install -y meld; }
 type filezilla >/dev/null 2>&1 || { sudo apt install -y filezilla; }
 
-#sudo aptitude install -y rabbitvcs-core rabbitvcs-cli
-#sudo aptitude install rabbitvcs-nautilus
-#sudo aptitude install rabbitvcs-gedit
+if ! hash rabbitvcs 2>/dev/null; then
+  type gedit >/dev/null 2>&1 && { sudo aptitude install -y gedit; }
+  sudo aptitude install -y rabbitvcs-core rabbitvcs-cli rabbitvcs-gedit
+  type nautilus >/dev/null 2>&1 && { sudo aptitude install -y rabbitvcs-nautilus; }
+  type nemo >/dev/null 2>&1 && { sudo aptitude install -y nemo-rabbitvcs; }
+fi
 
 echo
 echo $SEPARATOR
@@ -210,16 +235,19 @@ if ! hash vagrant 2>/dev/null; then
     echo $SEPARATOR
     echo "VAGRANT .............."
     echo $SEPARATOR
-    #TODO: Download
-    sudo dpkg -i vagrant_1.9.0_x86_64.deb
+    if [ ! -f "$FILE_VAGRANT" ]; then
+        echo "    $URL_VAGRANT"
+        curl -o $FILE_VAGRANT -fSL $URL_VAGRANT
+    fi
+    sudo dpkg -i $FILE_VAGRANT
     vagrant plugin install vagrant-proxyconf
 fi
 
 if [ ! -d "$HOME/opt/smartsvn" ] ; then
-  echo
-  echo $SEPARATOR
-  echo "SMART SVN ............."
-  echo $SEPARATOR
+    echo
+    echo $SEPARATOR
+    echo "SMART SVN ............."
+    echo $SEPARATOR
     if [ ! -f "$FILE_SMARTSVN" ]; then
         echo "    $URL_SMARTSVN"
         curl -o $FILE_SMARTSVN -fSL $URL_SMARTSVN
@@ -361,7 +389,6 @@ xdg-icon-resource install --size 128 "$HOME/opt/postman/resources/app/assets/ico
 rm $DESKTOP_FILE
 
     fi
-
 fi
 
 if ! hash remarkable 2>/dev/null; then
@@ -374,18 +401,37 @@ if ! hash remarkable 2>/dev/null; then
 fi
 
 if ! hash subl 2>/dev/null; then
-    #TODO: Download
-    sudo dpkg -i sublime-text_build-3126_amd64.deb
+  echo "SUBLIME ..........."
+  if [ ! -f "$FILE_SUBLIME" ]; then
+      echo "    $URL_SUBLIME"
+      curl -o $FILE_SUBLIME -fSL $URL_SUBLIME
+  fi
+  sudo dpkg -i $FILE_SUBLIME
 fi
 
-SOAP_UI_DIR="$HOME/opt/SmartBear/SoapUI-5.2.1"
-if [ ! -d "$SOAP_UI_DIR" ] ; then
-    #TODO: Download
-    echo SoapUI-x64-5.2.1.sh
-    sh SoapUI-x64-5.2.1.sh -q -Dinstall4j.noProxyAutoDetect=true -splash "SOAPUI 5"\
-     -dir $SOAP_UI_DIR
+SOAPUI5_DIR="$HOME/opt/soapUI-$VERSION_SOAPUI5"
+if [ ! -d "$SOAPUI5_DIR" ] ; then
+    echo "SOAPUI5 ..........."
+    if [ ! -f "$FILE_SOAPUI5" ]; then
+        echo "    $URL_SOAPUI5"
+        curl -o $FILE_SOAPUI5 -fSL $URL_SOAPUI5
+    fi
+    echo $FILE_SOAPUI5
+    sh $FILE_SOAPUI5 -q -Dinstall4j.noProxyAutoDetect=true -splash "SOAPUI 5 installer"\
+     -dir $SOAPUI5_DIR
 fi
 
+SOAPUI4_DIR="$HOME/opt/soapUI-$VERSION_SOAPUI4"
+if [ ! -d "$SOAPUI4_DIR" ] ; then
+    echo "SOAPUI4 ..........."
+    if [ ! -f "$FILE_SOAPUI4" ]; then
+        echo "    $URL_SOAPUI4"
+        curl -o $FILE_SOAPUI4 -fSL $URL_SOAPUI4
+    fi
+    echo $FILE_SOAPUI4
+    sh $FILE_SOAPUI4 -q -Dinstall4j.noProxyAutoDetect=true -splash "SOAPUI 4 installer"\
+     -dir $SOAPUI4_DIR
+fi
 
 #CLEAN ALL
 cd $CURR_DIR
