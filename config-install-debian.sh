@@ -1,5 +1,10 @@
 #!/bin/bash
 
+#apache tomcat, glassfish
+#vb extensions
+#VB Guest additions
+#Nodejs
+
 # http://www.webupd8.org/2014/03/how-to-install-oracle-java-8-in-debian.html
 # http://www.webupd8.org/2015/02/install-oracle-java-9-in-ubuntu-linux.html
 SEPARATOR="======================================================"
@@ -56,12 +61,25 @@ VERSION_SOAPUI5=5.3.0
 FILE_SOAPUI5=SoapUI-x64-$VERSION_SOAPUI5.sh
 URL_SOAPUI5="http://cdn01.downloads.smartbear.com/soapui/$VERSION_SOAPUI5/$FILE_SOAPUI5"
 
-#https://www.soapui.org/downloads/soapui/soapui-os-older-versions.html
-#https://www.soapui.org/articles/older-versions.html
 #http://smartbearsoftware.com/distrib/soapui/4.0.1/soapUI-x32-4_0_1.sh
 VERSION_SOAPUI4=4.0.1
 FILE_SOAPUI4=soapUI-x32-4_0_1.sh
 URL_SOAPUI4="http://smartbearsoftware.com/distrib/soapui/$VERSION_SOAPUI4/$FILE_SOAPUI4"
+
+#https://www.gitkraken.com/download/linux-deb
+VERSION_GITKRAKEN=2.2.1
+FILE_GITKRAKEN=gitkraken-amd64.deb
+URL_GITKRAKEN="https://release.gitkraken.com/linux/$FILE_GITKRAKEN"
+
+#http://eclipse.c3sl.ufpr.br/oomph/epp/neon/R2a/eclipse-inst-linux64.tar.gz
+VERSION_ECLIPSE_INST=R2a
+FILE_ECLIPSE_INST=eclipse-inst-linux64.tar.gz
+URL_ECLIPSE_INST="http://eclipse.c3sl.ufpr.br/oomph/epp/neon/$VERSION_ECLIPSE_INST/$FILE_ECLIPSE_INST"
+
+#https://github.com/java-decompiler/jd-gui/releases/download/v1.4.0/jd-gui_1.4.0-0_all.deb
+VERSION_JAVADEC=1.4.0
+FILE_JAVADEC=jd-gui_$VERSION_JAVADEC-0_all.deb
+URL_JAVADEC="https://github.com/java-decompiler/jd-gui/releases/download/v$VERSION_JAVADEC/$FILE_JAVADEC"
 
 source /etc/os-release
 source /etc/lsb-release
@@ -72,7 +90,8 @@ echo "ADD REPOSITORIES ......"
 echo $SEPARATOR
 
 #JAVA PPA
-test -f "/etc/apt/sources.list.d/webupd8team-ubuntu-java-xenial.list" || sudo add-apt-repository ppa:webupd8team/java -y
+test -f "/etc/apt/sources.list.d/webupd8team-java-xenial.list" || sudo add-apt-repository ppa:webupd8team/java -y
+
 #VIRTUAL BOX
 if [ ! -f "/etc/apt/sources.list.d/virtualbox.list" ]; then
     if [ $ID == "ubuntu" ] || [ $ID == "debian" ]; then
@@ -154,8 +173,17 @@ if [ ! -d "/usr/lib/jvm/java-8-oracle" ]; then
         echo "JAVA SET"
     fi
 fi
+read -p "UPDATE JAVA? (y/n) > " to_update
 
-sudo aptitude install -y oracle-java6-set-default
+export USE_UPDATE=false
+
+if [ "$to_update" = true ] || [ "$to_update" = "true" ] || [ "$to_update" = "1" ] || [ "$to_update" = "y" ]|| [ "$to_update" = "yes" ]; then
+    export USE_UPDATE=true
+fi
+
+if [ "$USE_UPDATE" = true ]; then
+  sudo aptitude install -y oracle-java6-set-default
+fi
 
 echo
 echo $SEPARATOR
@@ -243,6 +271,30 @@ if ! hash vagrant 2>/dev/null; then
     vagrant plugin install vagrant-proxyconf
 fi
 
+if ! hash gitkraken 2>/dev/null; then
+    echo
+    echo $SEPARATOR
+    echo "GITKRAKEN .............."
+    echo $SEPARATOR
+    if [ ! -f "$FILE_GITKRAKEN" ]; then
+        echo "    $URL_GITKRAKEN"
+        curl -o $FILE_GITKRAKEN -fSL $URL_GITKRAKEN
+    fi
+    sudo dpkg -i $FILE_GITKRAKEN
+fi
+
+if ! hash jd-gui 2>/dev/null; then
+    echo
+    echo $SEPARATOR
+    echo "JAVA DECOMPILER .............."
+    echo $SEPARATOR
+    if [ ! -f "$FILE_JAVADEC" ]; then
+        echo "    $URL_JAVADEC"
+        curl -o $FILE_JAVADEC -fSL $URL_JAVADEC
+    fi
+    sudo dpkg -i $FILE_JAVADEC
+fi
+
 if [ ! -d "$HOME/opt/smartsvn" ] ; then
     echo
     echo $SEPARATOR
@@ -255,8 +307,51 @@ if [ ! -d "$HOME/opt/smartsvn" ] ; then
     tar -zxf $FILE_SMARTSVN
     mv smartsvn/ $HOME/opt
     cd $HOME/opt/smartsvn/bin/
+    sed -i '/MimeType=/d' add-menuitem.sh
     bash add-menuitem.sh
     cd $TMP_INSTALL_DIR
+fi
+
+if [ ! -d "$HOME/opt/eclipse-installer" ] ; then
+    echo
+    echo $SEPARATOR
+    echo "ECLIPSE INSTALLER ............."
+    echo $SEPARATOR
+    if [ ! -f "$FILE_ECLIPSE_INST" ]; then
+        echo "    $URL_ECLIPSE_INST"
+        curl -o $FILE_ECLIPSE_INST -fSL $URL_ECLIPSE_INST
+    fi
+    tar -zxf $FILE_ECLIPSE_INST
+    mv eclipse-installer/ $HOME/opt
+    echo "-vm" >> "$HOME/opt/eclipse-installer/eclipse-inst.ini"
+    echo "/usr/lib/jvm/java-8-oracle/bin/javaw" >> "$HOME/opt/eclipse-installer/eclipse-inst.ini"
+
+    DESKTOP_FILE=eclipse-installer-$VERSION_ECLIPSE_INST.desktop
+    ICON_PATH="$HOME/opt/eclipse-installer/icon.xpm"
+
+cat << EOF > $DESKTOP_FILE
+[Desktop Entry]
+Version=$VERSION_ECLIPSE_INST
+Encoding=UTF-8
+Name=Eclipse Installer
+Keywords=Java, JEE, JSE, IDE
+GenericName=Eclipse Installer
+Type=Application
+Categories=Development
+Terminal=false
+StartupNotify=true
+Exec="$HOME/opt/eclipse-installer/eclipse-inst"
+Icon=$ICON_PATH
+X-Ayatana-Desktop-Shortcuts=NewWindow;
+EOF
+
+    # seems necessary to refresh immediately:
+    chmod 644 $DESKTOP_FILE
+
+    xdg-desktop-menu install $DESKTOP_FILE
+    xdg-icon-resource install --size 128 "$ICON_PATH" "eclipse-inst-$VERSION_ECLIPSE_INST"
+
+    rm $DESKTOP_FILE
 fi
 
 if [ ! -d "$HOME/opt/apache-maven-$VERSION_MVN32" ] ; then
@@ -362,6 +457,7 @@ if [ ! -d "$HOME/opt/postman" ] ; then
         mv -f postman/ $HOME/opt
 
         DESKTOP_FILE=postman-$VERSION_POSTMAN.desktop
+        ICON_PATH=$HOME/opt/postman/resources/app/assets/icon.png
 
 cat << EOF > $DESKTOP_FILE
 [Desktop Entry]
@@ -375,8 +471,7 @@ Categories=Development
 Terminal=false
 StartupNotify=true
 Exec="$HOME/opt/postman/postman"
-MimeType=x-directory/normal
-Icon=$HOME/opt/postman/resources/app/assets/icon.png
+Icon=$ICON_PATH
 X-Ayatana-Desktop-Shortcuts=NewWindow;
 EOF
 
@@ -384,7 +479,7 @@ EOF
 chmod 644 $DESKTOP_FILE
 
 xdg-desktop-menu install $DESKTOP_FILE
-xdg-icon-resource install --size 128 "$HOME/opt/postman/resources/app/assets/icon.png" "postman-$VERSION_POSTMAN"
+xdg-icon-resource install --size 128 "$ICON_PATH" "postman-$VERSION_POSTMAN"
 
 rm $DESKTOP_FILE
 
