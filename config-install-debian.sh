@@ -77,9 +77,30 @@ FILE_ECLIPSE_INST=eclipse-inst-linux64.tar.gz
 URL_ECLIPSE_INST="http://eclipse.c3sl.ufpr.br/oomph/epp/neon/$VERSION_ECLIPSE_INST/$FILE_ECLIPSE_INST"
 
 #https://github.com/java-decompiler/jd-gui/releases/download/v1.4.0/jd-gui_1.4.0-0_all.deb
+#https://github.com/java-decompiler/jd-gui/releases/download/v1.4.0/jd-gui-1.4.0.jar
 VERSION_JAVADEC=1.4.0
-FILE_JAVADEC=jd-gui_$VERSION_JAVADEC-0_all.deb
+FILE_JAVADEC=jd-gui_$VERSION_JAVADEC.jar
 URL_JAVADEC="https://github.com/java-decompiler/jd-gui/releases/download/v$VERSION_JAVADEC/$FILE_JAVADEC"
+
+#https://dl.google.com/dl/android/studio/ide-zips/2.3.0.8/android-studio-ide-162.3764568-linux.zip?hl=es-419
+VERSION_ANDSTUDIO=2.3.0.8
+FILE_ANDSTUDIO=android-studio-ide-162.3764568-linux.zip
+URL_ANDSTUDIO="https://dl.google.com/dl/android/studio/ide-zips/$VERSION_ANDSTUDIO/$FILE_ANDSTUDIO?hl=es-419"
+
+#https://dl.google.com/android/repository/tools_r25.2.3-linux.zip
+VERSION_ANDTOOLS=r25.2.3
+FILE_ANDTOOLS=tools_$VERSION_ANDTOOLS-linux.zip
+URL_ANDTOOLS="https://dl.google.com/android/repository/$FILE_ANDTOOLS"
+
+#https://dl.google.com/android/repository/platform-tools-latest-linux.zip
+VERSION_AND_PLATF_TOOLS=latest
+FILE_AND_PLATF_TOOLS=platform-tools-latest-linux.zip
+URL_AND_PLATF_TOOLS="https://dl.google.com/android/repository/platform-tools-latest-linux.zip"
+
+#https://services.gradle.org/distributions/gradle-3.4.1-all.zip
+VERSION_GRADLE=3.4.1
+FILE_GRADLE=gradle-$VERSION_GRADLE-all.zip
+URL_GRADLE="https://services.gradle.org/distributions/$FILE_GRADLE"
 
 source /etc/os-release
 source /etc/lsb-release
@@ -129,7 +150,7 @@ if [ ! -f "/etc/apt/sources.list.d/spotify.list" ]; then
 fi
 
 #RabbitVCS
-sudo add-apt-repository ppa:rabbitvcs/ppa -y
+## sudo add-apt-repository ppa:rabbitvcs/ppa -y
 
 echo ""
 echo $SEPARATOR
@@ -182,7 +203,8 @@ if [ "$to_update" = true ] || [ "$to_update" = "true" ] || [ "$to_update" = "1" 
 fi
 
 if [ "$USE_UPDATE" = true ]; then
-  sudo aptitude install -y oracle-java6-set-default
+  #sudo aptitude install -y oracle-java8-set-default
+  sudo update-alternatives --config java
 fi
 
 echo
@@ -283,17 +305,17 @@ if ! hash gitkraken 2>/dev/null; then
     sudo dpkg -i $FILE_GITKRAKEN
 fi
 
-if ! hash jd-gui 2>/dev/null; then
-    echo
-    echo $SEPARATOR
-    echo "JAVA DECOMPILER .............."
-    echo $SEPARATOR
-    if [ ! -f "$FILE_JAVADEC" ]; then
-        echo "    $URL_JAVADEC"
-        curl -o $FILE_JAVADEC -fSL $URL_JAVADEC
-    fi
-    sudo dpkg -i $FILE_JAVADEC
-fi
+# if ! hash jd-gui 2>/dev/null; then
+#     echo
+#     echo $SEPARATOR
+#     echo "JAVA DECOMPILER .............."
+#     echo $SEPARATOR
+#     if [ ! -f "$FILE_JAVADEC" ]; then
+#         echo "    $URL_JAVADEC"
+#         curl -o $FILE_JAVADEC -fSL $URL_JAVADEC
+#     fi
+#     sudo dpkg -i $FILE_JAVADEC
+# fi
 
 if [ ! -d "$HOME/opt/smartsvn" ] ; then
     echo
@@ -323,8 +345,8 @@ if [ ! -d "$HOME/opt/eclipse-installer" ] ; then
     fi
     tar -zxf $FILE_ECLIPSE_INST
     mv eclipse-installer/ $HOME/opt
-    echo "-vm" >> "$HOME/opt/eclipse-installer/eclipse-inst.ini"
-    echo "/usr/lib/jvm/java-8-oracle/bin/javaw" >> "$HOME/opt/eclipse-installer/eclipse-inst.ini"
+    #echo "-vm" >> "$HOME/opt/eclipse-installer/eclipse-inst.ini"
+    #echo "/usr/lib/jvm/java-8-oracle/bin/javaw" >> "$HOME/opt/eclipse-installer/eclipse-inst.ini"
 
     DESKTOP_FILE=eclipse-installer-$VERSION_ECLIPSE_INST.desktop
     ICON_PATH="$HOME/opt/eclipse-installer/icon.xpm"
@@ -526,6 +548,105 @@ if [ ! -d "$SOAPUI4_DIR" ] ; then
     echo $FILE_SOAPUI4
     sh $FILE_SOAPUI4 -q -Dinstall4j.noProxyAutoDetect=true -splash "SOAPUI 4 installer"\
      -dir $SOAPUI4_DIR
+fi
+
+if [ ! -d "$HOME/opt/android-platform-tools" ] ; then
+  echo
+  echo $SEPARATOR
+  echo "Android Platform Tools ............."
+  echo $SEPARATOR
+
+  sudo apt-get install libstdc++6:i386 libgcc1:i386 zlib1g:i386 libncurses5:i386
+
+    if [ ! -f "$FILE_AND_PLATF_TOOLS" ]; then
+        echo "    $URL_AND_PLATF_TOOLS"
+        curl -o $FILE_AND_PLATF_TOOLS -fSL $URL_AND_PLATF_TOOLS
+    fi
+    unzip -q $FILE_AND_PLATF_TOOLS
+    mv platform-tools/ $HOME/opt/android-platform-tools
+
+    ## ADD
+    AND_PLATFORM_TOOLS_HOME="AND_PLATFORM_TOOLS_HOME=$HOME/opt/android-platform-tools"
+    if ! grep -q "$AND_PLATFORM_TOOLS_HOME" ~/.profile; then
+        echo "" >> ~/.profile
+        echo "#Android Platform Tools" >> ~/.profile
+        echo "export $AND_PLATFORM_TOOLS_HOME" >> ~/.profile
+        echo "PATH=\"\$PATH:\$AND_PLATFORM_TOOLS_HOME\"" >> ~/.profile
+        echo "ANDROID TOOLS SET"
+    fi
+
+    #load
+    source $HOME/.profile
+    #test
+    adb -version
+fi
+
+if [ ! -d "$HOME/opt/android-studio" ] ; then
+  echo
+  echo $SEPARATOR
+  echo "Android Studio ................."
+  echo $SEPARATOR
+
+    if [ ! -f "$FILE_ANDSTUDIO" ]; then
+        echo "    $URL_ANDSTUDIO"
+        curl -o $FILE_ANDSTUDIO -fSL $URL_ANDSTUDIO
+    fi
+    unzip -q $FILE_ANDSTUDIO
+    mv android-studio/ $HOME/opt
+
+    DESKTOP_FILE=android-studio-$VERSION_ANDSTUDIO.desktop
+    ICON_PATH="$HOME/opt/android-studio/bin/studio.png"
+
+cat << EOF > $DESKTOP_FILE
+[Desktop Entry]
+Version=$VERSION_ANDSTUDIO
+Encoding=UTF-8
+Name=Android Studio
+Keywords=Java, JEE, JSE, IDE
+GenericName=Android Studio
+Type=Application
+Categories=Development
+Terminal=false
+StartupNotify=true
+Exec="$HOME/opt/android-studio/bin/studio.sh"
+Icon=$ICON_PATH
+X-Ayatana-Desktop-Shortcuts=NewWindow;
+EOF
+
+    # seems necessary to refresh immediately:
+    chmod 644 $DESKTOP_FILE
+
+    xdg-desktop-menu install $DESKTOP_FILE
+    xdg-icon-resource install --size 128 "$ICON_PATH" "android-studio-$VERSION_ANDSTUDIO"
+
+    rm $DESKTOP_FILE
+fi
+
+if [ ! -d "$HOME/opt/gradle-$VERSION_GRADLE" ] ; then
+  echo
+  echo $SEPARATOR
+  echo "GRADLE ................."
+  echo $SEPARATOR
+
+    if [ ! -f "$FILE_GRADLE" ]; then
+        echo "    $URL_GRADLE"
+        curl -o $FILE_GRADLE -fSL $URL_GRADLE
+    fi
+    unzip -q $FILE_GRADLE
+    mv gradle-$VERSION_GRADLE/ $HOME/opt
+
+    ## ADD
+    GRADLE="GRADLE_HOME=~/opt/gradle-$VERSION_GRADLE"
+    if ! grep -q "$GRADLE" ~/.profile; then
+        echo "" >> ~/.profile
+        echo "export $GRADLE" >> ~/.profile
+        echo "PATH=\"\$PATH:\$GRADLE_HOME/bin\"" >> ~/.profile
+        echo "GRADLE SET"
+    fi
+
+    #test
+    source $HOME/.profile
+    gradle -v
 fi
 
 #CLEAN ALL
