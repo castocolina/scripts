@@ -14,10 +14,6 @@ VERSION_HAROOPAD=v0.13.1-x64
 FILE_HAROOPAD="haroopad-$VERSION_HAROOPAD.deb"
 URL_HAROOPAD="https://bitbucket.org/rhiokim/haroopad-download/downloads/$FILE_HAROOPAD"
 
-VERSION_REMARKABLE=1.87_all
-FILE_REMARKABLE="remarkable_$VERSION_REMARKABLE.deb"
-URL_REMARKABLE="https://remarkableapp.github.io/files/$FILE_REMARKABLE"
-
 VERSION_REMARKABLE=_1.87_all
 FILE_REMARKABLE="remarkable$VERSION_REMARKABLE.deb"
 URL_REMARKABLE="https://remarkableapp.github.io/files/$FILE_REMARKABLE"
@@ -27,7 +23,7 @@ FILE_ATOM=atom-amd64.deb
 URL_ATOM="https://atom.io/download/deb"
 
 #https://www.getpostman.com/app/download/linux64
-VERSION_POSTMAN=4.9.x
+VERSION_POSTMAN=4.10.7
 FILE_POSTMAN=postman-linux-x64.tar.gz
 URL_POSTMAN="https://dl.pstmn.io/download/latest/linux64"
 
@@ -42,7 +38,7 @@ FILE_AXIS2=axis2-$VERSION_AXIS2-bin.zip
 URL_AXIS2="http://www-us.apache.org/dist/axis/axis2/java/core/$VERSION_AXIS2/$FILE_AXIS2"
 
 #http://www.smartsvn.com/static/svn/download/smartsvn/smartsvn-linux-9_1_3.tar.gz
-VERSION_SMARTSVN=9_1_3
+VERSION_SMARTSVN=9_2_0
 FILE_SMARTSVN=smartsvn-linux-$VERSION_SMARTSVN.tar.gz
 URL_SMARTSVN="http://www.smartsvn.com/static/svn/download/smartsvn/$FILE_SMARTSVN"
 
@@ -67,7 +63,7 @@ FILE_SOAPUI4=soapUI-x32-4_0_1.sh
 URL_SOAPUI4="http://smartbearsoftware.com/distrib/soapui/$VERSION_SOAPUI4/$FILE_SOAPUI4"
 
 #https://www.gitkraken.com/download/linux-deb
-VERSION_GITKRAKEN=2.2.1
+VERSION_GITKRAKEN=2.5
 FILE_GITKRAKEN=gitkraken-amd64.deb
 URL_GITKRAKEN="https://release.gitkraken.com/linux/$FILE_GITKRAKEN"
 

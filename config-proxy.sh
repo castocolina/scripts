@@ -24,7 +24,7 @@ else
 fi
 proxy=${proxy,,}
 
-if [ "$proxy" = true ] || [ "$proxy" = "true" ] || [ "$proxy" = "1" ] || [ "$proxy" = "y" ]|| [ "$proxy" = "yes" ]; then
+if [ "$proxy" = true ] || [ "$proxy" = "true" ] || [ "$proxy" = "1" ] || [ "$proxy" = "y" ] || [ "$proxy" = "yes" ]; then
     export USE_PROXY=true
 else
     export USE_PROXY=false
@@ -57,7 +57,7 @@ export NO_PROXY=$excep
 #~/.ssh/config
 export SSH_PROXY=true
 #~/.subversion/servers
-export SVN_PROXY=true
+export SVN_PROXY=false
 #/etc/default/docker
 #/etc/systemd/system/docker.service.d/http-proxy.conf
 export DOCKER_PROXY=true
@@ -110,13 +110,13 @@ else
         echo "unset HTTP_PROXY HTTPS_PROXY NO_PROXY SOCKS_PROXY FTP_PROXY ALL_PROXY" | sudo tee --append $cfile
         echo "unset http_proxy https_proxy no_proxy socks_proxy ftp_proxy all_proxy" | sudo tee --append $cfile
     else
-        sudo sed -i -r "s/.*unset HTTP_PROXY HTTPS_PROXY NO_PROXY SOCKS_PROXY FTP_PROXY ALL_PROXY/unset HTTP_PROXY HTTPS_PROXY NO_PROXY SOCKS_PROXY FTP_PROXY ALL_PROXY/gi" $cfile
-        sudo sed -i -r "s/.*unset http_proxy https_proxy no_proxy socks_proxy ftp_proxy all_proxy/unset http_proxy https_proxy no_proxy socks_proxy ftp_proxy all_proxy/gi" $cfile
+        sudo sed -r "s/.*unset HTTP_PROXY HTTPS_PROXY NO_PROXY SOCKS_PROXY FTP_PROXY ALL_PROXY/unset HTTP_PROXY HTTPS_PROXY NO_PROXY SOCKS_PROXY FTP_PROXY ALL_PROXY/gi" $cfile
+        sudo sed -r "s/.*unset http_proxy https_proxy no_proxy socks_proxy ftp_proxy all_proxy/unset http_proxy https_proxy no_proxy socks_proxy ftp_proxy all_proxy/gi" $cfile
     fi
 
-    sudo sed -i -r 's/((export)?\s*HTTP_PROXY\s?=\s?.*)/# \0/gi' $cfile
-    sudo sed -i -r 's/((export)?\s*HTTPS_PROXY\s?=\s?.*)/# \0/gi' $cfile
-    sudo sed -i -r 's/((export)?\s*NO_PROXY\s?=\s?.*)/# \0/i' $cfile
+    sudo sed -r 's/((export)?\s*HTTP_PROXY\s?=\s?.*)/# \0/gi' $cfile
+    sudo sed -r 's/((export)?\s*HTTPS_PROXY\s?=\s?.*)/# \0/gi' $cfile
+    sudo sed -r 's/((export)?\s*NO_PROXY\s?=\s?.*)/# \0/i' $cfile
 fi
 source $cfile
 
