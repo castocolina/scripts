@@ -16,11 +16,12 @@ if [ ! -f "$SSH_KEYFILE" ] ; then
     echo "CREATE SSH KEY FOR $SSH_KEYFILE"
 
     ssh-keygen -t rsa -f $SSH_KEYFILE -b 4096 -C $SSH_KEYNAME
-    eval "$(ssh-agent -s)"
-    ssh-add $SSH_KEYFILE
 fi
 
-echo 
+eval "$(ssh-agent -s)"
+ssh-add $SSH_KEYFILE
+
+echo
 echo "PUBLIC KEYS..."
 ls $HOME/.ssh/*.pub
 
@@ -32,7 +33,7 @@ xclip -sel clip < $SSH_KEYFILE.pub
 
 echo
 echo "Copies the contents of the "$SSH_KEYFILE.pub" (public key) file to your clipboard..."
-echo 
+echo
 cat $SSH_KEYFILE.pub
 echo
 
@@ -68,12 +69,12 @@ echo $SEPARATOR
 echo
 
 echo
-echo "TEST GH"
+echo "TEST GH   ssh -i $SSH_KEYFILE.pub -T git@github.com"
 echo $SEPARATOR
-ssh -T git@github.com
+ssh -i $SSH_KEYFILE.pub -T git@github.com
 
 echo
-echo "TEST BB"
+echo "TEST BB   ssh -i $SSH_KEYFILE.pub -T git@bitbucket.org"
 echo $SEPARATOR
-ssh -T git@bitbucket.org
+ssh -i $SSH_KEYFILE.pub -T git@bitbucket.org
 echo
