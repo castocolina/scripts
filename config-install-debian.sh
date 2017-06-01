@@ -38,7 +38,7 @@ FILE_AXIS2=axis2-$VERSION_AXIS2-bin.zip
 URL_AXIS2="http://www-us.apache.org/dist/axis/axis2/java/core/$VERSION_AXIS2/$FILE_AXIS2"
 
 #http://www.smartsvn.com/static/svn/download/smartsvn/smartsvn-linux-9_1_3.tar.gz
-VERSION_SMARTSVN=9_2_0
+VERSION_SMARTSVN=9_2_1
 FILE_SMARTSVN=smartsvn-linux-$VERSION_SMARTSVN.tar.gz
 URL_SMARTSVN="http://www.smartsvn.com/static/svn/download/smartsvn/$FILE_SMARTSVN"
 
@@ -164,6 +164,7 @@ fi
 type aptitude >/dev/null 2>&1 || { sudo apt install -y aptitude; }
 if [ "$USE_UPDATE" = true ]; then
     sudo aptitude update -y
+    sudo aptitude install linux-headers-$(uname -r) -y
 fi
 
 #if hash gdate 2>/dev/null; then
@@ -230,7 +231,10 @@ echo "VBOX ................."
 echo $SEPARATOR
 
 type dkms >/dev/null 2>&1 || { sudo apt install -y dkms; }
-type virtualbox >/dev/null 2>&1 || { sudo apt install -y virtualbox-5.1; }
+type virtualbox >/dev/null 2>&1 || \
+    { sudo apt install -y virtualbox-5.1 linux-headers-generic virtualbox-dkms virtualbox-ext-pack\
+    virtualbox-guest-additions-iso virtualbox-guest-dkms virtualbox-guest-utils virtualbox-guest-x11\
+    ; }
 
 if ! hash docker 2>/dev/null; then
     echo
