@@ -98,6 +98,49 @@ VERSION_GRADLE=3.4.1
 FILE_GRADLE=gradle-$VERSION_GRADLE-all.zip
 URL_GRADLE="https://services.gradle.org/distributions/$FILE_GRADLE"
 
+#https://download-cf.jetbrains.com/idea/ideaIC-2017.1.3-no-jdk.tar.gz
+VERSION_INTELLIJ=2017.1.3-no-jdk
+FILE_INTELLIJ="ideaIC-$VERSION_INTELLIJ.tar.gz"
+URL_INTELLIJ="https://download-cf.jetbrains.com/idea/$FILE_INTELLIJ"
+
+function create_sc(){
+    PSNAME=$1
+    PNAME=$2
+    PVERSION=$3
+    PEXEC=$4
+    PCATEGORIES=$5
+    PKEYS=$6
+    PICON=$7
+    PICON_SIZE=$8
+
+    DESKTOP_FILE=$PSNAME-$VERSION_ECLIPSE_INST.desktop
+
+    if [ ! -f "$DESKTOP_FILE" ] ; then
+        rm -f $DESKTOP_FILE
+    fi
+    touch $DESKTOP_FILE
+
+    echo "[Desktop Entry]" >> $DESKTOP_FILE
+    echo "Version=$PVERSION" >> $DESKTOP_FILE
+    echo "Encoding=UTF-8" >> $DESKTOP_FILE
+    echo "Name=$PSNAME" >> $DESKTOP_FILE
+    echo "Keywords=$PKEYS" >> $DESKTOP_FILE
+    echo "GenericName=$PNAME" >> $DESKTOP_FILE
+    echo "Type=Application" >> $DESKTOP_FILE
+    echo "Categories=$PCATEGORIES" >> $DESKTOP_FILE
+    printf "Terminal=false\nStartupNotify=true\n" >> $DESKTOP_FILE
+    printf "Exec=\"$PEXEC\"\nIcon=$PICON\n" >> $DESKTOP_FILE
+    echo "X-Ayatana-Desktop-Shortcuts=NewWindow;" >> $DESKTOP_FILE
+
+    # seems necessary to refresh immediately:
+    chmod 644 $DESKTOP_FILE
+
+    xdg-desktop-menu install $DESKTOP_FILE
+    xdg-icon-resource install --size $PICON_SIZE "$PICON" "$PSNAME-$PVERSION"
+
+    rm $DESKTOP_FILE
+}
+
 source /etc/os-release
 source /etc/lsb-release
 
@@ -209,6 +252,7 @@ echo $SEPARATOR
 echo "COMMONS ..............."
 echo $SEPARATOR
 
+type xmllint >/dev/null 2>&1 || { sudo apt install -y libxml2-utils; }
 type unzip >/dev/null 2>&1 || { sudo apt install -y unzip; }
 type git >/dev/null 2>&1 || { sudo apt install -y git; }
 type svn >/dev/null 2>&1 || { sudo apt install -y subversion;  svn --version | head -2; }
@@ -254,6 +298,7 @@ if ! hash docker 2>/dev/null; then
     sudo update-grub
     sudo ufw status
     sudo systemctl enable docker
+    sudo pip install setuptools
     sudo pip install docker-compose
 
     # /etc/default/ufw /etc/sysconfig/ufw
@@ -374,6 +419,31 @@ EOF
     xdg-icon-resource install --size 128 "$ICON_PATH" "eclipse-inst-$VERSION_ECLIPSE_INST"
 
     rm $DESKTOP_FILE
+fi
+
+if [ ! -d "$HOME/opt/IntelliJ-CE" ] ; then
+    echo
+    echo $SEPARATOR
+    echo "IntelliJ INSTALLER ............."
+    echo $SEPARATOR
+    if [ ! -f "$FILE_INTELLIJ" ]; then
+        echo "    $URL_INTELLIJ"
+        curl -o $FILE_INTELLIJ -fSL $URL_INTELLIJ
+    fi
+    mkdir -p $HOME/opt/IntelliJ-CE
+    tar -zxf $FILE_INTELLIJ
+    mv idea-IC*/* $HOME/opt/IntelliJ-CE/
+    rm -rf idea-IC*/
+
+    EXEC="$HOME/opt/IntelliJ-CE/bin/idea.sh"
+    ICON="$HOME/opt/IntelliJ-CE/bin/idea.png"
+
+    sed -i 's/-Xms.*/-Xms256/' "$HOME/opt/IntelliJ-CE/bin/idea64.vmoptions"
+    sed -i 's/-Xmx.*/-Xmx1024/' "$HOME/opt/IntelliJ-CE/bin/idea64.vmoptions"
+
+    create_sc "IntelliJ-CE" "IDEA IntelliJ Community" "$VERSION_INTELLIJ" \
+    "$EXEC" "Development" "Java, JEE, JSE, IDE, Groovy, Scala, Andoid" \
+    "$ICON" "128"
 fi
 
 if [ ! -d "$HOME/opt/apache-maven-$VERSION_MVN32" ] ; then
