@@ -123,7 +123,7 @@ function create_sc(){
     echo "[Desktop Entry]" >> $DESKTOP_FILE
     echo "Version=$PVERSION" >> $DESKTOP_FILE
     echo "Encoding=UTF-8" >> $DESKTOP_FILE
-    echo "Name=$PSNAME" >> $DESKTOP_FILE
+    echo "Name=$PNAME" >> $DESKTOP_FILE
     echo "Keywords=$PKEYS" >> $DESKTOP_FILE
     echo "GenericName=$PNAME" >> $DESKTOP_FILE
     echo "Type=Application" >> $DESKTOP_FILE
@@ -438,10 +438,11 @@ if [ ! -d "$HOME/opt/IntelliJ-CE" ] ; then
     EXEC="$HOME/opt/IntelliJ-CE/bin/idea.sh"
     ICON="$HOME/opt/IntelliJ-CE/bin/idea.png"
 
-    sed -i 's/-Xms.*/-Xms256/' "$HOME/opt/IntelliJ-CE/bin/idea64.vmoptions"
-    sed -i 's/-Xmx.*/-Xmx1024/' "$HOME/opt/IntelliJ-CE/bin/idea64.vmoptions"
+    cp $HOME/opt/IntelliJ-CE/bin/idea64.vmoptions $HOME/opt/IntelliJ-CE/bin/idea64.vmoptions.original
+    sed -i 's/-Xms.*/-Xms256m/' "$HOME/opt/IntelliJ-CE/bin/idea64.vmoptions"
+    sed -i 's/-Xmx.*/-Xmx1024m/' "$HOME/opt/IntelliJ-CE/bin/idea64.vmoptions"
 
-    create_sc "IntelliJ-CE" "IDEA IntelliJ Community" "$VERSION_INTELLIJ" \
+    create_sc "IntelliJ-CE" "IDEA IntelliJ Community Edition" "$VERSION_INTELLIJ" \
     "$EXEC" "Development" "Java, JEE, JSE, IDE, Groovy, Scala, Andoid" \
     "$ICON" "128"
 fi
