@@ -25,6 +25,11 @@ VERSION_MVN32=3.2.5
 FILE_MVN32=apache-maven-$VERSION_MVN32-bin.tar.gz
 URL_MVN32="https://archive.apache.org/dist/maven/maven-3/$VERSION_MVN32/binaries/$FILE_MVN32"
 
+#https://archive.apache.org/dist/maven/maven-3/3.2.5/binaries/apache-maven-3.2.5-bin.tar.gz
+VERSION_MVN35=3.5.0
+FILE_MVN35=apache-maven-$VERSION_MVN35-bin.tar.gz
+URL_MVN35="https://archive.apache.org/dist/maven/maven-3/$VERSION_MVN35/binaries/$FILE_MVN35"
+
 #http://www-us.apache.org/dist/axis/axis2/java/core/1.7.4/axis2-1.7.4-bin.zip
 VERSION_AXIS2=1.7.6
 FILE_AXIS2=axis2-$VERSION_AXIS2-bin.zip
@@ -179,12 +184,12 @@ if [ ! -f "/etc/apt/sources.list.d/docker.list" ]; then
 fi
 
 #Spotify
-if [ ! -f "/etc/apt/sources.list.d/spotify.list" ]; then
-    # 1. Add the Spotify repository signing key to be able to verify downloaded packages
-    sudo apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys BBEBDCB318AD50EC6865090613B00F1FD2C19886
-    # 2. Add the Spotify repository
-    echo deb http://repository.spotify.com stable non-free | sudo tee /etc/apt/sources.list.d/spotify.list
-fi
+# if [ ! -f "/etc/apt/sources.list.d/spotify.list" ]; then
+#     # 1. Add the Spotify repository signing key to be able to verify downloaded packages
+#     sudo apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys BBEBDCB318AD50EC6865090613B00F1FD2C19886
+#     # 2. Add the Spotify repository
+#     echo deb http://repository.spotify.com stable non-free | sudo tee /etc/apt/sources.list.d/spotify.list
+# fi
 
 #RabbitVCS
 ## sudo add-apt-repository ppa:rabbitvcs/ppa -y
@@ -474,7 +479,7 @@ fi
 if [ ! -d "$HOME/opt/apache-maven-$VERSION_MVN32" ] ; then
   echo
   echo $SEPARATOR
-  echo "MAVEN ................."
+  echo "MAVEN 3.2.5 ................."
   echo $SEPARATOR
 
     if [ ! -f "$FILE_MVN32" ]; then
@@ -485,17 +490,45 @@ if [ ! -d "$HOME/opt/apache-maven-$VERSION_MVN32" ] ; then
     mv apache-maven-$VERSION_MVN32/ $HOME/opt
 
     ## ADD
-    MVN="MVN_HOME=~/opt/apache-maven-$VERSION_MVN32"
-    if ! grep -q "$MVN" ~/.profile; then
+    MVN32="MVN32_HOME=~/opt/apache-maven-$VERSION_MVN32"
+    if ! grep -q "$MVN32" ~/.profile; then
         echo "" >> ~/.profile
-        echo "export $MVN" >> ~/.profile
-        echo "PATH=\"\$PATH:\$MVN_HOME/bin\"" >> ~/.profile
-        echo "MAVEN SET"
+        echo "export $MVN32" >> ~/.profile
+        #echo "PATH=\"\$PATH:\$MVN32_HOME/bin\"" >> ~/.profile
+        echo "MAVEN 3.2.5 SET"
     fi
 
     #test
     source $HOME/.profile
-    mvn -version
+    $MVN32/bin/mvn -version
+fi
+
+if [ ! -d "$HOME/opt/apache-maven-$VERSION_MVN35" ] ; then
+  echo
+  echo $SEPARATOR
+  echo "MAVEN 3.5.0 ................."
+  echo $SEPARATOR
+
+    if [ ! -f "$FILE_MVN35" ]; then
+        echo "    $URL_MVN35"
+        curl -o $FILE_MVN35 -fSL $URL_MVN35
+    fi
+    tar -zxf $FILE_MVN35
+    mv apache-maven-$VERSION_MVN35/ $HOME/opt
+
+    ## ADD
+    MVN35="MVN35_HOME=~/opt/apache-maven-$VERSION_MVN35"
+    if ! grep -q "$MVN35" ~/.profile; then
+        echo "" >> ~/.profile
+        echo "export $MVN35" >> ~/.profile
+        echo "export MVN_HOME=\$MVN35_HOME" >> ~/.profile
+        echo "PATH=\"\$PATH:\$MVN_HOME/bin\"" >> ~/.profile
+        echo "MAVEN 3.5.0 SET"
+    fi
+
+    #test
+    source $HOME/.profile
+    $MVN35/bin/mvn -version
 fi
 
 if [ ! -d "$HOME/opt/axis2-$VERSION_AXIS2" ] ; then
