@@ -10,13 +10,6 @@
 SEPARATOR="======================================================"
 
 #Download versions
-VERSION_HAROOPAD=v0.13.1-x64
-FILE_HAROOPAD="haroopad-$VERSION_HAROOPAD.deb"
-URL_HAROOPAD="https://bitbucket.org/rhiokim/haroopad-download/downloads/$FILE_HAROOPAD"
-
-VERSION_REMARKABLE=_1.87_all
-FILE_REMARKABLE="remarkable$VERSION_REMARKABLE.deb"
-URL_REMARKABLE="https://remarkableapp.github.io/files/$FILE_REMARKABLE"
 
 #https://atom-installer.github.com/v1.13.0/atom-amd64.deb
 FILE_ATOM=atom-amd64.deb
@@ -33,7 +26,7 @@ FILE_MVN32=apache-maven-$VERSION_MVN32-bin.tar.gz
 URL_MVN32="https://archive.apache.org/dist/maven/maven-3/$VERSION_MVN32/binaries/$FILE_MVN32"
 
 #http://www-us.apache.org/dist/axis/axis2/java/core/1.7.4/axis2-1.7.4-bin.zip
-VERSION_AXIS2=1.7.4
+VERSION_AXIS2=1.7.6
 FILE_AXIS2=axis2-$VERSION_AXIS2-bin.zip
 URL_AXIS2="http://www-us.apache.org/dist/axis/axis2/java/core/$VERSION_AXIS2/$FILE_AXIS2"
 
@@ -78,10 +71,10 @@ VERSION_JAVADEC=1.4.0
 FILE_JAVADEC=jd-gui_$VERSION_JAVADEC.jar
 URL_JAVADEC="https://github.com/java-decompiler/jd-gui/releases/download/v$VERSION_JAVADEC/$FILE_JAVADEC"
 
-#https://dl.google.com/dl/android/studio/ide-zips/2.3.0.8/android-studio-ide-162.3764568-linux.zip?hl=es-419
-VERSION_ANDSTUDIO=2.3.0.8
-FILE_ANDSTUDIO=android-studio-ide-162.3764568-linux.zip
-URL_ANDSTUDIO="https://dl.google.com/dl/android/studio/ide-zips/$VERSION_ANDSTUDIO/$FILE_ANDSTUDIO?hl=es-419"
+#https://dl.google.com/dl/android/studio/ide-zips/2.3.3.0/android-studio-ide-162.4069837-linux.zip
+VERSION_ANDSTUDIO=2.3.3.0
+FILE_ANDSTUDIO=android-studio-ide-162.4069837-linux.zip
+URL_ANDSTUDIO="https://dl.google.com/dl/android/studio/ide-zips/$VERSION_ANDSTUDIO/$FILE_ANDSTUDIO"
 
 #https://dl.google.com/android/repository/tools_r25.2.3-linux.zip
 VERSION_ANDTOOLS=r25.2.3
@@ -98,10 +91,15 @@ VERSION_GRADLE=3.4.1
 FILE_GRADLE=gradle-$VERSION_GRADLE-all.zip
 URL_GRADLE="https://services.gradle.org/distributions/$FILE_GRADLE"
 
-#https://download-cf.jetbrains.com/idea/ideaIC-2017.1.3-no-jdk.tar.gz
-VERSION_INTELLIJ=2017.1.3-no-jdk
-FILE_INTELLIJ="ideaIC-$VERSION_INTELLIJ.tar.gz"
-URL_INTELLIJ="https://download-cf.jetbrains.com/idea/$FILE_INTELLIJ"
+#https://download-cf.jetbrains.com/idea/ideaIU-2017.2.3-no-jdk.tar.gz
+VERSION_INTELLIJ_U=2017.2.3-no-jdk
+FILE_INTELLIJ_U="ideaIU-$VERSION_INTELLIJ_U.tar.gz"
+URL_INTELLIJ_U="https://download-cf.jetbrains.com/idea/$FILE_INTELLIJ_U"
+
+#https://download-cf.jetbrains.com/idea/ideaIC-2017.2.3-no-jdk.tar.gz
+VERSION_INTELLIJ_C=2017.2.3-no-jdk
+FILE_INTELLIJ_C="ideaIC-$VERSION_INTELLIJ_C.tar.gz"
+URL_INTELLIJ_C="https://download-cf.jetbrains.com/idea/$FILE_INTELLIJ_C"
 
 function create_sc(){
     PSNAME=$1
@@ -421,17 +419,43 @@ EOF
     rm $DESKTOP_FILE
 fi
 
+if [ ! -d "$HOME/opt/IntelliJ-Ultimate" ] ; then
+    echo
+    echo $SEPARATOR
+    echo "IntelliJ Ultimate INSTALLER ............."
+    echo $SEPARATOR
+    if [ ! -f "$FILE_INTELLIJ_U" ]; then
+        echo "    $URL_INTELLIJ_U"
+        curl -o $FILE_INTELLIJ_U -fSL $URL_INTELLIJ_U
+    fi
+    mkdir -p $HOME/opt/IntelliJ-Ultimate
+    tar -zxf $FILE_INTELLIJ_U
+    mv idea-IU*/* $HOME/opt/IntelliJ-Ultimate/
+    rm -rf idea-IU*/
+
+    EXEC="$HOME/opt/IntelliJ-Ultimate/bin/idea.sh"
+    ICON="$HOME/opt/IntelliJ-Ultimate/bin/idea.png"
+
+    cp $HOME/opt/IntelliJ-Ultimate/bin/idea64.vmoptions $HOME/opt/IntelliJ-Ultimate/bin/idea64.vmoptions.original
+    sed -i 's/-Xms.*/-Xms256m/' "$HOME/opt/IntelliJ-Ultimate/bin/idea64.vmoptions"
+    sed -i 's/-Xmx.*/-Xmx1024m/' "$HOME/opt/IntelliJ-Ultimate/bin/idea64.vmoptions"
+
+    create_sc "IntelliJ-Ultimate" "IDEA IntelliJ Ultimate Edition" "$VERSION_INTELLIJ_U" \
+    "$EXEC" "Development" "Java, JEE, JSE, IDE, Groovy, Scala, Android" \
+    "$ICON" "128"
+fi
+
 if [ ! -d "$HOME/opt/IntelliJ-CE" ] ; then
     echo
     echo $SEPARATOR
-    echo "IntelliJ INSTALLER ............."
+    echo "IntelliJ CE INSTALLER ............."
     echo $SEPARATOR
-    if [ ! -f "$FILE_INTELLIJ" ]; then
-        echo "    $URL_INTELLIJ"
-        curl -o $FILE_INTELLIJ -fSL $URL_INTELLIJ
+    if [ ! -f "$FILE_INTELLIJ_C" ]; then
+        echo "    $URL_INTELLIJ_C"
+        curl -o $FILE_INTELLIJ_C -fSL $URL_INTELLIJ_C
     fi
     mkdir -p $HOME/opt/IntelliJ-CE
-    tar -zxf $FILE_INTELLIJ
+    tar -zxf $FILE_INTELLIJ_C
     mv idea-IC*/* $HOME/opt/IntelliJ-CE/
     rm -rf idea-IC*/
 
@@ -442,8 +466,8 @@ if [ ! -d "$HOME/opt/IntelliJ-CE" ] ; then
     sed -i 's/-Xms.*/-Xms256m/' "$HOME/opt/IntelliJ-CE/bin/idea64.vmoptions"
     sed -i 's/-Xmx.*/-Xmx1024m/' "$HOME/opt/IntelliJ-CE/bin/idea64.vmoptions"
 
-    create_sc "IntelliJ-CE" "IDEA IntelliJ Community Edition" "$VERSION_INTELLIJ" \
-    "$EXEC" "Development" "Java, JEE, JSE, IDE, Groovy, Scala, Andoid" \
+    create_sc "IntelliJ-CE" "IDEA IntelliJ Community Edition" "$VERSION_INTELLIJ_C" \
+    "$EXEC" "Development" "Java, JEE, JSE, IDE, Groovy, Scala, Android" \
     "$ICON" "128"
 fi
 
@@ -486,7 +510,7 @@ if [ ! -d "$HOME/opt/axis2-$VERSION_AXIS2" ] ; then
         curl -o $FILE_AXIS2 -fSL $URL_AXIS2
     fi
     unzip -q $FILE_AXIS2
-    mv axis2-1.7.4/ $HOME/opt
+    mv axis2-$VERSION_AXIS2/ $HOME/opt
 
     ## ADD
     AXIS2="AXIS2_HOME=~/opt/axis2-$VERSION_AXIS2"
@@ -506,17 +530,6 @@ echo
 echo $SEPARATOR
 echo "OTROS ................."
 echo $SEPARATOR
-
-#MarkDown
-if ! hash haroopad 2>/dev/null; then
-    echo "HAROOPAD ............."
-
-    if [ ! -f "$FILE_HAROOPAD" ]; then
-        echo "    $URL_HAROOPAD"
-        curl -o $FILE_HAROOPAD -fSL $URL_HAROOPAD
-    fi
-    sudo dpkg -i $FILE_HAROOPAD
-fi
 
 if ! hash atom 2>/dev/null; then
     echo "ATOM ............."
@@ -549,43 +562,14 @@ if [ ! -d "$HOME/opt/postman" ] ; then
         mv -f postman/Postman postman/postman
         mv -f postman/ $HOME/opt
 
-        DESKTOP_FILE=postman-$VERSION_POSTMAN.desktop
-        ICON_PATH=$HOME/opt/postman/resources/app/assets/icon.png
+        ICON_PATH="$HOME/opt/postman/resources/app/assets/icon.png"
+        EXEC="$HOME/opt/postman/postman"
 
-cat << EOF > $DESKTOP_FILE
-[Desktop Entry]
-Version=$VERSION_POSTMAN
-Encoding=UTF-8
-Name=POSTMAN
-Keywords=post;json, rest
-GenericName=POSTMAN
-Type=Application
-Categories=Development
-Terminal=false
-StartupNotify=true
-Exec="$HOME/opt/postman/postman"
-Icon=$ICON_PATH
-X-Ayatana-Desktop-Shortcuts=NewWindow;
-EOF
-
-# seems necessary to refresh immediately:
-chmod 644 $DESKTOP_FILE
-
-xdg-desktop-menu install $DESKTOP_FILE
-xdg-icon-resource install --size 128 "$ICON_PATH" "postman-$VERSION_POSTMAN"
-
-rm $DESKTOP_FILE
+        create_sc "POSTMAN" "postman-$VERSION_POSTMAN" "$VERSION_POSTMAN" \
+        "$EXEC" "Development" "post;json, rest" \
+        "$ICON_PATH" "128"
 
     fi
-fi
-
-if ! hash remarkable 2>/dev/null; then
-     echo "REMARKABLE ..........."
-     if [ ! -f "$FILE_REMARKABLE" ]; then
-         echo "    $URL_REMARKABLE"
-         curl -o $FILE_REMARKABLE -fSL $URL_REMARKABLE
-     fi
-     sudo dpkg -i $FILE_REMARKABLE
 fi
 
 if ! hash subl 2>/dev/null; then
@@ -665,32 +649,13 @@ if [ ! -d "$HOME/opt/android-studio" ] ; then
     unzip -q $FILE_ANDSTUDIO
     mv android-studio/ $HOME/opt
 
-    DESKTOP_FILE=android-studio-$VERSION_ANDSTUDIO.desktop
+    EXEC="$HOME/opt/android-studio/bin/studio.sh"
     ICON_PATH="$HOME/opt/android-studio/bin/studio.png"
 
-cat << EOF > $DESKTOP_FILE
-[Desktop Entry]
-Version=$VERSION_ANDSTUDIO
-Encoding=UTF-8
-Name=Android Studio
-Keywords=Java, JEE, JSE, IDE
-GenericName=Android Studio
-Type=Application
-Categories=Development
-Terminal=false
-StartupNotify=true
-Exec="$HOME/opt/android-studio/bin/studio.sh"
-Icon=$ICON_PATH
-X-Ayatana-Desktop-Shortcuts=NewWindow;
-EOF
+    create_sc "android-studio-$VERSION_ANDSTUDIO" "Android Studio" "$VERSION_ANDSTUDIO" \
+        "$EXEC" "Development" "Java, JEE, JSE, IDE, Mobile, Android, Java" \
+        "$ICON_PATH" "128"
 
-    # seems necessary to refresh immediately:
-    chmod 644 $DESKTOP_FILE
-
-    xdg-desktop-menu install $DESKTOP_FILE
-    xdg-icon-resource install --size 128 "$ICON_PATH" "android-studio-$VERSION_ANDSTUDIO"
-
-    rm $DESKTOP_FILE
 fi
 
 if [ ! -d "$HOME/opt/gradle-$VERSION_GRADLE" ] ; then
