@@ -25,9 +25,7 @@ echo
 echo "PUBLIC KEYS..."
 ls $HOME/.ssh/*.pub
 
-if [ -z "xclip" ]; then
-    sudo apt-get -y install xclip
-fi
+type xclip >/dev/null 2>&1 || { sudo apt install -y xclip; }
 
 xclip -sel clip < $SSH_KEYFILE.pub
 
@@ -62,6 +60,14 @@ if ! grep -q "bitbucket" $sshcfile; then
     echo "#   ProxyCommand corkscrew %h %p" >> $sshcfile
     echo "" >> $sshcfile
 fi
+if ! grep -q "gitlab" $sshcfile; then
+    echo "CFG GL"
+    echo "Host gitlab.com" >> $sshcfile
+    echo "    Hostname altssh.gitlab.com" >> $sshcfile
+    echo "    Port 443" >> $sshcfile
+    echo "#   ProxyCommand corkscrew %h %p" >> $sshcfile
+    echo "" >> $sshcfile
+fi
 
 echo $SEPARATOR
 cat $sshcfile
@@ -77,4 +83,10 @@ echo
 echo "TEST BB   ssh -i $SSH_KEYFILE.pub -T git@bitbucket.org"
 echo $SEPARATOR
 ssh -i $SSH_KEYFILE.pub -T git@bitbucket.org
+echo
+
+echo
+echo "TEST GL   ssh -i $SSH_KEYFILE.pub -T git@gitlab.com"
+echo $SEPARATOR
+ssh -i $SSH_KEYFILE.pub -T git@gitlab.com
 echo
