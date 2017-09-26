@@ -42,4 +42,5 @@ git filter-branch -f --env-filter '
     
 ' HEAD
 
+echo "============================================= "
 git log -5
