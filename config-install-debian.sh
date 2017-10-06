@@ -16,8 +16,8 @@ FILE_ATOM=atom-amd64.deb
 URL_ATOM="https://atom.io/download/deb"
 
 #https://www.getpostman.com/app/download/linux64
-VERSION_POSTMAN=4.10.7
-FILE_POSTMAN=postman-linux-x64.tar.gz
+VERSION_POSTMAN=5.2.1
+FILE_POSTMAN="postman-linux-x64-$VERSION_POSTMAN.tar.gz"
 URL_POSTMAN="https://dl.pstmn.io/download/latest/linux64"
 
 #https://archive.apache.org/dist/maven/maven-3/3.2.5/binaries/apache-maven-3.2.5-bin.tar.gz
@@ -106,6 +106,21 @@ VERSION_INTELLIJ_C=2017.2.3-no-jdk
 FILE_INTELLIJ_C="ideaIC-$VERSION_INTELLIJ_C.tar.gz"
 URL_INTELLIJ_C="https://download-cf.jetbrains.com/idea/$FILE_INTELLIJ_C"
 
+#https://download-cf.jetbrains.com/datagrip/datagrip-2017.2.2.tar.gz
+VERSION_DATAGRIP=2017.2.2
+FILE_DATAGRIP="datagrip-$VERSION_DATAGRIP.tar.gz"
+URL_DATAGRIP="https://download-cf.jetbrains.com/datagrip/$FILE_DATAGRIP"
+
+#file://media/ccolina/DATA_MINT/Downloads/sqldeveloper-17.2.0.188.1159-no-jre.zip
+VERSION_ORA_SQLDEVELOPER=17.2.0
+FILE_ORA_SQLDEVELOPER="sqldeveloper-17.2.0.188.1159-no-jre.zip"
+URL_ORA_SQLDEVELOPER="/media/ccolina/DATA_MINT/Downloads/$FILE_ORA_SQLDEVELOPER"
+
+#http://mirror.predic8.com/membrane/monitor/linux-x86/membrane-monitor-linux-x86-gtk-3.2.2.tar.gz
+VERSION_MEMBRANE=3.2.2
+FILE_MEMBRANE="membrane-monitor-linux-x86-gtk-$VERSION_MEMBRANE.tar.gz"
+URL_MEMBRANE="http://mirror.predic8.com/membrane/monitor/linux-x86/$FILE_MEMBRANE"
+
 function create_sc(){
     PSNAME=$1
     PNAME=$2
@@ -116,7 +131,7 @@ function create_sc(){
     PICON=$7
     PICON_SIZE=$8
 
-    DESKTOP_FILE=$PSNAME-$VERSION_ECLIPSE_INST.desktop
+    DESKTOP_FILE=$PSNAME-$PVERSION.desktop
 
     if [ ! -f "$DESKTOP_FILE" ] ; then
         rm -f $DESKTOP_FILE
@@ -136,7 +151,12 @@ function create_sc(){
     echo "X-Ayatana-Desktop-Shortcuts=NewWindow;" >> $DESKTOP_FILE
 
     # seems necessary to refresh immediately:
-    chmod 644 $DESKTOP_FILE
+    chmod 755 $DESKTOP_FILE
+
+    echo $DESKTOP_FILE
+    echo "$SEPARATOR"
+    cat $DESKTOP_FILE
+    echo "$SEPARATOR"
 
     xdg-desktop-menu install $DESKTOP_FILE
     xdg-icon-resource install --size $PICON_SIZE "$PICON" "$PSNAME-$PVERSION"
@@ -476,6 +496,81 @@ if [ ! -d "$HOME/opt/IntelliJ-CE" ] ; then
     "$ICON" "128"
 fi
 
+if [ ! -d "$HOME/opt/DataGrip" ] ; then
+    echo
+    echo $SEPARATOR
+    echo "DataGrip INSTALLER ............."
+    echo $SEPARATOR
+    if [ ! -f "$FILE_DATAGRIP" ]; then
+        echo "    $URL_DATAGRIP"
+        curl -o $FILE_DATAGRIP -fSL $URL_DATAGRIP
+    fi
+    mkdir -p $HOME/opt/DataGrip
+    tar -zxf $FILE_DATAGRIP
+    mv DataGrip-*/* $HOME/opt/DataGrip/
+    rm -rf DataGrip-*/
+
+    EXEC="$HOME/opt/DataGrip/bin/datagrip.sh"
+    ICON="$HOME/opt/DataGrip/bin/datagrip.png"
+
+    cp $HOME/opt/DataGrip/bin/datagrip64.vmoptions $HOME/opt/DataGrip/bin/datagrip64.vmoptions.original
+    sed -i 's/-Xms.*/-Xms256m/' "$HOME/opt/DataGrip/bin/datagrip64.vmoptions"
+    sed -i 's/-Xmx.*/-Xmx1024m/' "$HOME/opt/DataGrip/bin/datagrip64.vmoptions"
+
+    create_sc "DataGrip" "JetBrains DataGrip" "$VERSION_DATAGRIP" \
+    "$EXEC" "Development" \
+    "SQL, Database, DML, DDL, Oracle, MySQL, Postgres, PostgreSQL,, IBM, DB2, SQL Server, Sybase, SQLite, Derby, HSQLDB, H2" \
+    "$ICON" "128"
+fi
+
+if [ ! -d "$HOME/opt/SQLDeveloper" ] ; then
+    echo
+    echo $SEPARATOR
+    echo "SQLDeveloper INSTALLER ............."
+    echo $SEPARATOR
+    if [ ! -f "$FILE_" ]; then
+        echo "    $URL_ORA_SQLDEVELOPER"
+        #curl -o $FILE_ORA_SQLDEVELOPER -fSL $URL_ORA_SQLDEVELOPER
+        cp -f $URL_ORA_SQLDEVELOPER $FILE_ORA_SQLDEVELOPER
+    fi
+    mkdir -p $HOME/opt/SQLDeveloper
+    unzip -q $FILE_ORA_SQLDEVELOPER
+    mv sqldeveloper*/* $HOME/opt/SQLDeveloper/
+    rm -rf SQLDeveloper-*/
+
+    EXEC="$HOME/opt/SQLDeveloper/sqldeveloper.sh"
+    ICON="$HOME/opt/SQLDeveloper/sqldeveloper/doc/icon.png"
+
+    create_sc "SQLDeveloper" "ORACLE SQLDeveloper" "$VERSION_ORA_SQLDEVELOPER" \
+    "$EXEC" "Development" \
+    "SQL, Database, DML, DDL, Oracle" \
+    "$ICON" "59"
+fi
+
+if [ ! -d "$HOME/opt/Membrane" ] ; then
+    echo
+    echo $SEPARATOR
+    echo "Membrane INSTALLER ............."
+    echo $SEPARATOR
+    if [ ! -f "$FILE_MEMBRANE" ]; then
+        echo "    $URL_MEMBRANE"
+        curl -o $FILE_MEMBRANE -fSL $URL_MEMBRANE
+        sudo apt-get install libgtk-3-dev
+    fi
+    mkdir -p $HOME/opt/Membrane
+    tar -zxf $FILE_MEMBRANE
+    mv membrane-monitor-*/* $HOME/opt/Membrane/
+    rm -rf membrane-monitor-*/
+
+    EXEC="$HOME/opt/Membrane/membrane-monitor"
+    ICON="$HOME/opt/Membrane/icon.xpm"
+
+    create_sc "Membrane" "Oracle Membrane Monitor" "$VERSION_MEMBRANE" \
+    "$EXEC" "Development" \
+    "SOA, HTTP Proxy, Webservices, XML, json" \
+    "$ICON" "48"
+fi
+
 if [ ! -d "$HOME/opt/apache-maven-$VERSION_MVN32" ] ; then
   echo
   echo $SEPARATOR
@@ -598,8 +693,8 @@ if [ ! -d "$HOME/opt/postman" ] ; then
         ICON_PATH="$HOME/opt/postman/resources/app/assets/icon.png"
         EXEC="$HOME/opt/postman/postman"
 
-        create_sc "POSTMAN" "postman-$VERSION_POSTMAN" "$VERSION_POSTMAN" \
-        "$EXEC" "Development" "post;json, rest" \
+        create_sc "POSTMAN" "POSTMAN $VERSION_POSTMAN" "$VERSION_POSTMAN" \
+        "$EXEC" "Development" "post;get;json, rest" \
         "$ICON_PATH" "128"
 
     fi
@@ -717,6 +812,18 @@ if [ ! -d "$HOME/opt/gradle-$VERSION_GRADLE" ] ; then
     source $HOME/.profile
     gradle -v
 fi
+
+#ALIASES
+ALIAS_DOKER_STATS="alias docker-stats='docker stats $(docker ps --format={{.Names}})'"
+
+if ! grep -q "$ALIAS_DOKER_STATS" ~/.profile; then
+    echo "" >> ~/.profile
+    echo "$ALIAS_DOKER_STATS" >> ~/.profile
+    echo "DOCKER STATS ALIAS"
+fi
+
+#test
+source $HOME/.profile
 
 #CLEAN ALL
 cd $CURR_DIR
