@@ -46,10 +46,6 @@ git config --local --replace-all user.email "$newuseremail"
 #git log -10
 
 git filter-branch -f --env-filter '
-    #ps -p $$
-    #echo "<<<omail='$olduseremail' nmail='$newuseremail' oname='$oldusername' nmail='$newusername'"
-    #echo "=== $GIT_AUTHOR_EMAIL $GIT_COMMITTER_EMAIL"
-    #[ -n "$olduseremail" ] && [ -n "$newuseremail" ] && 
     
     [ -n "$olduseremail" ] && [ -n "$newuseremail" ] && [ "$GIT_AUTHOR_EMAIL" = "$olduseremail" ] && \
     GIT_AUTHOR_EMAIL=$newuseremail; export GIT_AUTHOR_EMAIL;
