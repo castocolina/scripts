@@ -16,7 +16,7 @@ FILE_ATOM=atom-amd64.deb
 URL_ATOM="https://atom.io/download/deb"
 
 #https://www.getpostman.com/app/download/linux64
-VERSION_POSTMAN=5.2.1
+VERSION_POSTMAN=5.3.0
 FILE_POSTMAN="postman-linux-x64-$VERSION_POSTMAN.tar.gz"
 URL_POSTMAN="https://dl.pstmn.io/download/latest/linux64"
 
