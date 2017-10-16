@@ -814,12 +814,18 @@ if [ ! -d "$HOME/opt/gradle-$VERSION_GRADLE" ] ; then
 fi
 
 #ALIASES
-ALIAS_DOKER_STATS="alias docker-stats='docker stats $(docker ps --format={{.Names}})'"
-
+ALIAS_DOKER_STATS="alias docker-stats='docker stats \$(docker ps --format={{.Names}})'"
 if ! grep -q "$ALIAS_DOKER_STATS" ~/.profile; then
     echo "" >> ~/.profile
     echo "$ALIAS_DOKER_STATS" >> ~/.profile
     echo "DOCKER STATS ALIAS"
+fi
+
+ALIAS_MVN32="alias mvn32='~/opt/apache-maven-$VERSION_MVN32/bin/mvn'"
+if ! grep -q "$ALIAS_MVN32" ~/.profile; then
+    echo "" >> ~/.profile
+    echo "$ALIAS_MVN32" >> ~/.profile
+    echo "MAVEN $VERSION_MVN32 ALIAS"
 fi
 
 #test
