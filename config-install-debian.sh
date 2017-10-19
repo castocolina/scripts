@@ -815,21 +815,42 @@ fi
 
 #ALIASES
 ALIAS_DOKER_STATS="alias docker-stats='docker stats \$(docker ps --format={{.Names}})'"
-if ! grep -q "$ALIAS_DOKER_STATS" ~/.profile; then
-    echo "" >> ~/.profile
-    echo "$ALIAS_DOKER_STATS" >> ~/.profile
+if ! grep -q "$ALIAS_DOKER_STATS" ~/.bashrc; then
+    echo "" >> ~/.bashrc
+    echo "$ALIAS_DOKER_STATS" >> ~/.bashrc
     echo "DOCKER STATS ALIAS"
 fi
 
 ALIAS_MVN32="alias mvn32='~/opt/apache-maven-$VERSION_MVN32/bin/mvn'"
-if ! grep -q "$ALIAS_MVN32" ~/.profile; then
-    echo "" >> ~/.profile
-    echo "$ALIAS_MVN32" >> ~/.profile
+if ! grep -q "$ALIAS_MVN32" ~/.bashrc; then
+    echo "" >> ~/.bashrc
+    echo "$ALIAS_MVN32" >> ~/.bashrc
     echo "MAVEN $VERSION_MVN32 ALIAS"
 fi
 
+ALIAS_MVN32_JAVA6="alias mvn32-j6='JAVA_HOME=$JAVA6_HOME;~/opt/apache-maven-$VERSION_MVN32/bin/mvn'"
+if ! grep -q "$ALIAS_MVN32_JAVA6" ~/.bashrc; then
+    echo "" >> ~/.bashrc
+    echo "$ALIAS_MVN32_JAVA6" >> ~/.bashrc
+    echo "MAVEN $VERSION_MVN32 whit JAVA 6 (mvn32-j6) ALIAS"
+fi
+
+ALIAS_MVN35_JAVA7="alias mvn35-j7='JAVA_HOME=$JAVA7_HOME;~/opt/apache-maven-$VERSION_MVN35/bin/mvn'"
+if ! grep -q "$ALIAS_MVN35_JAVA7" ~/.bashrc; then
+    echo "" >> ~/.bashrc
+    echo "$ALIAS_MVN35_JAVA7" >> ~/.bashrc
+    echo "MAVEN $VERSION_MVN35 whit JAVA 7 (mvn35-j7) ALIAS"
+fi
+
+ALIAS_MVN35_JAVA8="alias mvn35-j8='JAVA_HOME=$JAVA8_HOME;~/opt/apache-maven-$VERSION_MVN35/bin/mvn'"
+if ! grep -q "$ALIAS_MVN35_JAVA8" ~/.bashrc; then
+    echo "" >> ~/.bashrc
+    echo "$ALIAS_MVN35_JAVA8" >> ~/.bashrc
+    echo "MAVEN $VERSION_MVN35 whit JAVA 8 (mvn35-j8) ALIAS"
+fi
+
 #test
-source $HOME/.profile
+source $HOME/.bashrc
 
 #CLEAN ALL
 cd $CURR_DIR
