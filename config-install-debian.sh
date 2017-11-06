@@ -15,8 +15,13 @@ SEPARATOR="======================================================"
 FILE_ATOM=atom-amd64.deb
 URL_ATOM="https://atom.io/download/deb"
 
+#http://get.code-industry.net/public/master-pdf-editor-4.3.61_qt5.amd64.deb
+VERSION_MASTER_PDF=4.3.61
+FILE_MASTER_PDF="master-pdf-editor-${VERSION_MASTER_PDF}_qt5.amd64.deb"
+URL_MASTER_PDF="http://get.code-industry.net/public/$FILE_MASTER_PDF"
+
 #https://www.getpostman.com/app/download/linux64
-VERSION_POSTMAN=5.3.0
+VERSION_POSTMAN=5.3.2
 FILE_POSTMAN="postman-linux-x64-$VERSION_POSTMAN.tar.gz"
 URL_POSTMAN="https://dl.pstmn.io/download/latest/linux64"
 
@@ -61,7 +66,7 @@ FILE_SOAPUI4=soapUI-x32-4_0_1.sh
 URL_SOAPUI4="http://smartbearsoftware.com/distrib/soapui/$VERSION_SOAPUI4/$FILE_SOAPUI4"
 
 #https://www.gitkraken.com/download/linux-deb
-VERSION_GITKRAKEN=2.5
+VERSION_GITKRAKEN=3.1.2
 FILE_GITKRAKEN=gitkraken-amd64.deb
 URL_GITKRAKEN="https://release.gitkraken.com/linux/$FILE_GITKRAKEN"
 
@@ -671,6 +676,21 @@ if ! hash atom 2>/dev/null; then
 
     if [ -f "$FILE_ATOM" ]; then
         sudo dpkg -i $FILE_ATOM
+    fi
+fi
+
+if ! hash masterpdfeditor4 2>/dev/null; then
+    echo "MASTER PDF EDITOR ............."
+
+    if [ ! -f "$FILE_MASTER_PDF" ]; then
+        echo "    $URL_MASTER_PDF"
+        touch $FILE_MASTER_PDF.tmp && chmod 400 $FILE_MASTER_PDF.tmp && rm -f $FILE_MASTER_PDF.tmp
+        curl -o $FILE_MASTER_PDF.tmp -fSL $URL_MASTER_PDF
+        mv -f $FILE_MASTER_PDF.tmp $FILE_MASTER_PDF
+    fi
+
+    if [ -f "$FILE_MASTER_PDF" ]; then
+        sudo dpkg -i $FILE_MASTER_PDF
     fi
 fi
 
