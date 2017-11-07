@@ -11,7 +11,7 @@ SEPARATOR="======================================================"
 
 #Download versions
 
-#https://atom-installer.github.com/v1.13.0/atom-amd64.deb
+#https://atom-installer.github.com/v1.22.0/atom-amd64.deb
 FILE_ATOM=atom-amd64.deb
 URL_ATOM="https://atom.io/download/deb"
 
@@ -40,18 +40,13 @@ VERSION_AXIS2=1.7.6
 FILE_AXIS2=axis2-$VERSION_AXIS2-bin.zip
 URL_AXIS2="http://www-us.apache.org/dist/axis/axis2/java/core/$VERSION_AXIS2/$FILE_AXIS2"
 
-#http://www.smartsvn.com/static/svn/download/smartsvn/smartsvn-linux-9_1_3.tar.gz
-VERSION_SMARTSVN=9_2_1
-FILE_SMARTSVN=smartsvn-linux-$VERSION_SMARTSVN.tar.gz
-URL_SMARTSVN="http://www.smartsvn.com/static/svn/download/smartsvn/$FILE_SMARTSVN"
-
 #https://releases.hashicorp.com/vagrant/1.9.3/vagrant_1.9.3_x86_64.deb
 VERSION_VAGRANT=1.9.3
 FILE_VAGRANT="vagrant_${VERSION_VAGRANT}_x86_64.deb"
 URL_VAGRANT="https://releases.hashicorp.com/vagrant/$VERSION_VAGRANT/$FILE_VAGRANT"
 
 #https://download.sublimetext.com/sublime-text_build-3126_amd64.deb
-VERSION_SUBLIME=3126_amd64
+VERSION_SUBLIME=3143_amd64
 FILE_SUBLIME=sublime-text_build-$VERSION_SUBLIME.deb
 URL_SUBLIME="https://download.sublimetext.com/$FILE_SUBLIME"
 
@@ -70,16 +65,10 @@ VERSION_GITKRAKEN=3.1.2
 FILE_GITKRAKEN=gitkraken-amd64.deb
 URL_GITKRAKEN="https://release.gitkraken.com/linux/$FILE_GITKRAKEN"
 
-#http://eclipse.c3sl.ufpr.br/oomph/epp/neon/R2a/eclipse-inst-linux64.tar.gz
-VERSION_ECLIPSE_INST=R2a
+#http://eclipse.c3sl.ufpr.br/oomph/epp/oxygen/R/eclipse-inst-linux64.tar.gz
+VERSION_ECLIPSE_INST=oxygen-R
 FILE_ECLIPSE_INST=eclipse-inst-linux64.tar.gz
-URL_ECLIPSE_INST="http://eclipse.c3sl.ufpr.br/oomph/epp/neon/$VERSION_ECLIPSE_INST/$FILE_ECLIPSE_INST"
-
-#https://github.com/java-decompiler/jd-gui/releases/download/v1.4.0/jd-gui_1.4.0-0_all.deb
-#https://github.com/java-decompiler/jd-gui/releases/download/v1.4.0/jd-gui-1.4.0.jar
-VERSION_JAVADEC=1.4.0
-FILE_JAVADEC=jd-gui_$VERSION_JAVADEC.jar
-URL_JAVADEC="https://github.com/java-decompiler/jd-gui/releases/download/v$VERSION_JAVADEC/$FILE_JAVADEC"
+URL_ECLIPSE_INST="http://eclipse.c3sl.ufpr.br/oomph/epp/oxygen/R/$FILE_ECLIPSE_INST"
 
 #https://dl.google.com/dl/android/studio/ide-zips/2.3.3.0/android-studio-ide-162.4069837-linux.zip
 VERSION_ANDSTUDIO=2.3.3.0
@@ -102,12 +91,12 @@ FILE_GRADLE=gradle-$VERSION_GRADLE-all.zip
 URL_GRADLE="https://services.gradle.org/distributions/$FILE_GRADLE"
 
 #https://download-cf.jetbrains.com/idea/ideaIU-2017.2.3-no-jdk.tar.gz
-VERSION_INTELLIJ_U=2017.2.3-no-jdk
+VERSION_INTELLIJ_U=2017.2.5-no-jdk
 FILE_INTELLIJ_U="ideaIU-$VERSION_INTELLIJ_U.tar.gz"
 URL_INTELLIJ_U="https://download-cf.jetbrains.com/idea/$FILE_INTELLIJ_U"
 
 #https://download-cf.jetbrains.com/idea/ideaIC-2017.2.3-no-jdk.tar.gz
-VERSION_INTELLIJ_C=2017.2.3-no-jdk
+VERSION_INTELLIJ_C=2017.2.5-no-jdk
 FILE_INTELLIJ_C="ideaIC-$VERSION_INTELLIJ_C.tar.gz"
 URL_INTELLIJ_C="https://download-cf.jetbrains.com/idea/$FILE_INTELLIJ_C"
 
@@ -120,11 +109,6 @@ URL_DATAGRIP="https://download-cf.jetbrains.com/datagrip/$FILE_DATAGRIP"
 VERSION_ORA_SQLDEVELOPER=17.2.0
 FILE_ORA_SQLDEVELOPER="sqldeveloper-17.2.0.188.1159-no-jre.zip"
 URL_ORA_SQLDEVELOPER="/media/ccolina/DATA_MINT/Downloads/$FILE_ORA_SQLDEVELOPER"
-
-#http://mirror.predic8.com/membrane/monitor/linux-x86/membrane-monitor-linux-x86-gtk-3.2.2.tar.gz
-VERSION_MEMBRANE=3.2.2
-FILE_MEMBRANE="membrane-monitor-linux-x86-gtk-$VERSION_MEMBRANE.tar.gz"
-URL_MEMBRANE="http://mirror.predic8.com/membrane/monitor/linux-x86/$FILE_MEMBRANE"
 
 function create_sc(){
     PSNAME=$1
@@ -246,18 +230,16 @@ if [ ! -d "/usr/lib/jvm/java-8-oracle" ]; then
     echo $SEPARATOR
 
     # oracle-java9-installer
-    sudo aptitude install -y python-software-properties oracle-java6-installer oracle-java8-installer
+    sudo aptitude install -y python-software-properties oracle-java8-installer oracle-java9-installer
     sudo update-alternatives --list java
     sudo update-alternatives --list javac
     java -version
     javac -version
-    #sudo update-alternatives --config java
-    #sudo update-alternatives --config javac
 
-    JAVA="JAVA_HOME=/usr/lib/jvm/java-8-oracle"
-    if ! grep -q "$JAVA" ~/.profile; then
+    JAVA8="JAVA_HOME=/usr/lib/jvm/java-8-oracle"
+    if ! grep -q "$JAVA8" ~/.profile; then
         echo "" >> ~/.profile
-        echo "export $JAVA" >> ~/.profile
+        echo "export $JAVA8" >> ~/.profile
         echo "PATH=\"\$PATH:\$JAVA_HOME/bin\"" >> ~/.profile
         echo "JAVA SET"
     fi
@@ -378,35 +360,6 @@ if ! hash gitkraken 2>/dev/null; then
     sudo dpkg -i $FILE_GITKRAKEN
 fi
 
-# if ! hash jd-gui 2>/dev/null; then
-#     echo
-#     echo $SEPARATOR
-#     echo "JAVA DECOMPILER .............."
-#     echo $SEPARATOR
-#     if [ ! -f "$FILE_JAVADEC" ]; then
-#         echo "    $URL_JAVADEC"
-#         curl -o $FILE_JAVADEC -fSL $URL_JAVADEC
-#     fi
-#     sudo dpkg -i $FILE_JAVADEC
-# fi
-
-if [ ! -d "$HOME/opt/smartsvn" ] ; then
-    echo
-    echo $SEPARATOR
-    echo "SMART SVN ............."
-    echo $SEPARATOR
-    if [ ! -f "$FILE_SMARTSVN" ]; then
-        echo "    $URL_SMARTSVN"
-        curl -o $FILE_SMARTSVN -fSL $URL_SMARTSVN
-    fi
-    tar -zxf $FILE_SMARTSVN
-    mv smartsvn/ $HOME/opt
-    cd $HOME/opt/smartsvn/bin/
-    sed -i '/MimeType=/d' add-menuitem.sh
-    bash add-menuitem.sh
-    cd $TMP_INSTALL_DIR
-fi
-
 if [ ! -d "$HOME/opt/eclipse-installer" ] ; then
     echo
     echo $SEPARATOR
@@ -418,35 +371,14 @@ if [ ! -d "$HOME/opt/eclipse-installer" ] ; then
     fi
     tar -zxf $FILE_ECLIPSE_INST
     mv eclipse-installer/ $HOME/opt
-    #echo "-vm" >> "$HOME/opt/eclipse-installer/eclipse-inst.ini"
-    #echo "/usr/lib/jvm/java-8-oracle/bin/javaw" >> "$HOME/opt/eclipse-installer/eclipse-inst.ini"
 
-    DESKTOP_FILE=eclipse-installer-$VERSION_ECLIPSE_INST.desktop
     ICON_PATH="$HOME/opt/eclipse-installer/icon.xpm"
+    EXEC="$HOME/opt/eclipse-installer/eclipse-inst"
 
-cat << EOF > $DESKTOP_FILE
-[Desktop Entry]
-Version=$VERSION_ECLIPSE_INST
-Encoding=UTF-8
-Name=Eclipse Installer
-Keywords=Java, JEE, JSE, IDE
-GenericName=Eclipse Installer
-Type=Application
-Categories=Development
-Terminal=false
-StartupNotify=true
-Exec="$HOME/opt/eclipse-installer/eclipse-inst"
-Icon=$ICON_PATH
-X-Ayatana-Desktop-Shortcuts=NewWindow;
-EOF
+    create_sc "Eclipse-Installer" "Eclipse Installer" "$VERSION_ECLIPSE_INST" \
+    "$EXEC" "Development" "Java, JEE, JSE, IDE" \
+    "$ICON_PATH" "128"
 
-    # seems necessary to refresh immediately:
-    chmod 644 $DESKTOP_FILE
-
-    xdg-desktop-menu install $DESKTOP_FILE
-    xdg-icon-resource install --size 128 "$ICON_PATH" "eclipse-inst-$VERSION_ECLIPSE_INST"
-
-    rm $DESKTOP_FILE
 fi
 
 if [ ! -d "$HOME/opt/IntelliJ-Ultimate" ] ; then
@@ -524,7 +456,7 @@ if [ ! -d "$HOME/opt/DataGrip" ] ; then
 
     create_sc "DataGrip" "JetBrains DataGrip" "$VERSION_DATAGRIP" \
     "$EXEC" "Development" \
-    "SQL, Database, DML, DDL, Oracle, MySQL, Postgres, PostgreSQL,, IBM, DB2, SQL Server, Sybase, SQLite, Derby, HSQLDB, H2" \
+    "SQL, Database, DML, DDL, Oracle, MySQL, Postgres, PostgreSQL, IBM, DB2, SQL Server, Sybase, SQLite, Derby, HSQLDB, H2" \
     "$ICON" "128"
 fi
 
@@ -533,47 +465,26 @@ if [ ! -d "$HOME/opt/SQLDeveloper" ] ; then
     echo $SEPARATOR
     echo "SQLDeveloper INSTALLER ............."
     echo $SEPARATOR
-    if [ ! -f "$FILE_" ]; then
+    if [ ! -f "$FILE_ORA_SQLDEVELOPER" ]; then
         echo "    $URL_ORA_SQLDEVELOPER"
         #curl -o $FILE_ORA_SQLDEVELOPER -fSL $URL_ORA_SQLDEVELOPER
-        cp -f $URL_ORA_SQLDEVELOPER $FILE_ORA_SQLDEVELOPER
+        #cp -f $URL_ORA_SQLDEVELOPER $FILE_ORA_SQLDEVELOPER
     fi
-    mkdir -p $HOME/opt/SQLDeveloper
-    unzip -q $FILE_ORA_SQLDEVELOPER
-    mv sqldeveloper*/* $HOME/opt/SQLDeveloper/
-    rm -rf SQLDeveloper-*/
+    
+    if [ -f "$FILE_ORA_SQLDEVELOPER" ]; then
+        mkdir -p $HOME/opt/SQLDeveloper
+        unzip -q $FILE_ORA_SQLDEVELOPER
+        mv sqldeveloper*/* $HOME/opt/SQLDeveloper/
+        rm -rf SQLDeveloper-*/
 
-    EXEC="$HOME/opt/SQLDeveloper/sqldeveloper.sh"
-    ICON="$HOME/opt/SQLDeveloper/sqldeveloper/doc/icon.png"
+        EXEC="$HOME/opt/SQLDeveloper/sqldeveloper.sh"
+        ICON="$HOME/opt/SQLDeveloper/sqldeveloper/doc/icon.png"
 
-    create_sc "SQLDeveloper" "ORACLE SQLDeveloper" "$VERSION_ORA_SQLDEVELOPER" \
-    "$EXEC" "Development" \
-    "SQL, Database, DML, DDL, Oracle" \
-    "$ICON" "59"
-fi
-
-if [ ! -d "$HOME/opt/Membrane" ] ; then
-    echo
-    echo $SEPARATOR
-    echo "Membrane INSTALLER ............."
-    echo $SEPARATOR
-    if [ ! -f "$FILE_MEMBRANE" ]; then
-        echo "    $URL_MEMBRANE"
-        curl -o $FILE_MEMBRANE -fSL $URL_MEMBRANE
-        sudo apt-get install libgtk-3-dev
+        create_sc "SQLDeveloper" "ORACLE SQLDeveloper" "$VERSION_ORA_SQLDEVELOPER" \
+        "$EXEC" "Development" \
+        "SQL, Database, DML, DDL, Oracle" \
+        "$ICON" "59"
     fi
-    mkdir -p $HOME/opt/Membrane
-    tar -zxf $FILE_MEMBRANE
-    mv membrane-monitor-*/* $HOME/opt/Membrane/
-    rm -rf membrane-monitor-*/
-
-    EXEC="$HOME/opt/Membrane/membrane-monitor"
-    ICON="$HOME/opt/Membrane/icon.xpm"
-
-    create_sc "Membrane" "Oracle Membrane Monitor" "$VERSION_MEMBRANE" \
-    "$EXEC" "Development" \
-    "SOA, HTTP Proxy, Webservices, XML, json" \
-    "$ICON" "48"
 fi
 
 if [ ! -d "$HOME/opt/apache-maven-$VERSION_MVN32" ] ; then
