@@ -110,6 +110,11 @@ VERSION_ORA_SQLDEVELOPER=17.2.0
 FILE_ORA_SQLDEVELOPER="sqldeveloper-17.2.0.188.1159-no-jre.zip"
 URL_ORA_SQLDEVELOPER="/media/ccolina/DATA_MINT/Downloads/$FILE_ORA_SQLDEVELOPER"
 
+#https://downloads.mongodb.com/linux/mongodb-linux-x86_64-enterprise-ubuntu1604-3.4.10.tgz
+VERSION_MONGODB34=3.4.10
+FILE_MONGODB34="mongodb-linux-x86_64-enterprise-ubuntu1604-$VERSION_MONGODB34.tgz"
+URL_MONGODB34="https://downloads.mongodb.com/linux/$FILE_MONGODB34"
+
 function create_sc(){
     PSNAME=$1
     PNAME=$2
@@ -470,7 +475,7 @@ if [ ! -d "$HOME/opt/SQLDeveloper" ] ; then
         #curl -o $FILE_ORA_SQLDEVELOPER -fSL $URL_ORA_SQLDEVELOPER
         #cp -f $URL_ORA_SQLDEVELOPER $FILE_ORA_SQLDEVELOPER
     fi
-    
+
     if [ -f "$FILE_ORA_SQLDEVELOPER" ]; then
         mkdir -p $HOME/opt/SQLDeveloper
         unzip -q $FILE_ORA_SQLDEVELOPER
@@ -540,6 +545,34 @@ if [ ! -d "$HOME/opt/apache-maven-$VERSION_MVN35" ] ; then
     #test
     source $HOME/.profile
     $MVN35/bin/mvn -version
+fi
+
+if [ ! -d "$HOME/opt/mongodb-$VERSION_MONGODB34" ] ; then
+    echo
+    echo $SEPARATOR
+    echo "mongodb $VERSION_MONGODB34 INSTALLER ............."
+    echo $SEPARATOR
+    if [ ! -f "$FILE_M" ]; then
+        echo "    $URL_MONGODB34"
+        curl -o $FILE_MONGODB34 -fSL $URL_MONGODB34
+    fi
+    mkdir -p $HOME/opt/mongodb-$VERSION_MONGODB34
+    tar -zxf $FILE_MONGODB34
+    mv mongodb-*$VERSION_MONGODB34*/* $HOME/opt/mongodb-$VERSION_MONGODB34
+    rm -rf mongodb-*$VERSION_MONGODB34*/
+
+    ## ADD
+    MONGODB34="MONGODB34_HOME=~/opt/mongodb-$VERSION_MONGODB34"
+    if ! grep -q "$MONGODB34" ~/.profile; then
+        echo "" >> ~/.profile
+        echo "export $MONGODB34" >> ~/.profile
+        echo "MONGODB $VERSION_MONGODB34 SET"
+    fi
+
+    #test
+    source $HOME/.profile
+    $MONGODB34_HOME/bin/mongo -version
+
 fi
 
 if [ ! -d "$HOME/opt/axis2-$VERSION_AXIS2" ] ; then
@@ -779,6 +812,13 @@ if ! grep -q "$ALIAS_MVN35_JAVA8" ~/.bashrc; then
     echo "$ALIAS_MVN35_JAVA8" >> ~/.bashrc
     echo "MAVEN $VERSION_MVN35 whit JAVA 8 (mvn35-j8) ALIAS"
 fi
+
+#ALIAS_MONGODB34="alias mvn32='~/opt/apache-maven-$VERSION_MONGODB34/bin/mvn'"
+#if ! grep -q "$ALIAS_MONGODB34" ~/.bashrc; then
+#    echo "" >> ~/.bashrc
+#    echo "$ALIAS_MONGODB34" >> ~/.bashrc
+#    echo "MAVEN $VERSION_MONGODB34 ALIAS"
+#fi
 
 #test
 source $HOME/.bashrc
