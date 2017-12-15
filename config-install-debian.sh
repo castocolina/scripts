@@ -21,7 +21,7 @@ FILE_MASTER_PDF="master-pdf-editor-${VERSION_MASTER_PDF}_qt5.amd64.deb"
 URL_MASTER_PDF="http://get.code-industry.net/public/$FILE_MASTER_PDF"
 
 #https://www.getpostman.com/app/download/linux64
-VERSION_POSTMAN=5.3.2
+VERSION_POSTMAN=5.5.0
 FILE_POSTMAN="postman-linux-x64-$VERSION_POSTMAN.tar.gz"
 URL_POSTMAN="https://dl.pstmn.io/download/latest/linux64"
 
@@ -51,9 +51,10 @@ FILE_SUBLIME=sublime-text_build-$VERSION_SUBLIME.deb
 URL_SUBLIME="https://download.sublimetext.com/$FILE_SUBLIME"
 
 #http://cdn01.downloads.smartbear.com/soapui/5.3.0/SoapUI-x64-5.3.0.sh
-VERSION_SOAPUI5=5.3.0
+#https://s3.amazonaws.com/downloads.eviware/soapuios/5.4.0/SoapUI-x64-5.4.0.sh
+VERSION_SOAPUI5=5.4.0
 FILE_SOAPUI5=SoapUI-x64-$VERSION_SOAPUI5.sh
-URL_SOAPUI5="http://cdn01.downloads.smartbear.com/soapui/$VERSION_SOAPUI5/$FILE_SOAPUI5"
+URL_SOAPUI5="https://s3.amazonaws.com/downloads.eviware/soapuios/$VERSION_SOAPUI5/$FILE_SOAPUI5"
 
 #http://smartbearsoftware.com/distrib/soapui/4.0.1/soapUI-x32-4_0_1.sh
 VERSION_SOAPUI4=4.0.1
@@ -61,7 +62,7 @@ FILE_SOAPUI4=soapUI-x32-4_0_1.sh
 URL_SOAPUI4="http://smartbearsoftware.com/distrib/soapui/$VERSION_SOAPUI4/$FILE_SOAPUI4"
 
 #https://www.gitkraken.com/download/linux-deb
-VERSION_GITKRAKEN=3.1.2
+VERSION_GITKRAKEN=3.3.1
 FILE_GITKRAKEN=gitkraken-amd64.deb
 URL_GITKRAKEN="https://release.gitkraken.com/linux/$FILE_GITKRAKEN"
 
@@ -91,7 +92,7 @@ FILE_GRADLE=gradle-$VERSION_GRADLE-all.zip
 URL_GRADLE="https://services.gradle.org/distributions/$FILE_GRADLE"
 
 #https://download-cf.jetbrains.com/idea/ideaIU-2017.2.3-no-jdk.tar.gz
-VERSION_INTELLIJ_U=2017.2.5-no-jdk
+VERSION_INTELLIJ_U=2017.3.1-no-jdk
 FILE_INTELLIJ_U="ideaIU-$VERSION_INTELLIJ_U.tar.gz"
 URL_INTELLIJ_U="https://download-cf.jetbrains.com/idea/$FILE_INTELLIJ_U"
 
