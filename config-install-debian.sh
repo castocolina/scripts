@@ -91,6 +91,11 @@ VERSION_GRADLE=3.4.1
 FILE_GRADLE=gradle-$VERSION_GRADLE-all.zip
 URL_GRADLE="https://services.gradle.org/distributions/$FILE_GRADLE"
 
+#https://codeload.github.com/exebetche/vlsub/zip/master
+VERSION_VL_SUB=0.10.2
+FILE_VL_SUB=vlsub-master.zip
+URL_VL_SUB="https://codeload.github.com/exebetche/vlsub/zip/master"
+
 #https://download-cf.jetbrains.com/idea/ideaIU-2017.2.3-no-jdk.tar.gz
 VERSION_INTELLIJ_U=2017.3.1-no-jdk
 FILE_INTELLIJ_U="ideaIU-$VERSION_INTELLIJ_U.tar.gz"
@@ -776,6 +781,27 @@ if [ ! -d "$HOME/opt/gradle-$VERSION_GRADLE" ] ; then
     #test
     source $HOME/.profile
     gradle -v
+fi
+
+#https://github.com/exebetche/vlsub/
+if [ ! -f "$HOME/.local/share/vlc/lua/extensions/vlsub.lua" ] ; then
+  echo
+  echo $SEPARATOR
+  echo "VL-SUB ................."
+  echo $SEPARATOR
+
+    if [ ! -f "$FILE_VL_SUB" ]; then
+        echo "    $URL_VL_SUB"
+        curl -o $FILE_VL_SUB -fSL $URL_VL_SUB
+    fi
+    unzip -qo $FILE_VL_SUB
+    mkdir -p "$HOME/.local/share/vlc/lua/extensions/"
+
+    ls -la vlsub-master
+    mv -f vlsub-master/vlsub.lua $HOME/.local/share/vlc/lua/extensions/
+    mv -f vlsub-master/locale $HOME/.local/share/vlc/lua/extensions/userdata/vlsub/
+
+    echo "VLSUB installed!"
 fi
 
 #ALIASES
