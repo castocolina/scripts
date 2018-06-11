@@ -476,7 +476,31 @@ if [ ! -d "$HOME/opt/mongodb-$VERSION_MONGODB34" ] ; then
     #test
     source $HOME/.profile
     $MONGODB34_HOME/bin/mongo -version
+fi
 
+if [ ! -d "$HOME/opt/jmeter-$VERSION_JMETER" ] ; then
+    echo
+    echo $SEPARATOR
+    echo "JMeter v$VERSION_JMETER INSTALLER ............."
+    echo $SEPARATOR
+    if [ ! -f "$FILE_JMETER" ]; then
+        echo "    $URL_JMETER"
+        curl -o $FILE_JMETER -fSL $URL_JMETER
+    fi
+
+    if [ -f "$FILE_JMETER" ]; then
+        mkdir -p $HOME/opt/jmeter-$VERSION_JMETER
+        tar -zxf $FILE_JMETER
+        mv apache-jmeter-*/* $HOME/opt/jmeter-$VERSION_JMETER
+        rm -rf apache-jmeter-*/
+
+        EXEC="$HOME/opt/jmeter-$VERSION_JMETER/bin/jmeter"
+        ICON="$HOME/opt/jmeter-$VERSION_JMETER/docs/images/jmeter_square.png"
+
+        create_sc "JMeter" "Apache JMeter" "$VERSION_JMETER" \
+        "$EXEC" "Development" \
+        "Load test, Unit test, Web, HTTP, SOA, REST"  "$ICON" "256"
+    fi
 fi
 
 if [ ! -d "$HOME/opt/axis2-$VERSION_AXIS2" ] ; then
@@ -511,6 +535,21 @@ echo
 echo $SEPARATOR
 echo "OTROS ................."
 echo $SEPARATOR
+
+if ! hash google-chrome 2>/dev/null; then
+    echo "Google Chrome ............."
+
+    if [ ! -f "$FILE_GCHROME" ]; then
+        echo "    $URL_GCHROME"
+        touch $FILE_GCHROME.tmp && chmod 400 $FILE_GCHROME.tmp && rm -f $FILE_GCHROME.tmp
+        curl -o $FILE_GCHROME.tmp -fSL $URL_GCHROME
+        mv -f $FILE_GCHROME.tmp $FILE_GCHROME
+    fi
+
+    if [ -f "$FILE_ATOM" ]; then
+        sudo dpkg -i $FILE_ATOM
+    fi
+fi
 
 if ! hash atom 2>/dev/null; then
     echo "ATOM ............."
