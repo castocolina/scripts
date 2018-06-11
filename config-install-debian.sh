@@ -164,7 +164,7 @@ type xmllint >/dev/null 2>&1 || { sudo apt install -y libxml2-utils; }
 type unzip >/dev/null 2>&1 || { sudo apt install -y unzip; }
 type git >/dev/null 2>&1 || { sudo apt install -y git; }
 type svn >/dev/null 2>&1 || { sudo apt install -y subversion;  svn --version | head -2; }
-type pip >/dev/null 2>&1 || { sudo apt install -y python-pip; sudo pip install --upgrade pip; }
+type pip >/dev/null 2>&1 || { sudo apt install -y python-pip; sudo -H pip install --upgrade pip; }
 type spotify >/dev/null 2>&1 || { sudo apt install -y spotify-client; }
 type corkscrew >/dev/null 2>&1 || { sudo apt install -y corkscrew; }
 type meld >/dev/null 2>&1 || { sudo apt install -y meld; }
@@ -176,6 +176,10 @@ if ! hash rabbitvcs 2>/dev/null; then
   type nautilus >/dev/null 2>&1 && { sudo aptitude install -y rabbitvcs-nautilus; }
   type nemo >/dev/null 2>&1 && { sudo aptitude install -y nemo-rabbitvcs; }
 fi
+
+
+type subl >/dev/null 2>&1 || { sudo apt-get install -y sublime-text; }
+sudo aptitude install -y ia32-libs
 
 echo
 echo $SEPARATOR
