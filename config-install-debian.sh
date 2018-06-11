@@ -14,34 +14,54 @@ function create_sc(){
     PICON_SIZE=$8
 
     DESKTOP_FILE=$PSNAME-$PVERSION.desktop
+    if [ "$PVERSION" == "" ] ; then
+        DESKTOP_FILE=$PSNAME.desktop
+    fi
 
     if [ ! -f "$DESKTOP_FILE" ] ; then
         rm -f $DESKTOP_FILE
     fi
     touch $DESKTOP_FILE
 
-    echo "[Desktop Entry]" >> $DESKTOP_FILE
-    echo "Version=$PVERSION" >> $DESKTOP_FILE
-    echo "Encoding=UTF-8" >> $DESKTOP_FILE
-    echo "Name=$PNAME" >> $DESKTOP_FILE
-    echo "Keywords=$PKEYS" >> $DESKTOP_FILE
-    echo "GenericName=$PNAME" >> $DESKTOP_FILE
-    echo "Type=Application" >> $DESKTOP_FILE
-    echo "Categories=$PCATEGORIES" >> $DESKTOP_FILE
-    printf "Terminal=false\nStartupNotify=true\n" >> $DESKTOP_FILE
-    printf "Exec=\"$PEXEC\"\nIcon=$PICON\n" >> $DESKTOP_FILE
-    echo "X-Ayatana-Desktop-Shortcuts=NewWindow;" >> $DESKTOP_FILE
+    #echo "[Desktop Entry]" >> $DESKTOP_FILE
+    #echo "Version=$PVERSION" >> $DESKTOP_FILE
+    #echo "Encoding=UTF-8" >> $DESKTOP_FILE
+    #echo "Name=$PNAME" >> $DESKTOP_FILE
+    #echo "Keywords=$PKEYS" >> $DESKTOP_FILE
+    #echo "GenericName=$PNAME" >> $DESKTOP_FILE
+    #echo "Type=Application" >> $DESKTOP_FILE
+    #echo "Categories=$PCATEGORIES" >> $DESKTOP_FILE
+    #printf "Terminal=false\nStartupNotify=true\n" >> $DESKTOP_FILE
+    #printf "Exec=\"$PEXEC\"\nIcon=$PICON\n" >> $DESKTOP_FILE
+    #echo "X-Ayatana-Desktop-Shortcuts=NewWindow;" >> $DESKTOP_FILE
+
+    cat > "$DESKTOP_FILE" << EOF
+[Desktop Entry]
+Version=$PVERSION
+Encoding=UTF-8
+Name=$PNAME
+Keywords=$PKEYS
+GenericName=$PNAME
+Type=Application
+Categories=$PCATEGORIES
+Terminal=false
+StartupNotify=true
+Exec=$PEXEC
+Icon=$PICON
+X-Ayatana-Desktop-Shortcuts=NewWindow;
+EOF
 
     # seems necessary to refresh immediately:
-    chmod 755 $DESKTOP_FILE
+    chmod 755 "$DESKTOP_FILE"
 
+    ls -la $DESKTOP_FILE
     echo $DESKTOP_FILE
     echo "$SEPARATOR"
     cat $DESKTOP_FILE
     echo "$SEPARATOR"
 
     xdg-desktop-menu install $DESKTOP_FILE
-    xdg-icon-resource install --size $PICON_SIZE "$PICON" "$PSNAME-$PVERSION"
+    xdg-icon-resource install --size $PICON_SIZE "$PICON" "$PSNAME"
 
     rm $DESKTOP_FILE
 }
@@ -169,6 +189,8 @@ type spotify >/dev/null 2>&1 || { sudo apt install -y spotify-client; }
 type corkscrew >/dev/null 2>&1 || { sudo apt install -y corkscrew; }
 type meld >/dev/null 2>&1 || { sudo apt install -y meld; }
 type filezilla >/dev/null 2>&1 || { sudo apt install -y filezilla; }
+type mkvtoolnix-gui >/dev/null 2>&1 || { sudo apt install -y mkvtoolnix-gui; }
+type ffmpeg >/dev/null 2>&1 || { sudo apt install -y ffmpeg; }
 
 if ! hash rabbitvcs 2>/dev/null; then
   type gedit >/dev/null 2>&1 && { sudo aptitude install -y gedit; }
@@ -732,6 +754,19 @@ if [ ! -f "$HOME/.local/share/vlc/lua/extensions/vlsub.lua" ] ; then
     echo "VLSUB installed!"
 fi
 
+wget -nv -O- https://download.calibre-ebook.com/linux-installer.py |\
+ python -c "import sys; main=lambda x,y:sys.stderr.write('Download failed\n'); exec(sys.stdin.read()); main('~/opt/', True)"
+
+create_sc "Calibre-ebook" "Calibre Ebook" "3" \
+        "$HOME/opt/calibre/calibre" "Graphics" \
+        "epub, pdf, amazon, ebook, awz, awz3, mobi" \
+        "$HOME/opt/calibre/resources/images/lt.png" "256"
+
+create_sc "Calibre-Viewer" "Calibre Ebook - Viewer" "3" \
+        "$HOME/opt/calibre/ebook-viewer" "Graphics" \
+        "epub, pdf, amazon, ebook, awz, awz3, mobi" \
+        "$HOME/opt/calibre/resources/images/viewer.png" "256"
+        
 #ALIASES
 ALIAS_DOKER_STATS="alias docker-stats='docker stats \$(docker ps --format={{.Names}})'"
 if ! grep -q "$ALIAS_DOKER_STATS" ~/.bashrc; then
