@@ -67,22 +67,37 @@ if [ ! -f "/etc/apt/sources.list.d/virtualbox.list" ]; then
     echo "$VBOX_REPO" | sudo tee /etc/apt/sources.list.d/virtualbox.list
 
     wget -q https://www.virtualbox.org/download/oracle_vbox_2016.asc -O- | sudo apt-key add -
-    wget -q https://www.virtualbox.org/download/oracle_vbox.asc -O- | sudo apt-key add -
+    #wget -q https://www.virtualbox.org/download/oracle_vbox.asc -O- | sudo apt-key add -
 fi
 
 #DOCKER
 if [ ! -f "/etc/apt/sources.list.d/docker.list" ]; then
+
+    curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
+    
     sudo apt-key adv \
                    --keyserver hkp://ha.pool.sks-keyservers.net:80 \
                    --recv-keys 58118E89F3A912897C070ADBF76221572C52609D
 
-    if [ $ID == "ubuntu" ] || [ $ID == "debian" ]; then
-      DOCKER_REPO="deb https://apt.dockerproject.org/repo $ID-$DISTRIB_CODENAME main"
+    if [ $ID == "ubuntu" ]; then
+      DOCKER_REPO="deb [arch=amd64] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable"
+    elif [ $ID == "debian" ]; then
+      DOCKER_REPO="deb [arch=amd64] https://download.docker.com/linux/debian $(lsb_release -cs) stable"
     else
-      DOCKER_REPO="deb https://apt.dockerproject.org/repo $ID_LIKE-$UBUNTU_CODENAME main"
+      DOCKER_REPO="deb [arch=amd64] https://download.docker.com/linux/ubuntu $UBUNTU_CODENAME stable"
     fi
 
+    #sudo add-apt-repository "$DOCKER_REPO"
     echo "$DOCKER_REPO" | sudo tee /etc/apt/sources.list.d/docker.list
+    read -p "DOCKER" aaaaaa
+fi
+
+#SUBLIME
+if [ ! -f "/etc/apt/sources.list.d/sublime-text.list" ]; then
+    wget -qO - https://download.sublimetext.com/sublimehq-pub.gpg | sudo apt-key add -
+
+    sudo apt-get install apt-transport-https -y
+    echo "deb https://download.sublimetext.com/ apt/stable/" | sudo tee /etc/apt/sources.list.d/sublime-text.list
 fi
 
 #Spotify
@@ -92,9 +107,6 @@ fi
 #     # 2. Add the Spotify repository
 #     echo deb http://repository.spotify.com stable non-free | sudo tee /etc/apt/sources.list.d/spotify.list
 # fi
-
-#RabbitVCS
-## sudo add-apt-repository ppa:rabbitvcs/ppa -y
 
 echo ""
 echo $SEPARATOR
