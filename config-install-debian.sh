@@ -456,7 +456,7 @@ if [ ! -d "$HOME/opt/mongodb-$VERSION_MONGODB34" ] ; then
     echo $SEPARATOR
     echo "mongodb $VERSION_MONGODB34 INSTALLER ............."
     echo $SEPARATOR
-    if [ ! -f "$FILE_M" ]; then
+    if [ ! -f "$FILE_MONGODB34" ]; then
         echo "    $URL_MONGODB34"
         curl -o $FILE_MONGODB34 -fSL $URL_MONGODB34
     fi
