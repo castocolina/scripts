@@ -55,6 +55,8 @@ echo "ADD REPOSITORIES ......"
 echo $SEPARATOR
 
 #JAVA PPA
+# http://www.webupd8.org/2015/02/install-oracle-java-9-in-ubuntu-linux.html
+#NEXT: https://www.linuxuprising.com/2018/04/install-oracle-java-10-in-ubuntu-or.html
 test -f "/etc/apt/sources.list.d/webupd8team-java-xenial.list" || sudo add-apt-repository ppa:webupd8team/java -y
 
 #VIRTUAL BOX
@@ -74,7 +76,7 @@ fi
 if [ ! -f "/etc/apt/sources.list.d/docker.list" ]; then
 
     curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
-    
+
     sudo apt-key adv \
                    --keyserver hkp://ha.pool.sks-keyservers.net:80 \
                    --recv-keys 58118E89F3A912897C070ADBF76221572C52609D
@@ -100,14 +102,6 @@ if [ ! -f "/etc/apt/sources.list.d/sublime-text.list" ]; then
     echo "deb https://download.sublimetext.com/ apt/stable/" | sudo tee /etc/apt/sources.list.d/sublime-text.list
 fi
 
-#Spotify
-# if [ ! -f "/etc/apt/sources.list.d/spotify.list" ]; then
-#     # 1. Add the Spotify repository signing key to be able to verify downloaded packages
-#     sudo apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys BBEBDCB318AD50EC6865090613B00F1FD2C19886
-#     # 2. Add the Spotify repository
-#     echo deb http://repository.spotify.com stable non-free | sudo tee /etc/apt/sources.list.d/spotify.list
-# fi
-
 echo ""
 echo $SEPARATOR
 echo "UPDATE ................"
@@ -131,24 +125,22 @@ fi
 if [ ! -d "/usr/lib/jvm/java-8-oracle" ]; then
     echo
     echo $SEPARATOR
-    echo "INSTALL JAVA .........."
+    echo "INSTALL JAVA 8.........."
     echo $SEPARATOR
 
-    # oracle-java9-installer
-    sudo aptitude install -y python-software-properties oracle-java8-installer oracle-java9-installer
-    sudo update-alternatives --list java
-    sudo update-alternatives --list javac
-    java -version
-    javac -version
+    #JAVA 9 END OF LIFE (Apr 2018)
+    sudo aptitude install -y python-software-properties oracle-java8-installer
 
-    JAVA8="JAVA_HOME=/usr/lib/jvm/java-8-oracle"
+    JAVA8="JAVA8_HOME=/usr/lib/jvm/java-8-oracle"
     if ! grep -q "$JAVA8" ~/.profile; then
         echo "" >> ~/.profile
         echo "export $JAVA8" >> ~/.profile
+        echo "export JAVA_HOME=\$JAVA8_HOME" >> ~/.profile
         echo "PATH=\"\$PATH:\$JAVA_HOME/bin\"" >> ~/.profile
-        echo "JAVA SET"
+        echo "JAVA 8 SET"
     fi
 fi
+
 read -p "UPDATE JAVA? (y/n) > " to_update
 
 export USE_UPDATE=false
@@ -158,8 +150,9 @@ if [ "$to_update" = true ] || [ "$to_update" = "true" ] || [ "$to_update" = "1" 
 fi
 
 if [ "$USE_UPDATE" = true ]; then
-  #sudo aptitude install -y oracle-java8-set-default
   sudo update-alternatives --config java
+  sudo update-alternatives --config javac
+  sudo update-alternatives --config javaws
 fi
 
 echo
