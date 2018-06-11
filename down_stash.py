@@ -44,10 +44,11 @@ local_base64credentials = base64.b64encode('%s:%s' % (gUser, gPasswd))
 
 k = 0
 projects = STASH_PROJECTS.split(',')
+kSize = len(projects)
 for sProj in projects:
     k = k+1
     spName = sProj.strip()
-    print("PROJECT.... {} - {}".format(k, spName))
+    print("PROJECT.... :{:>2}/{} - {}".format(k, kSize, spName))
     project_url = "http://{}/rest/api/1.0/projects/{}/repos".format(SERVER_PORT, spName)
     print("URL.... {}".format(project_url))
     try:
@@ -83,7 +84,7 @@ for sProj in projects:
             if sshCloneURL['name'] == 'ssh':
                 strURLSsh = sshCloneURL['href']
                 break
-        print (">>> P:{:>3} - R:{:>3}/{} \t {} - {} ".format(k, i, size, sname, slug))
+        print (">>> P:{:>2}/{} - R:{:>3}/{} \t {} - {} ".format(k, kSize, i, size, sname, slug))
         print ("SSH - {} ".format(strURLSsh))
         print ("HTTP - {} ".format(strURLHttp))
         print "-----------------------------------------------------------------------------"
