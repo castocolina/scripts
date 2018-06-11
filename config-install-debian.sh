@@ -188,7 +188,7 @@ echo $SEPARATOR
 
 type dkms >/dev/null 2>&1 || { sudo apt install -y dkms; }
 type virtualbox >/dev/null 2>&1 || \
-    { sudo apt install -y virtualbox-5.1 linux-headers-generic virtualbox-dkms virtualbox-ext-pack\
+    { sudo apt install -y virtualbox-5.2 linux-headers-generic virtualbox-dkms virtualbox-ext-pack\
     virtualbox-guest-additions-iso virtualbox-guest-dkms virtualbox-guest-utils virtualbox-guest-x11\
     ; }
 
@@ -200,7 +200,7 @@ if ! hash docker 2>/dev/null; then
 
     sudo aptitude install -y linux-image-extra-$(uname -r) linux-image-extra-virtual
     sudo aptitude install -y apt-transport-https ca-certificates
-    sudo aptitude install -y docker-engine
+    sudo aptitude install -y docker-ce
     sudo service docker start
     sudo systemctl daemon-reload
     sudo systemctl restart docker
@@ -210,8 +210,7 @@ if ! hash docker 2>/dev/null; then
     sudo update-grub
     sudo ufw status
     sudo systemctl enable docker
-    sudo pip install setuptools
-    sudo pip install docker-compose
+    sudo -H pip install setuptools
 
     # /etc/default/ufw /etc/sysconfig/ufw
     #       DEFAULT_FORWARD_POLICY="ACCEPT"
@@ -224,8 +223,16 @@ if ! hash docker 2>/dev/null; then
     sudo sed -i '/dns=dnsmasq/c\#dns=dnsmasq.' /etc/NetworkManager/NetworkManager.conf
     #Save and close the file.
     #Restart both NetworkManager and Docker. As an alternative, you can reboot your system.
-    #$ sudo restart network-manager
-    # $ sudo restart docker
+    sudo restart network-manager
+    sudo restart docker
+fi
+
+if hash docker 2>/dev/null; then
+
+    if ! hash docker-compose 2>/dev/null; then
+        sudo -H pip install docker-compose
+    fi
+
 fi
 
 CURR_DIR=$(pwd)
