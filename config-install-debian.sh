@@ -566,7 +566,7 @@ if ! hash atom 2>/dev/null; then
     fi
 fi
 
-if ! hash masterpdfeditor4 2>/dev/null; then
+if ! hash masterpdfeditor5 2>/dev/null; then
     echo "MASTER PDF EDITOR ............."
 
     if [ ! -f "$FILE_MASTER_PDF" ]; then
@@ -597,23 +597,14 @@ if [ ! -d "$HOME/opt/postman" ] ; then
         mv -f postman/Postman postman/postman
         mv -f postman/ $HOME/opt
 
-        ICON_PATH="$HOME/opt/postman/resources/app/assets/icon.png"
+        ICON_PATH="$HOME/opt/postman/app/resources/app/assets/icon.png"
         EXEC="$HOME/opt/postman/postman"
 
-        create_sc "POSTMAN" "POSTMAN $VERSION_POSTMAN" "$VERSION_POSTMAN" \
+        create_sc "POSTMAN" "POSTMAN" "$VERSION_POSTMAN" \
         "$EXEC" "Development" "post;get;json, rest" \
         "$ICON_PATH" "128"
 
     fi
-fi
-
-if ! hash subl 2>/dev/null; then
-  echo "SUBLIME ..........."
-  if [ ! -f "$FILE_SUBLIME" ]; then
-      echo "    $URL_SUBLIME"
-      curl -o $FILE_SUBLIME -fSL $URL_SUBLIME
-  fi
-  sudo dpkg -i $FILE_SUBLIME
 fi
 
 SOAPUI5_DIR="$HOME/opt/soapUI-$VERSION_SOAPUI5"
@@ -687,7 +678,7 @@ if [ ! -d "$HOME/opt/android-studio" ] ; then
     EXEC="$HOME/opt/android-studio/bin/studio.sh"
     ICON_PATH="$HOME/opt/android-studio/bin/studio.png"
 
-    create_sc "android-studio-$VERSION_ANDSTUDIO" "Android Studio" "$VERSION_ANDSTUDIO" \
+    create_sc "android-studio" "Android Studio" "$VERSION_ANDSTUDIO" \
         "$EXEC" "Development" "Java, JEE, JSE, IDE, Mobile, Android, Java" \
         "$ICON_PATH" "128"
 
