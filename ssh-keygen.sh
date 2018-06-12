@@ -10,8 +10,11 @@ else
     SSH_KEYNAME="$1"
 fi
 
+#FILE_ALPHAN_NAME=$(echo "$SSH_KEYNAME" | tr -c '[[:alnum:]].-' '_')
+FILE_ALPHAN_NAME=$(echo $SSH_KEYNAME | sed -r 's/[^a-z0-9\.]/_/g')
+
 # https://help.github.com/articles/generating-an-ssh-key/
-SSH_KEYFILE="$HOME/.ssh/$SSH_KEYNAME"
+SSH_KEYFILE="$HOME/.ssh/$FILE_ALPHAN_NAME"
 if [ ! -f "$SSH_KEYFILE" ] ; then
     echo "CREATE SSH KEY FOR $SSH_KEYFILE"
 
@@ -75,18 +78,18 @@ echo $SEPARATOR
 echo
 
 echo
-echo "TEST GH   ssh -i $SSH_KEYFILE.pub -T git@github.com"
+echo "TEST GH   ssh -i $SSH_KEYFILE -T git@github.com"
 echo $SEPARATOR
-ssh -i $SSH_KEYFILE.pub -T git@github.com
+ssh -i $SSH_KEYFILE -T git@github.com
 
 echo
-echo "TEST BB   ssh -i $SSH_KEYFILE.pub -T git@bitbucket.org"
+echo "TEST BB   ssh -i $SSH_KEYFILE -T git@bitbucket.org"
 echo $SEPARATOR
-ssh -i $SSH_KEYFILE.pub -T git@bitbucket.org
+ssh -i $SSH_KEYFILE -T git@bitbucket.org
 echo
 
 echo
-echo "TEST GL   ssh -i $SSH_KEYFILE.pub -T git@gitlab.com"
+echo "TEST GL   ssh -i $SSH_KEYFILE -T git@gitlab.com"
 echo $SEPARATOR
-ssh -i $SSH_KEYFILE.pub -T git@gitlab.com
+ssh -i $SSH_KEYFILE -T git@gitlab.com
 echo
