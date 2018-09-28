@@ -1,10 +1,13 @@
 #!/bin/bash
 
 SEPARATOR="---------------------"
-SSH_KEYNAME="myemail@example.com"
+SSH_KEYNAME="id_rsa"
 if [ $# -eq 0 ] || [ -z "$1" ]; then
     echo "No arguments supplied"
-    read -p "Enter your key name (default: '$SSH_KEYNAME' > " key
+    #read -p "Enter your key name (default: '$SSH_KEYNAME' > " key
+    echo -n "Enter your key name (default: '$SSH_KEYNAME' > "
+    read key
+
     [ ! -z "$key" ] && SSH_KEYNAME=$key
 else
     SSH_KEYNAME="$1"
@@ -20,8 +23,8 @@ if [ ! -f "$SSH_KEYFILE" ] ; then
     ssh-keygen -t rsa -f $SSH_KEYFILE -b 4096 -C $SSH_KEYNAME
 fi
 
-eval "$(ssh-agent -s)"
-ssh-add $SSH_KEYFILE
+eval `ssh-agent`
+ssh-add -K $SSH_KEYFILE
 
 echo
 echo "PUBLIC KEYS..."
@@ -35,14 +38,19 @@ echo
 cat $SSH_KEYFILE.pub
 echo
 
-
-
 #https://help.github.com/articles/using-ssh-over-the-https-port/
 sshcfile="$HOME/.ssh/config"
 if [ ! -f "$sshcfile" ] ; then
     echo "NOT EXIST ... $sshcfile"
     touch $sshcfile
     printf "" > $sshcfile
+fi
+
+if ! grep -q "UseKeychain" $sshcfile; then
+    echo "CFG UseKeychain"
+    echo "Host *" >> $sshcfile
+    echo "    UseKeychain yes" >> $sshcfile
+    echo "" >> $sshcfile
 fi
 
 if ! grep -q "github" $sshcfile; then
@@ -76,18 +84,18 @@ echo $SEPARATOR
 echo
 
 echo
-echo "TEST GH   ssh -i $SSH_KEYFILE -T git@github.com"
+echo "TEST GH   ssh -T git@github.com"
 echo $SEPARATOR
-ssh -i $SSH_KEYFILE -T git@github.com
+ssh -T git@github.com
 
 echo
-echo "TEST BB   ssh -i $SSH_KEYFILE -T git@bitbucket.org"
+echo "TEST BB   ssh -T git@bitbucket.org"
 echo $SEPARATOR
-ssh -i $SSH_KEYFILE -T git@bitbucket.org
+ssh -T git@bitbucket.org
 echo
 
 echo
-echo "TEST GL   ssh -i $SSH_KEYFILE -T git@gitlab.com"
+echo "TEST GL   ssh -T git@gitlab.com"
 echo $SEPARATOR
-ssh -i $SSH_KEYFILE -T git@gitlab.com
+ssh -T git@gitlab.com
 echo
