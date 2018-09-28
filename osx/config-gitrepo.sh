@@ -9,12 +9,14 @@ useremail=$(git config --get user.email)
 
 if [ $# -eq 0 ] || [ -z "$1" ]  || [ -z "$2" ]; then
     echo "No arguments supplied or incompleted"
-    #echo -n "Enter your name > "
-    #read -a username
-    read -p "Enter your name (default: '$username') > " iusername
-    #echo -n "Enter your email > "
-    #read useremail
-    read -p "Enter your email (default: '$useremail')> " iuseremail
+    echo
+    echo -n "Enter your name (default: '$username') > "
+    read iusername
+    #read -p "Enter your name (default: '$username') > " iusername
+    echo -n "Enter your email (default: '$useremail')> "
+    read iuseremail
+    #read -p "Enter your email (default: '$useremail')> " iuseremail
+    echo
 else
     iusername="$1"
     iuseremail="$2"
@@ -32,13 +34,15 @@ git config --global push.default simple
 git config --global core.longpaths true
 
 ## https://help.github.com/articles/dealing-with-line-endings/
-if [ "$(uname)" == "Darwin" ]; then
+OS_NAME=$(uname -s)
+echo "--- $OS_NAME ---"
+if [ "$OS_NAME" = "Darwin" ]; then
     git config --global core.autocrlf input
     echo "Mac ::: git config --global core.autocrlf input"
-elif [ "$(expr substr $(uname -s) 1 5)" == "Linux" ]; then
+elif [ "$(expr substr $OS_NAME 1 5)" = "Linux" ]; then
     git config --global core.autocrlf input
     echo "Linux ::: git config --global core.autocrlf input"
-elif [ "$(expr substr $(uname -s) 1 10)" == "MINGW32_NT" ]; then
+elif [ "$(expr substr $OS_NAME 1 10)" = "MINGW32_NT" ]; then
     git config --global core.autocrlf true
     echo "WIN ::: git config --global core.autocrlf true"
 fi
