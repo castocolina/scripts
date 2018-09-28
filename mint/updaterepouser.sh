@@ -25,10 +25,16 @@ shift $((OPTIND - 1))
 
 if [ $# -eq 0 ] || [ -z "$1" ]  || [ -z "$2" ] ; then
     echo "No arguments supplied or incompleted"
-    read -p "Enter your oldemail > " olduseremail
-    read -p "Enter your newemail > " newuseremail
-    read -p "Enter your oldname > " oldusername
-    read -p "Enter your newname > " newusername
+    echo
+    echo -n "Enter your oldemail > "
+    read olduseremail
+    echo -n "Enter your newemail > "
+    read newuseremail
+    echo -n "Enter your oldname > "
+    read oldusername
+    echo -n "Enter your newname > "
+    read newusername
+    echo
 else
     olduseremail="$1"
     newuseremail="$2"
