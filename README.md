@@ -1,2 +1,2 @@
 # scripts
-Script for linux shortcuts 
+Script for osx/linux shortcuts 
