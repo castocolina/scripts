@@ -10,6 +10,7 @@ ruby --version
 
 /usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
 brew tap caskroom/cask
+brew tap caskroom/versions
 brew doctor
 brew update
 
@@ -34,7 +35,7 @@ brew install homebrew/fuse/ntfs-3g
 
 brew install nvm 
 nvm install --lts
-npm install -g exp
+#npm install -g exp
 npm install -g expo-cli
 npm install -g create-react-native-app
 brew install yarn --without-node
@@ -42,23 +43,35 @@ brew install yarn --without-node
 sudo sysctl -w kern.maxfiles=5242880;
 sudo sysctl -w kern.maxfilesperproc=524288
 
-brew cask install virtualbox genymotion
+brew cask install virtualbox 
+brew cask install genymotion
 
-brew cask install java
-brew cask install homebrew/cask-versions/java8
+brew cask install java8
 
 brew cask install android-sdk android-platform-tools androidtool android-ndk android-studio
 
 brew cask install docker
-docker run hello-world
 
-export ANDROID_SDK_ROOT="/usr/local/share/android-sdk"
+#export ANDROID_SDK_ROOT="/usr/local/share/android-sdk"
 
 brew cask install slack
 brew cask install sublime-text
 brew cask install google-chrome
 brew cask install postman
+brew cask install robo-3t
+brew cask install gitkraken
+brew cask install sourcetree
 #brew cask install master-pdf-editor
+
+brew install tree
+brew install ack
+brew install vim
+brew install golang
 
 python --version
 brew list --versions
+go version
+java -version
+docker run hello-world
+docker -v
+docker-compose -v
