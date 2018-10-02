@@ -39,6 +39,7 @@ nvm install --lts
 npm install -g expo-cli
 npm install -g create-react-native-app
 brew install yarn --without-node
+npm config delete prefix
 
 sudo sysctl -w kern.maxfiles=5242880;
 sudo sysctl -w kern.maxfilesperproc=524288
@@ -61,6 +62,9 @@ brew cask install postman
 brew cask install robo-3t
 brew cask install gitkraken
 brew cask install sourcetree
+brew cask install whatsapp
+brew cask install calibre
+brew cask install vlc
 #brew cask install master-pdf-editor
 
 brew install tree
