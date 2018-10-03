@@ -19,6 +19,9 @@ brew install zsh
 sh -c "$(curl -fsSL https://raw.githubusercontent.com/robbyrussell/oh-my-zsh/master/tools/install.sh)"
 chsh -s /bin/zsh
 source ~/.zshrc
+curl -L https://iterm2.com/shell_integration/zsh \
+-o ~/.iterm2_shell_integration.zsh
+source ~/.iterm2_shell_integration.zsh
 
 #These plugins add support for the corresponding file type to Mac Quick Look 
 #(In Finder, mark a file and press Space to start Quick Look).
@@ -40,6 +43,8 @@ npm install -g expo-cli
 npm install -g create-react-native-app
 brew install yarn --without-node
 npm config delete prefix
+npm install -g eslint
+npm install -g tslint
 
 sudo sysctl -w kern.maxfiles=5242880;
 sudo sysctl -w kern.maxfilesperproc=524288
