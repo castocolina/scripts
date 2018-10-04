@@ -5,6 +5,7 @@ defaults write com.apple.screencapture location $HOME/Pictures/screenshots/ && k
 
 xcode-select --install
 xcode-select -p /Library/Developer/CommandLineTools
+sudo xcodebuild -license accept
 gcc --version
 ruby --version
 
@@ -36,15 +37,15 @@ brew cask install \
     suspicious-package
 brew install homebrew/fuse/ntfs-3g
 
-brew install nvm 
-nvm install --lts
+brew install node@8 
+#nvm install --lts
 #npm install -g exp
-npm install -g expo-cli
-npm install -g create-react-native-app
+sudo npm install -g expo-cli
+sudo npm install -g create-react-native-app
 brew install yarn --without-node
-npm config delete prefix
-npm install -g eslint
-npm install -g tslint
+sudo npm config delete prefix
+sudo npm install -g eslint
+sudo npm install -g tslint
 
 sudo sysctl -w kern.maxfiles=5242880;
 sudo sysctl -w kern.maxfilesperproc=524288
@@ -84,3 +85,5 @@ java -version
 docker run hello-world
 docker -v
 docker-compose -v
+npm --version
+node --version
