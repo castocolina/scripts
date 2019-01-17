@@ -1,0 +1,178 @@
+#!/bin/bash
+
+function exist_cmd() {
+  CMD=$1
+  { command -v $CMD >/dev/null 2>&1 && echo "'$CMD' is INSTALLED!" && return_cd=0; } || \
+  { echo >&2 "I require '$CMD' but it's not installed."; return_cd=1; }
+  # type foo >/dev/null 2>&1 || { echo >&2 "I require foo but it's not installed.  Aborting."; exit 1; }
+  # hash foo 2>/dev/null || { echo >&2 "I require foo but it's not installed.  Aborting."; exit 1; }
+  # echo $return_cd;
+  return $return_cd;
+}
+
+
+TMP_INSTALL_DIR=/tmp/installers
+export INSTALL_DIR=$HOME/opt
+
+function install_deb(){
+  
+  CURR_DIR=$(pwd)
+  mkdir -p $TMP_INSTALL_DIR; cd $TMP_INSTALL_DIR
+
+  CMD=$1; NAME="$2"; FNAME=$3; URL=$4;
+  exist_cmd $1 || {
+    echo
+    echo $SEPARATOR
+    echo "$NAME .............."
+    echo $SEPARATOR
+    if [ ! -f "$FNAME" ]; then
+        echo "    $URL"
+        curl -o "$FNAME" -fSL $URL
+    fi
+    sudo dpkg -i $FNAME
+  }
+
+  cd $CURR_DIR
+}
+
+function down_install_soapui(){
+  CURR_DIR=$(pwd)
+  mkdir -p $TMP_INSTALL_DIR; cd $TMP_INSTALL_DIR
+
+  VERSION=$1; FILE=$2; URL=$3;
+
+  SOAPUI_DIR="$INSTALL_DIR/soapUI-$VERSION"
+  if [ ! -d "$SOAPUI_DIR" ] ; then
+      echo "SOAPUI $VERSION ..........."
+      if [ ! -f "$FILE" ]; then
+          echo "    $URL"
+          curl -o $FILE -fSL $URL
+      fi
+      echo $FILE
+      sh $FILE -q -Dinstall4j.noProxyAutoDetect=true -splash "SOAPUI $VERSION installer" -dir $SOAPUI_DIR
+  fi
+
+  cd $CURR_DIR
+}
+
+function down_uncompress(){
+  CURR_DIR=$(pwd)
+  mkdir -p $TMP_INSTALL_DIR; cd $TMP_INSTALL_DIR
+  #target folder name, original folder name, desc name, file name, url
+  ENAME=$1; CNAME=$2; NAME=$3; FNAME=$4; URL=$5;
+  if [ ! -d "$INSTALL_DIR/$ENAME" ] ; then
+    echo
+    echo $SEPARATOR
+    echo "$NAME ............."
+    echo $SEPARATOR
+    if [ ! -f "$FNAME" ]; then
+        echo "    $URL"
+        curl -o "$FNAME" -fSL $URL
+    fi
+
+    if [[ $FNAME == *.tar.gz ]]; then
+      tar -zxf $FNAME
+    fi
+    
+    if [ ! "$CNAME" = "$ENAME" ]; then 
+      mv -f $CNAME/ $ENAME
+    fi
+    mv -f $ENAME/ $INSTALL_DIR/
+    return_cd=0
+  else 
+    return_cd=1
+  fi
+  cd $CURR_DIR
+  return $return_cd;
+}
+
+function exist_pkg() {
+  PKG=$1
+  { dpkg -s $PKG >/dev/null 2>&1 && echo "'$PKG' is INSTALLED!" && return_cd=0; } || \
+  { echo >&2 "I require '$PKG' but it's not installed."; return_cd=1; }
+  # echo $return_cd;
+  return $return_cd;
+}
+
+function find_append(){
+  FILE=$1
+  FIND=$2
+  TEXT=$3
+
+  if ! grep -q "$FIND" $FILE; then
+    printf "$TEXT" >> $FILE
+  fi
+}
+
+function is_true() {
+  if [ "$1" = true ] || [ "$1" = "true" ] || [ "$1" = "1" ] || [ "$1" = "y" ] || [ "$1" = "yes" ]; then
+    return 0;
+  fi
+  return 1;
+}
+
+function exist_dir() {
+  if [ -d "$1" ] ; then
+    return 0;
+  fi
+  return 1;
+}
+
+function exist_file() {
+  if [ -f "$1" ] ; then
+    return 0;
+  fi
+  return 1;
+}
+
+function create_sc(){
+    PSNAME=$1
+    PNAME=$2
+    PVERSION=$3
+    PEXEC=$4
+    PCATEGORIES=$5
+    PKEYS=$6
+    PICON=$7
+    PICON_SIZE=$8
+
+    DESKTOP_FILE=$PSNAME-$PVERSION.desktop
+    if [ "$PVERSION" == "" ] ; then
+        DESKTOP_FILE=$PSNAME.desktop
+    fi
+
+    if [ -f "$DESKTOP_FILE" ] ; then
+        rm -f $DESKTOP_FILE
+    fi
+    touch $DESKTOP_FILE
+
+    cat > "$DESKTOP_FILE" << EOF
+[Desktop Entry]
+Version=$PVERSION
+Encoding=UTF-8
+Name=$PNAME
+Keywords=$PKEYS
+GenericName=$PNAME
+Type=Application
+Categories=$PCATEGORIES
+Terminal=false
+StartupNotify=true
+Exec=$PEXEC
+Icon=$PICON
+X-Ayatana-Desktop-Shortcuts=NewWindow;
+EOF
+
+    # seems necessary to refresh immediately:
+    chmod 755 "$DESKTOP_FILE"
+
+    ls -la $DESKTOP_FILE
+    echo $DESKTOP_FILE
+    echo "$SEPARATOR"
+    cat $DESKTOP_FILE
+    echo "$SEPARATOR"
+
+    xdg-desktop-menu install $DESKTOP_FILE
+    xdg-icon-resource --novendor install --size $PICON_SIZE "$PICON" "$PSNAME"
+    sudo cp -v $DESKTOP_FILE /usr/share/applications/$DESKTOP_FILE
+    rm $DESKTOP_FILE
+    echo "CREATE SC for $PNAME"
+}
