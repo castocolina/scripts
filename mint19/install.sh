@@ -111,7 +111,8 @@ exist_cmd nodemon || npm install -g nodemon
 #exist_cmd react-native-debugger || brew cask install react-native-debugger
 
 printf "\n$SEPARATOR\n >>>>> JAVA / ANDROID\n"
-sdk install java 8.0.191-oracle
+
+exist_dir "$HOME/.sdkman/candidates/java/current/" || sdk install java 8.0.191-oracle
 exist_cmd mvn || sdk install maven 3.6.0
 exist_cmd gradle || sdk install gradle 5.1
 #exist_cmd adb || brew cask install android-sdk android-platform-tools androidtool android-ndk android-studio
@@ -168,15 +169,15 @@ exist_cmd rabbitvcs || {
 
 ( exist_dir "$INSTALL_DIR/calibre" && echo "Calibre Installed" ) || {
   wget -nv -O- https://download.calibre-ebook.com/linux-installer.py |\
-  python -c "import sys; main=lambda x,y:sys.stderr.write('Download failed\n'); exec(sys.stdin.read()); main('~/opt/', True)"
+  python -c "import sys; main=lambda x,y:sys.stderr.write('Download failed\n'); exec(sys.stdin.read()); main('$INSTALL_DIR', True)"
 
-  create_sc "Calibre-ebook" "Calibre Ebook" "3" \
-        "$INSTALL_DIR/calibre/calibre" "Graphics" \
+  create_sc "Calibre-ebook" "Calibre Ebook" "Calibre" "3" \
+        "$INSTALL_DIR/calibre/calibre" "Utility;Graphics" \
         "epub, pdf, amazon, ebook, awz, awz3, mobi" \
         "$INSTALL_DIR/calibre/resources/images/lt.png" "256"
 
-  create_sc "Calibre-Viewer" "Calibre Ebook - Viewer" "3" \
-        "$INSTALL_DIR/calibre/ebook-viewer" "Graphics" \
+  create_sc "Calibre-Viewer" "Calibre Ebook - Viewer" "Calibre" "3" \
+        "$INSTALL_DIR/calibre/ebook-viewer" "Utility;Graphics" \
         "epub, pdf, amazon, ebook, awz, awz3, mobi" \
         "$INSTALL_DIR/calibre/resources/images/viewer.png" "256"
 }
@@ -193,8 +194,8 @@ install_deb virtualbox "Virtual Box" "$FILE_VB" "$URL_VB"
 #Eclipse installer
 down_uncompress "eclipse-installer" "eclipse-installer" "Eclipse Installer" "$FILE_ECLIPSE_INST" "$URL_ECLIPSE_INST" && {
   ICON_PATH="$INSTALL_DIR/eclipse-installer/icon.xpm";
-  EXEC="$INSTALL_DIR/eclipse-installer/eclipse-inst":
-  create_sc "Eclipse-Installer" "Eclipse Installer" "$VERSION_ECLIPSE_INST" \
+  EXEC="$INSTALL_DIR/eclipse-installer/eclipse-inst";
+  create_sc "eclipseinst" "Eclipse Installer" "Eclipse" "$VERSION_ECLIPSE_INST" \
     "$EXEC" "Development" "Java, JEE, JSE, IDE" "$ICON_PATH" "128";
 }
 
@@ -202,9 +203,9 @@ down_uncompress "eclipse-installer" "eclipse-installer" "Eclipse Installer" "$FI
 # rm -rfv $INSTALL_DIR/postman/
 down_uncompress "postman" "Postman" "Postman" "$FILE_POSTMAN" "$URL_POSTMAN" && {
   ICON_PATH="$INSTALL_DIR/postman/app/resources/app/assets/icon.png";
-  EXEC="$INSTALL_DIR/postman/Postman":
-  create_sc "Postman" "Postman" "$VERSION_POSTMAN" \
-    "$EXEC" "Development" "post;get;json, rest" "$ICON_PATH" "128"
+  EXEC="$INSTALL_DIR/postman/Postman";
+  create_sc "Postman" "Postman" "Postman" "$VERSION_POSTMAN" \
+    "$EXEC" "Development" "post, get, json, rest, api, request" "$ICON_PATH" "128"
 }
 
 # rm -rfv $HOME/opt/soapUI-*

@@ -63,7 +63,7 @@ function down_uncompress(){
   if [ ! -d "$INSTALL_DIR/$ENAME" ] ; then
     echo
     echo $SEPARATOR
-    echo "$NAME ............."
+    echo "$NAME ............. $FNAME"
     echo $SEPARATOR
     if [ ! -f "$FNAME" ]; then
         echo "    $URL"
@@ -90,7 +90,6 @@ function exist_pkg() {
   PKG=$1
   { dpkg -s $PKG >/dev/null 2>&1 && echo "'$PKG' is INSTALLED!" && return_cd=0; } || \
   { echo >&2 "I require '$PKG' but it's not installed."; return_cd=1; }
-  # echo $return_cd;
   return $return_cd;
 }
 
@@ -113,8 +112,10 @@ function is_true() {
 
 function exist_dir() {
   if [ -d "$1" ] ; then
+    echo "DIR '$1' EXIST!"
     return 0;
   fi
+  echo >&2 "I require DIR '$1' but it's not exist.";
   return 1;
 }
 
@@ -128,26 +129,23 @@ function exist_file() {
 function create_sc(){
     PSNAME=$1
     PNAME=$2
-    PVERSION=$3
-    PEXEC=$4
-    PCATEGORIES=$5
-    PKEYS=$6
-    PICON=$7
-    PICON_SIZE=$8
+    PVENDOR=$3
+    PVERSION=$4
+    PEXEC=$5
+    PCATEGORIES=$6
+    PKEYS=$7
+    PICON=$8
+    PICON_SIZE=$9
 
-    DESKTOP_FILE=$PSNAME-$PVERSION.desktop
-    if [ "$PVERSION" == "" ] ; then
-        DESKTOP_FILE=$PSNAME.desktop
-    fi
+    DESKTOP_FILE="$PSNAME.desktop"
 
     if [ -f "$DESKTOP_FILE" ] ; then
         rm -f $DESKTOP_FILE
     fi
     touch $DESKTOP_FILE
-
+    ## Version=$PVERSION
     cat > "$DESKTOP_FILE" << EOF
 [Desktop Entry]
-Version=$PVERSION
 Encoding=UTF-8
 Name=$PNAME
 Keywords=$PKEYS
@@ -165,14 +163,16 @@ EOF
     chmod 755 "$DESKTOP_FILE"
 
     ls -la $DESKTOP_FILE
+    ls -la $PICON
+    ls -la $PEXEC
+
     echo $DESKTOP_FILE
     echo "$SEPARATOR"
-    cat $DESKTOP_FILE
+    # cat $DESKTOP_FILE
     echo "$SEPARATOR"
 
-    xdg-desktop-menu install $DESKTOP_FILE
-    xdg-icon-resource --novendor install --size $PICON_SIZE "$PICON" "$PSNAME"
-    sudo cp -v $DESKTOP_FILE /usr/share/applications/$DESKTOP_FILE
-    rm $DESKTOP_FILE
+    # xdg-desktop-menu install $DESKTOP_FILE
+    desktop-file-install --dir=$HOME/.local/share/applications/ --delete-original $DESKTOP_FILE
+    xdg-icon-resource install --size $PICON_SIZE "$PICON" "$PVENDOR-$PSNAME"
     echo "CREATE SC for $PNAME"
 }
