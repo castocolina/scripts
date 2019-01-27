@@ -20,6 +20,9 @@ exist_cmd aptitude || { sudo apt install -y aptitude; }
 if is_true $to_update ; then
     sudo aptitude update -y
     sudo aptitude install linux-headers-$(uname -r) -y
+    exist_cmd pip && sudo -H pip install --upgrade pip;
+    exist_cmd brew && brew update --force
+    exist_cmd sdk && sdk selfupdate force
 fi
 
 printf "\n$SEPARATOR\n >>>>>  ESSENTIALS\n"
@@ -155,7 +158,7 @@ exist_cmd docker ||
   sudo restart docker
 }
 #sudo -H pip install docker-compose
-exist_cmd docker-compose && sudo -H pip install docker-compose
+exist_cmd docker-compose || sudo -H pip install docker-compose
 
 printf "\n$SEPARATOR\n >>>>> GUI\n"
 exist_cmd meld ca-certificates|| { sudo apt install -y meld; }
