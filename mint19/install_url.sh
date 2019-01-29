@@ -62,11 +62,6 @@ VERSION_VAGRANT=2.2.2
 FILE_VAGRANT="vagrant_${VERSION_VAGRANT}_x86_64.deb"
 URL_VAGRANT="https://releases.hashicorp.com/vagrant/$VERSION_VAGRANT/$FILE_VAGRANT"
 
-#https://code-industry.net/public/master-pdf-editor-5.0.15_qt5.amd64.deb
-VERSION_MASTER_PDF=5.2.20
-FILE_MASTER_PDF="master-pdf-editor-${VERSION_MASTER_PDF}_qt5.amd64.deb"
-URL_MASTER_PDF="https://code-industry.net/public/$FILE_MASTER_PDF"
-
 #https://www.getpostman.com/app/download/linux64
 VERSION_POSTMAN=6.7.1
 FILE_POSTMAN="postman-linux-x64-$VERSION_POSTMAN.tar.gz"
@@ -89,20 +84,16 @@ VERSION_ECLIPSE_INST=2018-12
 FILE_ECLIPSE_INST=eclipse-inst-linux64.tar.gz
 URL_ECLIPSE_INST="http://espejito.fder.edu.uy/eclipse/oomph/epp/$VERSION_ECLIPSE_INST/R/$FILE_ECLIPSE_INST"
 
-#https://dl.google.com/dl/android/studio/ide-zips/2.3.3.0/android-studio-ide-162.4069837-linux.zip
-VERSION_ANDSTUDIO=2.3.3.0
-FILE_ANDSTUDIO=android-studio-ide-162.4069837-linux.zip
-URL_ANDSTUDIO="https://dl.google.com/dl/android/studio/ide-zips/$VERSION_ANDSTUDIO/$FILE_ANDSTUDIO"
+#https://dl.google.com/android/repository/sdk-tools-linux-4333796.zip
+VERSION_ANDROID_TOOLS=4333796
+FILE_ANDROID_TOOLS="sdk-tools-linux-$VERSION_ANDROID_TOOLS.zip"
+URL_ANDROID_TOOLS="https://dl.google.com/android/repository/$FILE_ANDROID_TOOLS"
 
-#https://dl.google.com/android/repository/tools_r25.2.3-linux.zip
-VERSION_ANDTOOLS=r25.2.3
-FILE_ANDTOOLS=tools_$VERSION_ANDTOOLS-linux.zip
-URL_ANDTOOLS="https://dl.google.com/android/repository/$FILE_ANDTOOLS"
-
-#https://dl.google.com/android/repository/platform-tools-latest-linux.zip
-VERSION_AND_PLATF_TOOLS=latest
-FILE_AND_PLATF_TOOLS=platform-tools-latest-linux.zip
-URL_AND_PLATF_TOOLS="https://dl.google.com/android/repository/platform-tools-latest-linux.zip"
+#https://dl.google.com/dl/android/studio/ide-zips/3.2.1.0/android-studio-ide-181.5056338-linux.zip
+#https://dl.google.com/dl/android/studio/ide-zips/3.3.0.20/android-studio-ide-182.5199772-linux.zip
+VERSION_ANDROID_STUDIO=3.3.0.20
+FILE_ANDROID_STUDIO=android-studio-ide-182.5199772-linux.zip
+URL_ANDROID_STUDIO="https://dl.google.com/dl/android/studio/ide-zips/$VERSION_ANDROID_STUDIO/$FILE_ANDROID_STUDIO"
 
 #https://download-cf.jetbrains.com/idea/ideaIU-2017.2.3-no-jdk.tar.gz
 VERSION_INTELLIJ_U=2017.1.5-no-jdk
@@ -118,11 +109,6 @@ URL_INTELLIJ_C="https://download-cf.jetbrains.com/idea/$FILE_INTELLIJ_C"
 VERSION_DATAGRIP=2017.1.5
 FILE_DATAGRIP="datagrip-$VERSION_DATAGRIP.tar.gz"
 URL_DATAGRIP="https://download-cf.jetbrains.com/datagrip/$FILE_DATAGRIP"
-
-#file://media/ccolina/DATA_MINT/Downloads/sqldeveloper-17.2.0.188.1159-no-jre.zip
-VERSION_ORA_SQLDEVELOPER=17.2.0
-FILE_ORA_SQLDEVELOPER="sqldeveloper-17.2.0.188.1159-no-jre.zip"
-URL_ORA_SQLDEVELOPER="/media/ccolina/DATA_MINT/Downloads/$FILE_ORA_SQLDEVELOPER"
 
 #https://downloads.mongodb.com/linux/mongodb-linux-x86_64-enterprise-ubuntu1604-3.4.10.tgz
 VERSION_MONGODB34=3.4.10

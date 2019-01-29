@@ -1,5 +1,7 @@
 #!/bin/bash
 
+sudo echo "Test sudo"
+
 export SEPARATOR="========================================================================================================================"
 # http://sourabhbajaj.com/mac-setup/
 
@@ -23,6 +25,7 @@ if is_true $to_update ; then
     exist_cmd pip && sudo -H pip install --upgrade pip;
     exist_cmd brew && brew update --force
     exist_cmd sdk && sdk selfupdate force
+    exist_cmd sdkmanager && sdkmanager --update
 fi
 
 printf "\n$SEPARATOR\n >>>>>  ESSENTIALS\n"
@@ -118,13 +121,83 @@ printf "\n$SEPARATOR\n >>>>> JAVA / ANDROID\n"
 exist_dir "$HOME/.sdkman/candidates/java/current/" || sdk install java 8.0.191-oracle
 exist_cmd mvn || sdk install maven 3.6.0
 exist_cmd gradle || sdk install gradle 5.1
-#exist_cmd adb || brew cask install android-sdk android-platform-tools androidtool android-ndk android-studio
-#export ANDROID_SDK_ROOT="/usr/local/share/android-sdk"
+#Android SDK Tools
+down_uncompress "tools" "tools" "Android SDK Tools" "$FILE_ANDROID_TOOLS" "$URL_ANDROID_TOOLS" "$HOME/Android/Sdk" && {
+  ANDROID_SDK_CONFIG=$(cat <<'EOF'
+
+export ANDROID_SDK="$HOME/Android/Sdk"
+export ANDROID_SDK_HOME="$ANDROID_SDK"
+export ANDROID_SDK_ROOT="$ANDROID_SDK"
+export ANDROID_TOOLS="$ANDROID_SDK/tools"
+export ANDROID_PLATFORM_TOOLS="$ANDROID_SDK/platform-tools"
+export PATH="$ANDROID_PLATFORM_TOOLS:$ANDROID_TOOLS:$ANDROID_TOOLS/bin:$PATH"
+
+EOF
+);
+  echo "$ANDROID_SDK_CONFIG ----"
+  find_append $MY_SH_CFG_FILE "ANDROID_SDK_HOME=" "$ANDROID_SDK_CONFIG"
+  source $MY_SH_CFG_FILE
+  echo
+  which sdkmanager
+  echo
+
+  mkdir -p $ANDROID_SDK/.android/
+  ANDROID_REPO_PREFIX="### User Sources for Android SDK Manager"
+  ANDROID_REPOSITORIES="$ANDROID_REPO_PREFIX\n# $(date "+%a %b %d %T %Z %Y") count=0\n"
+  printf "\n===> ANDROID repositories.cfg\n$ANDROID_REPOSITORIES ----\n\n"
+  find_append $ANDROID_SDK/.android/repositories.cfg "$ANDROID_REPO_PREFIX" "$ANDROID_REPOSITORIES"
+
+  yes | sdkmanager --licenses || true
+  yes | sdkmanager --update --verbose --sdk_root="$ANDROID_SDK"
+
+}
+
+printf "\n$SEPARATOR\n >>>>> INSTALL REPOS\n"
+yes | sdkmanager "extras;google;m2repository" "extras;android;m2repository" --verbose --sdk_root="$ANDROID_SDK"
+
+printf "\n$SEPARATOR\n >>>>> INSTALL TOOLS\n"
+yes | sdkmanager "tools" "platform-tools" --verbose --sdk_root="$ANDROID_SDK"
+
+printf "\n$SEPARATOR\n >>>>> INSTALL EMULATOR, DOCS, NDK\n"
+yes | sdkmanager "emulator" --verbose --sdk_root="$ANDROID_SDK"
+yes | sdkmanager "docs" --verbose --sdk_root="$ANDROID_SDK"
+yes | sdkmanager "ndk-bundle" --verbose --sdk_root="$ANDROID_SDK"
+
+printf "\n$SEPARATOR\n >>>>> INSTALL PLATFORM, SOURCES, IMAGES\n"
+yes | sdkmanager "platforms;android-24" "sources;android-24" "system-images;android-24;google_apis_playstore;x86" \
+    "build-tools;24.0.3" --verbose --sdk_root="$ANDROID_SDK"
+yes | sdkmanager "platforms;android-25" "sources;android-25" "system-images;android-25;google_apis_playstore;x86" \
+    "build-tools;25.0.3" "system-images;android-25;android-wear;x86" --verbose --sdk_root="$ANDROID_SDK"
+yes | sdkmanager "platforms;android-26" "sources;android-26" "system-images;android-26;google_apis_playstore;x86" \
+    "build-tools;26.0.3" --verbose --sdk_root="$ANDROID_SDK"
+yes | sdkmanager "platforms;android-27" "sources;android-27" "system-images;android-27;google_apis_playstore;x86" \
+    "build-tools;27.0.3" --verbose --sdk_root="$ANDROID_SDK"
+yes | sdkmanager "platforms;android-28" "sources;android-28" "system-images;android-28;google_apis_playstore;x86" \
+    "build-tools;28.0.3" "system-images;android-28;android-wear;x86" --verbose --sdk_root="$ANDROID_SDK"
+
+printf "\n$SEPARATOR\n >>>>> OTHERS ANDROIDS DEPS \n"
+exist_pkg cpu-checker || sudo aptitude install -y cpu-checker
+exist_pkg qemu-kvm || sudo aptitude install -y qemu-kvm
+exist_pkg libvirt-bin || sudo aptitude install -y libvirt-bin
+exist_pkg ubuntu-vm-builder || sudo aptitude install -y ubuntu-vm-builder
+exist_pkg bridge-utils || sudo aptitude install -y bridge-utils
+exist_pkg ia32-libs || sudo aptitude install -y ia32-libs
+
+sudo adduser $USER  kvm
+sudo chmod o+x /dev/kvm
+
+# Android Studio
+down_uncompress "android-studio-ide" "android-studio" "Android Studio IDE" "$FILE_ANDROID_STUDIO" "$URL_ANDROID_STUDIO" && {
+  ICON_PATH="$INSTALL_DIR/android-studio-ide/bin/studio.png";
+  EXEC="$INSTALL_DIR/android-studio-ide/bin/studio.sh";
+  create_sc "android-studio" "Android Studio IDE" "Android" "$VERSION_ANDROID_STUDIO" \
+    "$EXEC" "Development" "Java, Android, IDE" "$ICON_PATH" "128";
+}
 
 printf "\n$SEPARATOR\n >>>>> MULTIMEDIA\n"
 exist_cmd ffmpeg || { sudo apt install -y ffmpeg; }
 exist_cmd mkvtoolnix-gui || { sudo apt install -y mkvtoolnix-gui; }
-exist_pkg spotify-client >/dev/null 2>&1 || { sudo apt install -y spotify-client; }
+exist_pkg spotify-client || { sudo apt install -y spotify-client; }
 
 printf "\n$SEPARATOR\n >>>>> OTHERS\n"
 exist_cmd tree || brew install tree
@@ -254,8 +327,9 @@ printf ":: $SEPARATOR\n NPM: "
 npm --version
 printf ":: $SEPARATOR\n NODE: "
 node --version
+printf ":: $SEPARATOR\n Android SDK Manager"
+sdkmanager --version
 printf ":: $SEPARATOR\n "
-
 
 echo
 

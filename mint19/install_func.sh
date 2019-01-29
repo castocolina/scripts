@@ -35,35 +35,19 @@ function install_deb(){
   cd $CURR_DIR
 }
 
-function down_install_soapui(){
-  CURR_DIR=$(pwd)
-  mkdir -p $TMP_INSTALL_DIR; cd $TMP_INSTALL_DIR
-
-  VERSION=$1; FILE=$2; URL=$3;
-
-  SOAPUI_DIR="$INSTALL_DIR/soapUI-$VERSION"
-  if [ ! -d "$SOAPUI_DIR" ] ; then
-      echo "SOAPUI $VERSION ..........."
-      if [ ! -f "$FILE" ]; then
-          echo "    $URL"
-          curl -o $FILE -fSL $URL
-      fi
-      echo $FILE
-      sh $FILE -q -Dinstall4j.noProxyAutoDetect=true -splash "SOAPUI $VERSION installer" -dir $SOAPUI_DIR
-  fi
-
-  cd $CURR_DIR
-}
-
 function down_uncompress(){
   CURR_DIR=$(pwd)
   mkdir -p $TMP_INSTALL_DIR; cd $TMP_INSTALL_DIR
   #target folder name, original folder name, desc name, file name, url
-  ENAME=$1; CNAME=$2; NAME=$3; FNAME=$4; URL=$5;
-  if [ ! -d "$INSTALL_DIR/$ENAME" ] ; then
+  ENAME=$1; CNAME=$2; NAME=$3; FNAME=$4; URL=$5; TARGET=$6;
+
+  APP_TARGET=${TARGET:-$INSTALL_DIR}
+
+  if [ ! -d "$APP_TARGET/$ENAME" ] ; then
+    mkdir -p $APP_TARGET
     echo
     echo $SEPARATOR
-    echo "$NAME ............. $FNAME"
+    echo "$NAME ............. $FNAME ->> $APP_TARGET"
     echo $SEPARATOR
     if [ ! -f "$FNAME" ]; then
         echo "    $URL"
@@ -73,13 +57,18 @@ function down_uncompress(){
     if [[ $FNAME == *.tar.gz ]]; then
       tar -zxf $FNAME
     fi
+
+    if [[ $FNAME == *.zip ]]; then
+      unzip -q $FNAME
+    fi
     
     if [ ! "$CNAME" = "$ENAME" ]; then 
       mv -f $CNAME/ $ENAME
     fi
-    mv -f $ENAME/ $INSTALL_DIR/
+    mv -f $ENAME/ $APP_TARGET/
     return_cd=0
-  else 
+  else
+    echo "$NAME ............. IS INSTALLED ->> $APP_TARGET"
     return_cd=1
   fi
   cd $CURR_DIR
@@ -97,7 +86,7 @@ function find_append(){
   FILE=$1
   FIND=$2
   TEXT=$3
-
+  touch $FILE
   if ! grep -q "$FIND" $FILE; then
     printf "$TEXT" >> $FILE
   fi
@@ -175,4 +164,24 @@ EOF
     desktop-file-install --dir=$HOME/.local/share/applications/ --delete-original $DESKTOP_FILE
     xdg-icon-resource install --size $PICON_SIZE "$PICON" "$PVENDOR-$PSNAME"
     echo "CREATE SC for $PNAME"
+}
+
+function down_install_soapui(){
+  CURR_DIR=$(pwd)
+  mkdir -p $TMP_INSTALL_DIR; cd $TMP_INSTALL_DIR
+
+  VERSION=$1; FILE=$2; URL=$3;
+
+  SOAPUI_DIR="$INSTALL_DIR/soapUI-$VERSION"
+  if [ ! -d "$SOAPUI_DIR" ] ; then
+      echo "SOAPUI $VERSION ..........."
+      if [ ! -f "$FILE" ]; then
+          echo "    $URL"
+          curl -o $FILE -fSL $URL
+      fi
+      echo $FILE
+      sh $FILE -q -Dinstall4j.noProxyAutoDetect=true -splash "SOAPUI $VERSION installer" -dir $SOAPUI_DIR
+  fi
+
+  cd $CURR_DIR
 }
