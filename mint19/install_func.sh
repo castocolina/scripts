@@ -39,9 +39,9 @@ function down_uncompress(){
   CURR_DIR=$(pwd)
   mkdir -p $TMP_INSTALL_DIR; cd $TMP_INSTALL_DIR
   #target folder name, original folder name, desc name, file name, url
-  ENAME=$1; CNAME=$2; NAME=$3; FNAME=$4; URL=$5; TARGET=$6;
+  ENAME=$1; CNAME=$2; NAME=$3; FNAME=$4; URL=$5; FINAL_TARGET_DIR=$6;
 
-  APP_TARGET=${TARGET:-$INSTALL_DIR}
+  APP_TARGET=${FINAL_TARGET_DIR:-$INSTALL_DIR}
 
   if [ ! -d "$APP_TARGET/$ENAME" ] ; then
     mkdir -p $APP_TARGET
@@ -54,18 +54,26 @@ function down_uncompress(){
         curl -o "$FNAME" -fSL $URL
     fi
 
-    if [[ $FNAME == *.tar.gz ]]; then
+    if [[ $FNAME == *.tar.gz ]] || [[ $FNAME == *.tgz ]]; then
       tar -zxf $FNAME
     fi
 
     if [[ $FNAME == *.zip ]]; then
       unzip -q $FNAME
     fi
+
+    if [[ $CNAME == *.sh ]]; then
+      bash $CNAME -q -Dinstall4j.noProxyAutoDetect=true -splash "$NAME  installer" -dir "$APP_TARGET/$ENAME"
+    fi
     
-    if [ ! "$CNAME" = "$ENAME" ]; then 
+    if [ -d "$CNAME" ] && [ ! "$CNAME" = "$ENAME" ]; then 
       mv -f $CNAME/ $ENAME
     fi
-    mv -f $ENAME/ $APP_TARGET/
+
+    if [ -d "$ENAME" ] ; then 
+      mv -f $ENAME/ $APP_TARGET/
+    fi
+
     return_cd=0
   else
     echo "$NAME ............. IS INSTALLED ->> $APP_TARGET"
@@ -88,7 +96,7 @@ function find_append(){
   TEXT=$3
   touch $FILE
   if ! grep -q "$FIND" $FILE; then
-    printf "$TEXT" >> $FILE
+    printf "$TEXT\n\n" >> $FILE
   fi
 }
 
@@ -180,7 +188,7 @@ function down_install_soapui(){
           curl -o $FILE -fSL $URL
       fi
       echo $FILE
-      sh $FILE -q -Dinstall4j.noProxyAutoDetect=true -splash "SOAPUI $VERSION installer" -dir $SOAPUI_DIR
+      bash $FILE -q -Dinstall4j.noProxyAutoDetect=true -splash "SOAPUI $VERSION installer" -dir $SOAPUI_DIR
   fi
 
   cd $CURR_DIR

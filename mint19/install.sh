@@ -150,30 +150,30 @@ EOF
   yes | sdkmanager --licenses || true
   yes | sdkmanager --update --verbose --sdk_root="$ANDROID_SDK"
 
+  printf "\n$SEPARATOR\n >>>>> INSTALL REPOS\n"
+  yes | sdkmanager "extras;google;m2repository" "extras;android;m2repository" --verbose --sdk_root="$ANDROID_SDK"
+
+  printf "\n$SEPARATOR\n >>>>> INSTALL TOOLS\n"
+  yes | sdkmanager "tools" "platform-tools" --verbose --sdk_root="$ANDROID_SDK"
+
+  printf "\n$SEPARATOR\n >>>>> INSTALL EMULATOR, DOCS, NDK\n"
+  yes | sdkmanager "emulator" --verbose --sdk_root="$ANDROID_SDK"
+  yes | sdkmanager "docs" --verbose --sdk_root="$ANDROID_SDK"
+  yes | sdkmanager "ndk-bundle" --verbose --sdk_root="$ANDROID_SDK"
+
+  printf "\n$SEPARATOR\n >>>>> INSTALL PLATFORM, SOURCES, IMAGES\n"
+  yes | sdkmanager "platforms;android-24" "sources;android-24" "system-images;android-24;google_apis_playstore;x86" \
+      "build-tools;24.0.3" --verbose --sdk_root="$ANDROID_SDK"
+  yes | sdkmanager "platforms;android-25" "sources;android-25" "system-images;android-25;google_apis_playstore;x86" \
+      "build-tools;25.0.3" "system-images;android-25;android-wear;x86" --verbose --sdk_root="$ANDROID_SDK"
+  yes | sdkmanager "platforms;android-26" "sources;android-26" "system-images;android-26;google_apis_playstore;x86" \
+      "build-tools;26.0.3" --verbose --sdk_root="$ANDROID_SDK"
+  yes | sdkmanager "platforms;android-27" "sources;android-27" "system-images;android-27;google_apis_playstore;x86" \
+      "build-tools;27.0.3" --verbose --sdk_root="$ANDROID_SDK"
+  yes | sdkmanager "platforms;android-28" "sources;android-28" "system-images;android-28;google_apis_playstore;x86" \
+      "build-tools;28.0.3" "system-images;android-28;android-wear;x86" --verbose --sdk_root="$ANDROID_SDK"
+
 }
-
-printf "\n$SEPARATOR\n >>>>> INSTALL REPOS\n"
-yes | sdkmanager "extras;google;m2repository" "extras;android;m2repository" --verbose --sdk_root="$ANDROID_SDK"
-
-printf "\n$SEPARATOR\n >>>>> INSTALL TOOLS\n"
-yes | sdkmanager "tools" "platform-tools" --verbose --sdk_root="$ANDROID_SDK"
-
-printf "\n$SEPARATOR\n >>>>> INSTALL EMULATOR, DOCS, NDK\n"
-yes | sdkmanager "emulator" --verbose --sdk_root="$ANDROID_SDK"
-yes | sdkmanager "docs" --verbose --sdk_root="$ANDROID_SDK"
-yes | sdkmanager "ndk-bundle" --verbose --sdk_root="$ANDROID_SDK"
-
-printf "\n$SEPARATOR\n >>>>> INSTALL PLATFORM, SOURCES, IMAGES\n"
-yes | sdkmanager "platforms;android-24" "sources;android-24" "system-images;android-24;google_apis_playstore;x86" \
-    "build-tools;24.0.3" --verbose --sdk_root="$ANDROID_SDK"
-yes | sdkmanager "platforms;android-25" "sources;android-25" "system-images;android-25;google_apis_playstore;x86" \
-    "build-tools;25.0.3" "system-images;android-25;android-wear;x86" --verbose --sdk_root="$ANDROID_SDK"
-yes | sdkmanager "platforms;android-26" "sources;android-26" "system-images;android-26;google_apis_playstore;x86" \
-    "build-tools;26.0.3" --verbose --sdk_root="$ANDROID_SDK"
-yes | sdkmanager "platforms;android-27" "sources;android-27" "system-images;android-27;google_apis_playstore;x86" \
-    "build-tools;27.0.3" --verbose --sdk_root="$ANDROID_SDK"
-yes | sdkmanager "platforms;android-28" "sources;android-28" "system-images;android-28;google_apis_playstore;x86" \
-    "build-tools;28.0.3" "system-images;android-28;android-wear;x86" --verbose --sdk_root="$ANDROID_SDK"
 
 printf "\n$SEPARATOR\n >>>>> OTHERS ANDROIDS DEPS \n"
 exist_pkg cpu-checker || sudo aptitude install -y cpu-checker
@@ -284,7 +284,50 @@ down_uncompress "postman" "Postman" "Postman" "$FILE_POSTMAN" "$URL_POSTMAN" && 
     "$EXEC" "Development" "post, get, json, rest, api, request" "$ICON_PATH" "128"
 }
 
-# rm -rfv $HOME/opt/soapUI-*
+#Mongo DB
+down_uncompress "mongodb4" "mongodb*" "MongoDB" "$FILE_MONGODB_4" "$URL_MONGODB_4" && {
+
+  sudo mkdir -p /data/db
+  sudo chown $USER:$USER /data/db
+  MONGODB_4_CONFIG=$(cat <<'EOF'
+export MONGODB_4_HOME="$HOME/opt/mongodb4"
+export MONGODB_HOME="$MONGODB_4_HOME"
+export PATH="$MONGODB_HOME/bin:$PATH"
+EOF
+);
+  echo "$MONGODB_4_CONFIG ----"
+  find_append $MY_SH_CFG_FILE "MONGODB_4_HOME=" "$MONGODB_4_CONFIG"
+  source $MY_SH_CFG_FILE
+}
+
+#Robo Studio 3T
+exist_dir "$INSTALL_DIR/studio-3t" || {
+   down_uncompress "studio-3t" "studio-3t-linux-x64.sh" "Robo Studio 3T" "$FILE_ROBO_STUDIO_3T" "$URL_ROBO_STUDIO_3T"
+
+  ICON_PATH="$INSTALL_DIR/studio-3t/.install4j/Studio-3T.png";
+  EXEC="$INSTALL_DIR/studio-3t/Studio-3T";
+  create_sc "studio3t" "Robo Studio 3T" "robo3t" "$VERSION_ROBO_STUDIO_3T" \
+    "$EXEC" "Development" \
+    "no SQL, Database, non SQL, JSON, Mongo, MongoDB, Document, Javascript, JS" \
+    "$ICON_PATH" "48"
+}
+
+#Data Grip
+down_uncompress "DataGrip" "DataGrip-*" "DataGrip" "$FILE_DATAGRIP" "$URL_DATAGRIP" && {
+
+  cp -f $INSTALL_DIR/DataGrip/bin/datagrip64.vmoptions $INSTALL_DIR/DataGrip/bin/datagrip64.vmoptions.original
+  sed -i 's/-Xms.*/-Xms256m/' "$INSTALL_DIR/DataGrip/bin/datagrip64.vmoptions"
+  sed -i 's/-Xmx.*/-Xmx1024m/' "$INSTALL_DIR/DataGrip/bin/datagrip64.vmoptions"
+
+  ICON_PATH="$INSTALL_DIR/DataGrip/bin/datagrip.png";
+  EXEC="$INSTALL_DIR/DataGrip/bin/datagrip.sh";
+  create_sc "datagrip" "DataGrip" "JetBrains" "$VERSION_DATAGRIP" \
+    "$EXEC" "Development" \
+    "SQL, Database, DML, DDL, Oracle, MySQL, Postgres, PostgreSQL, IBM, DB2, SQL Server, Sybase, SQLite, Derby, HSQLDB, H2" \
+    "$ICON_PATH" "128"
+}
+
+# rm -rfv $HOME/soapUI-*
 down_install_soapui "4" "$FILE_SOAPUI4" "$URL_SOAPUI4"
 down_install_soapui "5" "$FILE_SOAPUI5" "$URL_SOAPUI5"
 

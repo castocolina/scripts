@@ -95,10 +95,16 @@ VERSION_ANDROID_STUDIO=3.3.0.20
 FILE_ANDROID_STUDIO=android-studio-ide-182.5199772-linux.zip
 URL_ANDROID_STUDIO="https://dl.google.com/dl/android/studio/ide-zips/$VERSION_ANDROID_STUDIO/$FILE_ANDROID_STUDIO"
 
-#https://download-cf.jetbrains.com/idea/ideaIU-2017.2.3-no-jdk.tar.gz
-VERSION_INTELLIJ_U=2017.1.5-no-jdk
-FILE_INTELLIJ_U="ideaIU-$VERSION_INTELLIJ_U.tar.gz"
-URL_INTELLIJ_U="https://download-cf.jetbrains.com/idea/$FILE_INTELLIJ_U"
+#https://repo.mongodb.org/apt/ubuntu/dists/bionic/mongodb-org/4.0/multiverse/binary-amd64/mongodb-org-server_4.0.5_amd64.deb
+#http://downloads.mongodb.org/linux/mongodb-linux-x86_64-ubuntu1804-4.0.5.tgz
+VERSION_MONGODB_4=4.0.5
+FILE_MONGODB_4="mongodb-linux-x86_64-ubuntu1804-$VERSION_MONGODB_4.tgz"
+URL_MONGODB_4="http://downloads.mongodb.org/linux/$FILE_MONGODB_4"
+
+#https://download.studio3t.com/studio-3t/linux/2018.6.1/studio-3t-linux-x64.tar.gz
+VERSION_ROBO_STUDIO_3T=2018.6.1
+FILE_ROBO_STUDIO_3T="studio-3t-linux-x64.tar.gz"
+URL_ROBO_STUDIO_3T="https://download.studio3t.com/studio-3t/linux/$VERSION_ROBO_STUDIO_3T/$FILE_ROBO_STUDIO_3T"
 
 #https://download-cf.jetbrains.com/idea/ideaIC-2017.2.3-no-jdk.tar.gz
 VERSION_INTELLIJ_C=2017.2.5-no-jdk
@@ -109,11 +115,6 @@ URL_INTELLIJ_C="https://download-cf.jetbrains.com/idea/$FILE_INTELLIJ_C"
 VERSION_DATAGRIP=2017.1.5
 FILE_DATAGRIP="datagrip-$VERSION_DATAGRIP.tar.gz"
 URL_DATAGRIP="https://download-cf.jetbrains.com/datagrip/$FILE_DATAGRIP"
-
-#https://downloads.mongodb.com/linux/mongodb-linux-x86_64-enterprise-ubuntu1604-3.4.10.tgz
-VERSION_MONGODB34=3.4.10
-FILE_MONGODB34="mongodb-linux-x86_64-enterprise-ubuntu1604-$VERSION_MONGODB34.tgz"
-URL_MONGODB34="https://downloads.mongodb.com/linux/$FILE_MONGODB34"
 
 #http://www-eu.apache.org/dist//jmeter/binaries/apache-jmeter-4.0.tgz
 VERSION_JMETER=4.0
