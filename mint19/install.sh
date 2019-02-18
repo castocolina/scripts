@@ -5,16 +5,14 @@ sudo echo "Test sudo"
 export SEPARATOR="========================================================================================================================"
 # http://sourabhbajaj.com/mac-setup/
 
-export MY_SH_CFG_FILE=~/.zshrc4cco
-touch $MY_SH_CFG_FILE
-
 echo ""
 echo $SEPARATOR
 echo ">>>>> UPDATE ................"
 echo $SEPARATOR
-source $MY_SH_CFG_FILE
+
 source install_func.sh
 source install_url.sh
+source $MY_SH_CFG_FILE
 
 read -p "UPDATE? (y/n) > " to_update
 
@@ -42,6 +40,8 @@ exist_pkg ca-certificates || sudo aptitude install -y ca-certificates
 exist_pkg software-properties-common || sudo aptitude install -y software-properties-common
 exist_pkg git || sudo aptitude install -y git
 exist_pkg dkms || sudo aptitude install -y dkms
+exist_pkg xclip || sudo aptitude install -y xclip
+exist_pkg xsel || sudo aptitude install -y xsel
 
 exist_cmd unzip || { sudo aptitude install -y unzip; }
 exist_cmd pip || { sudo aptitude install -y python-pip; sudo -H pip install --upgrade pip; }
@@ -302,7 +302,7 @@ EOF
 
 #Robo Studio 3T
 exist_dir "$INSTALL_DIR/studio-3t" || {
-   down_uncompress "studio-3t" "studio-3t-linux-x64.sh" "Robo Studio 3T" "$FILE_ROBO_STUDIO_3T" "$URL_ROBO_STUDIO_3T"
+  down_install4j "studio-3t" "Robo Studio 3T" "$FILE_ROBO_STUDIO_3T" "$URL_ROBO_STUDIO_3T"
 
   ICON_PATH="$INSTALL_DIR/studio-3t/.install4j/Studio-3T.png";
   EXEC="$INSTALL_DIR/studio-3t/Studio-3T";
@@ -328,8 +328,8 @@ down_uncompress "DataGrip" "DataGrip-*" "DataGrip" "$FILE_DATAGRIP" "$URL_DATAGR
 }
 
 # rm -rfv $HOME/soapUI-*
-down_install_soapui "4" "$FILE_SOAPUI4" "$URL_SOAPUI4"
-down_install_soapui "5" "$FILE_SOAPUI5" "$URL_SOAPUI5"
+down_install4j "soapUI-4" "soapUI v4" "$FILE_SOAPUI4" "$URL_SOAPUI4"
+down_install4j "soapUI-5" "soapUI v5" "$FILE_SOAPUI5" "$URL_SOAPUI5"
 
 #exist_cmd robo-3t || brew cask install robo-3t
 

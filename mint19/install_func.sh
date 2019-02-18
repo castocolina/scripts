@@ -1,5 +1,8 @@
 #!/bin/bash
 
+export MY_SH_CFG_FILE=~/.zshrc4cco
+touch $MY_SH_CFG_FILE
+
 function exist_cmd() {
   CMD=$1
   { command -v $CMD >/dev/null 2>&1 && echo "'$CMD' is INSTALLED!" && return_cd=0; } || \
@@ -60,10 +63,6 @@ function down_uncompress(){
 
     if [[ $FNAME == *.zip ]]; then
       unzip -q $FNAME
-    fi
-
-    if [[ $CNAME == *.sh ]]; then
-      bash $CNAME -q -Dinstall4j.noProxyAutoDetect=true -splash "$NAME  installer" -dir "$APP_TARGET/$ENAME"
     fi
     
     if [ -d "$CNAME" ] && [ ! "$CNAME" = "$ENAME" ]; then 
@@ -174,21 +173,22 @@ EOF
     echo "CREATE SC for $PNAME"
 }
 
-function down_install_soapui(){
+function down_install4j(){
+
   CURR_DIR=$(pwd)
   mkdir -p $TMP_INSTALL_DIR; cd $TMP_INSTALL_DIR
 
-  VERSION=$1; FILE=$2; URL=$3;
+  SNAME=$1; NAME=$2; FILE=$3; URL=$4;
 
-  SOAPUI_DIR="$INSTALL_DIR/soapUI-$VERSION"
-  if [ ! -d "$SOAPUI_DIR" ] ; then
-      echo "SOAPUI $VERSION ..........."
+  PROGRAM_DIR="$INSTALL_DIR/$SNAME"
+  echo "$NAME ........... >> $PROGRAM_DIR"
+  if [ ! -d "$PROGRAM_DIR" ] ; then
       if [ ! -f "$FILE" ]; then
           echo "    $URL"
           curl -o $FILE -fSL $URL
       fi
       echo $FILE
-      bash $FILE -q -Dinstall4j.noProxyAutoDetect=true -splash "SOAPUI $VERSION installer" -dir $SOAPUI_DIR
+      bash $FILE -q -Dinstall4j.noProxyAutoDetect=true -splash "$NAME $VERSION installer" -dir $PROGRAM_DIR
   fi
 
   cd $CURR_DIR
