@@ -1,18 +1,21 @@
 #!/bin/bash
-
+BASEDIR=$(dirname "$0")
 sudo echo "Test sudo"
 
 export SEPARATOR="========================================================================================================================"
 # http://sourabhbajaj.com/mac-setup/
-
-export MY_ZSH_COMPLETION_MINIKUBE=~/.zsh_minikube
-export MY_ZSH_COMPLETION_KUBECTL=~/.zsh_kubectl
+ZSH_COMPLETIONS_DIR=$HOME/.oh-my-zsh/completions
+mkdir -p $ZSH_COMPLETIONS_DIR
+export MY_ZSH_COMPLETION_MINIKUBE=$ZSH_COMPLETIONS_DIR/_minikube.zsh
+export MY_ZSH_COMPLETION_KUBECTL=$ZSH_COMPLETIONS_DIR/_kubectl.zsh
+export MY_ZSH_COMPLETION_KUBECTX=$ZSH_COMPLETIONS_DIR/_kubectx.zsh
+export MY_ZSH_COMPLETION_KUBENS=$ZSH_COMPLETIONS_DIR/_kubens.zsh
 
 echo ""
 echo $SEPARATOR
 echo ">>>>> INSTAL K8 Developer Utilities ................"
 echo $SEPARATOR
-source install_func.sh
+source $BASEDIR/install_func.sh
 source $MY_SH_CFG_FILE
 
 egrep --color 'vmx|svm' /proc/cpuinfo
@@ -38,6 +41,31 @@ exist_cmd minikube || {
   sudo cp minikube /usr/local/bin && rm minikube
 }
 
+exist_cmd kubectx || brew install kubectx
+exist_cmd kube_ps1 || {
+  brew install kube-ps1;
+
+  KUBE_PS1_COMMENT="#PS1 load config"
+  KUBE_PS1_CONFIG=$(cat << EOF
+
+$KUBE_PS1_COMMENT
+source "/home/linuxbrew/.linuxbrew/opt/kube-ps1/share/kube-ps1.sh"
+PS1='\$(kube_ps1)'\$PS1
+
+EOF
+);
+    
+  echo "   $KUBE_PS1_CONFIG ----"
+  find_append $MY_SH_CFG_FILE "$KUBE_PS1_COMMENT" "$KUBE_PS1_CONFIG"
+  source $MY_SH_CFG_FILE
+}
+exist_cmd kube-prompt || {
+  wget https://github.com/c-bata/kube-prompt/releases/download/v1.0.6/kube-prompt_v1.0.6_linux_amd64.zip;
+  unzip kube-prompt_v1.0.6_linux_amd64.zip
+  chmod +x kube-prompt
+  sudo mv ./kube-prompt /usr/local/bin/kube-prompt
+}
+
 if [ ! -f "$MY_ZSH_COMPLETION_MINIKUBE" ] ; then
   touch $MY_ZSH_COMPLETION_MINIKUBE
   echo "#!/bin/zsh" > "$MY_ZSH_COMPLETION_MINIKUBE"
@@ -50,19 +78,13 @@ if [ ! -f "$MY_ZSH_COMPLETION_KUBECTL" ] ; then
   kubectl completion zsh >> "$MY_ZSH_COMPLETION_KUBECTL"
 fi
 
-COMPLETION_COMMENT="#Load minikube & kubectl completion for zsh"
-KUBE_CONFIG=$(cat << EOF
+if [ ! -f "$MY_ZSH_COMPLETION_KUBECTX" ] ; then
+  curl -o $MY_ZSH_COMPLETION_KUBECTX -fSL "https://raw.githubusercontent.com/ahmetb/kubectx/master/completion/kubectx.zsh"
+fi
 
-$COMPLETION_COMMENT
-zsh $MY_ZSH_COMPLETION_KUBECTL
-zsh $MY_ZSH_COMPLETION_MINIKUBE
-
-EOF
-);
-  
-echo "   $KUBE_CONFIG ----"
-find_append $MY_SH_CFG_FILE "$COMPLETION_COMMENT" "$KUBE_CONFIG"
-source $MY_SH_CFG_FILE
+if [ ! -f "$MY_ZSH_COMPLETION_KUBENS" ] ; then
+  curl -o $MY_ZSH_COMPLETION_KUBENS -fSL "https://raw.githubusercontent.com/ahmetb/kubectx/master/completion/kubens.zsh"
+fi
 
 minikube stop --alsologtostderr
 # --gpu --vm-driver=kvm2
