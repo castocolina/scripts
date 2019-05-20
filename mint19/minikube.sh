@@ -4,12 +4,9 @@ sudo echo "Test sudo"
 
 export SEPARATOR="========================================================================================================================"
 # http://sourabhbajaj.com/mac-setup/
-ZSH_COMPLETIONS_DIR=$HOME/.oh-my-zsh/completions
-mkdir -p $ZSH_COMPLETIONS_DIR
-export MY_ZSH_COMPLETION_MINIKUBE=$ZSH_COMPLETIONS_DIR/_minikube.zsh
-export MY_ZSH_COMPLETION_KUBECTL=$ZSH_COMPLETIONS_DIR/_kubectl.zsh
-export MY_ZSH_COMPLETION_KUBECTX=$ZSH_COMPLETIONS_DIR/_kubectx.zsh
-export MY_ZSH_COMPLETION_KUBENS=$ZSH_COMPLETIONS_DIR/_kubens.zsh
+
+export COMPLETION_KUBECTX=$HOME/.completion-kubectx.zsh;
+export COMPLETION_KUBENS=$HOME/.completion-kubens.zsh;
 
 echo ""
 echo $SEPARATOR
@@ -22,6 +19,7 @@ egrep --color 'vmx|svm' /proc/cpuinfo
 
 exist_pkg dkms || sudo aptitude install -y dkms
 exist_pkg apt-transport-https || sudo aptitude install -y apt-transport-https
+exist_pkg bash-completion || sudo aptitude install -y bash-completion
 
 #check is installed VB
 # install_deb virtualbox "Virtual Box" "$FILE_VB" "$URL_VB"
@@ -66,24 +64,66 @@ exist_cmd kube-prompt || {
   sudo mv ./kube-prompt /usr/local/bin/kube-prompt
 }
 
-if [ ! -f "$MY_ZSH_COMPLETION_MINIKUBE" ] ; then
-  touch $MY_ZSH_COMPLETION_MINIKUBE
-  echo "#!/bin/zsh" > "$MY_ZSH_COMPLETION_MINIKUBE"
-  minikube completion zsh >> "$MY_ZSH_COMPLETION_MINIKUBE"
+#### MINIKUBE COMPLETION
+MINIKUBE_COMMENT="#MINIKUBE load config"
+MINIKUBE_CONFIG=$(cat << EOF
+
+$MINIKUBE_COMMENT
+source <(minikube completion zsh)
+
+EOF
+);
+    
+  echo "   $MINIKUBE_CONFIG ----"
+  find_append $MY_SH_CFG_FILE "$MINIKUBE_COMMENT" "$MINIKUBE_CONFIG"
+  source $MY_SH_CFG_FILE
+
+#### KUBECTL COMPLETION
+KUBECTL_COMMENT="#KUBECTL load config"
+KUBECTL_CONFIG=$(cat << EOF
+
+$KUBECTL_COMMENT
+source <(kubectl completion zsh)
+
+EOF
+);
+    
+  echo "   $KUBECTL_CONFIG ----"
+  find_append $MY_SH_CFG_FILE "$KUBECTL_COMMENT" "$KUBECTL_CONFIG"
+  source $MY_SH_CFG_FILE
+
+if [ ! -f "$COMPLETION_KUBECTX" ] ; then
+  curl -o $COMPLETION_KUBECTX -fSL "https://raw.githubusercontent.com/ahmetb/kubectx/master/completion/kubectx.zsh"
+
+KUBECTX_COMMENT="#KUBECTX load config"
+KUBECTX_CONFIG=$(cat << EOF
+
+$KUBECTX_COMMENT
+source $COMPLETION_KUBECTX
+
+EOF
+);
+    
+  echo "   $KUBECTX_CONFIG ----"
+  find_append $MY_SH_CFG_FILE "$KUBECTX_COMMENT" "$KUBECTX_CONFIG"
+  source $MY_SH_CFG_FILE
 fi
 
-if [ ! -f "$MY_ZSH_COMPLETION_KUBECTL" ] ; then
-  touch $MY_ZSH_COMPLETION_KUBECTL
-  echo "#!/bin/zsh" > "$MY_ZSH_COMPLETION_KUBECTL"
-  kubectl completion zsh >> "$MY_ZSH_COMPLETION_KUBECTL"
-fi
+if [ ! -f "$COMPLETION_KUBENS" ] ; then
+  curl -o $COMPLETION_KUBENS -fSL "https://raw.githubusercontent.com/ahmetb/kubectx/master/completion/kubens.zsh"
+  
+KUBENS_COMMENT="#KUBENS load config"
+KUBENS_CONFIG=$(cat << EOF
 
-if [ ! -f "$MY_ZSH_COMPLETION_KUBECTX" ] ; then
-  curl -o $MY_ZSH_COMPLETION_KUBECTX -fSL "https://raw.githubusercontent.com/ahmetb/kubectx/master/completion/kubectx.zsh"
-fi
+$KUBENS_COMMENT
+source $COMPLETION_KUBENS
 
-if [ ! -f "$MY_ZSH_COMPLETION_KUBENS" ] ; then
-  curl -o $MY_ZSH_COMPLETION_KUBENS -fSL "https://raw.githubusercontent.com/ahmetb/kubectx/master/completion/kubens.zsh"
+EOF
+);
+    
+  echo "   $KUBENS_CONFIG ----"
+  find_append $MY_SH_CFG_FILE "$KUBENS_COMMENT" "$KUBENS_CONFIG"
+  source $MY_SH_CFG_FILE
 fi
 
 minikube stop --alsologtostderr
