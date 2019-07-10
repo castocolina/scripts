@@ -8,30 +8,6 @@ echo $SEPARATOR
 echo "ADD REPOSITORIES ......"
 echo $SEPARATOR
 
-#VIRTUAL BOX
-if [ -f "/etc/apt/sources.list.d/virtualbox.list" ]; then
-    sudo rm "/etc/apt/sources.list.d/virtualbox.list"
-fi
-
-#DOCKER
-if [ ! -f "/etc/apt/sources.list.d/docker.list" ]; then
-
-    curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
-
-    sudo apt-key fingerprint 0EBFCD88
-
-    if [ $ID == "ubuntu" ]; then
-      DOCKER_REPO="deb [arch=amd64] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable"
-    elif [ $ID == "debian" ]; then
-      DOCKER_REPO="deb [arch=amd64] https://download.docker.com/linux/debian $(lsb_release -cs) stable"
-    else
-      DOCKER_REPO="deb [arch=amd64] https://download.docker.com/linux/ubuntu $UBUNTU_CODENAME stable"
-    fi
-
-    #sudo add-apt-repository "$DOCKER_REPO"
-    echo "$DOCKER_REPO" | sudo tee /etc/apt/sources.list.d/docker.list
-fi
-
 #Download versions
 
 #https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb
@@ -39,8 +15,8 @@ FILE_GCHROME=google-chrome-stable_current_amd64.deb
 URL_GCHROME="https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb"
 
 #https://update.code.visualstudio.com/1.30.1/linux-deb-x64/stable
-VERSION_VSCODE="1.30.1"
-FILE_VSCODE=vscode-amd64.deb
+VERSION_VSCODE="1.34.0"
+FILE_VSCODE=vscode-amd64-$VERSION_VSCODE.deb
 URL_VSCODE="https://update.code.visualstudio.com/$VERSION_VSCODE/linux-deb-x64/stable"
 
 #https://www.gitkraken.com/download/linux-deb

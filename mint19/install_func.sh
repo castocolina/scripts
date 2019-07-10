@@ -106,6 +106,14 @@ function is_true() {
   return 1;
 }
 
+
+function is_false() {
+  if is_true $1 ; then
+    return 1;
+  fi
+  return 0;
+}
+
 function exist_dir() {
   if [ -d "$1" ] ; then
     echo "DIR '$1' EXIST!"
