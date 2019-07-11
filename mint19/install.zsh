@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/zsh
 
 sudo echo "Test sudo"
 
@@ -10,11 +10,12 @@ echo $SEPARATOR
 echo ">>>>> UPDATE ................"
 echo $SEPARATOR
 
-source install_func.sh
-source install_url.sh
+source install_func.zsh
+source install_url.zsh
 source $MY_SH_CFG_FILE
 
-read -p "UPDATE? (y/n) > " to_update
+echo -n "UPDATE? (y/n) > "
+read to_update
 
 exist_cmd aptitude || { sudo apt install -y aptitude; }
 if is_true $to_update ; then
@@ -198,6 +199,7 @@ printf "\n$SEPARATOR\n >>>>> MULTIMEDIA\n"
 exist_cmd ffmpeg || { sudo apt install -y ffmpeg; }
 exist_cmd mkvtoolnix-gui || { sudo apt install -y mkvtoolnix-gui; }
 exist_pkg spotify-client || { sudo apt install -y spotify-client; }
+exist_pkg brave-browser || { sudo apt install brave-browser; }
 
 printf "\n$SEPARATOR\n >>>>> OTHERS\n"
 exist_cmd tree || brew install tree
@@ -265,6 +267,7 @@ install_deb gitkraken "GitKraken" "$FILE_GITKRAKEN" "$URL_GITKRAKEN"
 install_deb vagrant "Vagrant" "$FILE_VAGRANT" "$URL_VAGRANT"
 install_deb masterpdfeditor5 "Master PDF Editor" "$FILE_MASTER_PDF" "$URL_MASTER_PDF"
 install_deb virtualbox "Virtual Box" "$FILE_VB" "$URL_VB"
+install_deb slack "Slack" "$FILE_SLACK" "$URL_SLACK"
 
 
 #Eclipse installer

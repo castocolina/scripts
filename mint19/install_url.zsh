@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/zsh
 
 source /etc/os-release
 source /etc/lsb-release
@@ -9,6 +9,11 @@ echo "ADD REPOSITORIES ......"
 echo $SEPARATOR
 
 #Download versions
+
+#https://downloads.slack-edge.com/linux_releases/slack-desktop-3.4.2-amd64.deb
+VERSION_SLACK="3.4.2"
+FILE_SLACK=slack-desktop-$VERSION_SLACK-amd64.deb
+URL_SLACK="https://downloads.slack-edge.com/linux_releases/$FILE_SLACK"
 
 #https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb
 FILE_GCHROME=google-chrome-stable_current_amd64.deb
@@ -97,3 +102,26 @@ VERSION_JMETER=4.0
 FILE_JMETER="apache-jmeter-$VERSION_JMETER.tgz"
 URL_JMETER="http://www.us.apache.org/dist//jmeter/binaries/$FILE_JMETER"
 
+
+# REPOSITORIES
+
+if [ ! -f "/etc/apt/sources.list.d/sublime-text.list" ]; then
+    wget -qO - https://download.sublimetext.com/sublimehq-pub.gpg | sudo apt-key add -
+
+    sudo apt-get install apt-transport-https -y
+    echo "deb https://download.sublimetext.com/ apt/stable/" | sudo tee /etc/apt/sources.list.d/sublime-text.list
+fi
+
+if [ ! -f "/etc/apt/sources.list.d/brave-browser.list" ]; then
+    # ${UBUNTU_CODENAME}
+    curl -s https://brave-browser-apt-release.s3.brave.com/brave-core.asc | \
+     sudo apt-key --keyring /etc/apt/trusted.gpg.d/brave-browser-release.gpg add -
+    echo "deb [arch=amd64] https://brave-browser-apt-release.s3.brave.com/ xenial main" \
+     | sudo tee /etc/apt/sources.list.d/brave-browser.list
+fi
+
+if [ ! -f "/etc/apt/sources.list.d/kubernetes.list" ]; then
+    #${UBUNTU_CODENAME}
+    curl -s https://packages.cloud.google.com/apt/doc/apt-key.gpg | sudo apt-key add -;
+    echo "deb https://apt.kubernetes.io/ kubernetes-xenial main" | sudo tee -a /etc/apt/sources.list.d/kubernetes.list;
+fi

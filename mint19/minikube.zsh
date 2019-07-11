@@ -5,18 +5,21 @@ sudo echo "Test sudo"
 export SEPARATOR="========================================================================================================================"
 # http://sourabhbajaj.com/mac-setup/
 
-#read -p "UPDATE? (y/n) > " to_update
+export COMPLETION_KUBECTX=$HOME/.completion-kubectx.zsh;
+export COMPLETION_KUBENS=$HOME/.completion-kubens.zsh;
+
 echo -n "UPDATE? (y/n) > "
 read to_update
 
-export COMPLETION_KUBECTX=$HOME/.completion-kubectx.zsh;
-export COMPLETION_KUBENS=$HOME/.completion-kubens.zsh;
+if is_true $to_update ; then
+    sudo aptitude update -y
+if
 
 echo ""
 echo $SEPARATOR
 echo ">>>>> INSTAL K8 Developer Utilities ................"
 echo $SEPARATOR
-source $BASEDIR/install_func.sh
+source $BASEDIR/install_func.zsh
 source $MY_SH_CFG_FILE
 
 egrep --color 'vmx|svm' /proc/cpuinfo
@@ -44,10 +47,7 @@ exist_pkg bash-completion || sudo aptitude install -y bash-completion
 
 (is_false $to_update && exist_cmd kubectl) || {
   echo "INSTALL KUBECTL";
-  sudo apt-get update && sudo apt-get install -y apt-transport-https;
-  curl -s https://packages.cloud.google.com/apt/doc/apt-key.gpg | sudo apt-key add -;
-  echo "deb https://apt.kubernetes.io/ kubernetes-xenial main" | sudo tee -a /etc/apt/sources.list.d/kubernetes.list;
-  sudo apt-get update;
+  sudo apt-get install -y apt-transport-https;
   sudo apt-get install -y kubectl;
 }
 
@@ -144,11 +144,8 @@ EOF
   source $MY_SH_CFG_FILE
 fi
 
-# minikube stop --alsologtostderr
-# # --gpu --vm-driver=kvm2
-# minikube start --alsologtostderr
+# minikube start --alsologtostderr --v=3  --memory 4096 --cpus 3 -p $PROFILE_NAME 
 
-# set x && printf "\n\n $SEPARATOR\n USE: \n\t minikube dashboard --url --alsologtostderr\n to get URL of dashboard\n $SEPARATOR\n\n"
 
 printf ":: $SEPARATOR\n kubectl: "
 kubectl version
