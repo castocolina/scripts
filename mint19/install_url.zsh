@@ -19,6 +19,10 @@ URL_SLACK="https://downloads.slack-edge.com/linux_releases/$FILE_SLACK"
 FILE_GCHROME=google-chrome-stable_current_amd64.deb
 URL_GCHROME="https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb"
 
+#https://prerelease.keybase.io/keybase_amd64.deb
+FILE_KEYBASE=keybase_amd64.deb
+URL_KEYBASE="https://prerelease.keybase.io/keybase_amd64.deb"
+
 #https://update.code.visualstudio.com/1.30.1/linux-deb-x64/stable
 VERSION_VSCODE="1.34.0"
 FILE_VSCODE=vscode-amd64-$VERSION_VSCODE.deb

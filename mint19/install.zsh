@@ -268,6 +268,7 @@ install_deb vagrant "Vagrant" "$FILE_VAGRANT" "$URL_VAGRANT"
 install_deb masterpdfeditor5 "Master PDF Editor" "$FILE_MASTER_PDF" "$URL_MASTER_PDF"
 install_deb virtualbox "Virtual Box" "$FILE_VB" "$URL_VB"
 install_deb slack "Slack" "$FILE_SLACK" "$URL_SLACK"
+install_deb run_keybase "Key Base" "$FILE_KEYBASE" "$URL_KEYBASE"
 
 
 #Eclipse installer
