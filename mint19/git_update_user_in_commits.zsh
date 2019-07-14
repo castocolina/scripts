@@ -30,20 +30,25 @@ if [ $# -eq 0 ] || [ -z "$1" ]  || [ -z "$2" ] ; then
     echo "No arguments supplied or incompleted"
     echo
     echo -n "Enter your oldemail > "
-    read olduseremail
+    read iolduseremail
     echo -n "Enter your newemail > "
-    read newuseremail
+    read inewuseremail
     echo -n "Enter your oldname > "
-    read oldusername
+    read ioldusername
     echo -n "Enter your newname > "
-    read newusername
+    read inewusername
     echo
 else
-    olduseremail=${1:-$cuseremail}
-    newuseremail=${2:-$cuseremail}
-    oldusername=${3:-$cusername}
-    newusername=${4:-$cusername}
+    iolduseremail=$1
+    inewuseremail=$1
+    ioldusername=$3
+    inewusername=$4
 fi
+
+olduseremail=${iolduseremail:-$cuseremail}
+newuseremail=${inewuseremail:-$cuseremail}
+oldusername=${ioldusername:-$cusername}
+newusername=${inewusername:-$cusername}
 
 export olduseremail newuseremail oldusername newusername
 
@@ -71,5 +76,6 @@ git filter-branch -f --env-filter '
     
 ' HEAD
 
+echo
 echo "============================================= "
-git log -5
+git --no-pager log -5
