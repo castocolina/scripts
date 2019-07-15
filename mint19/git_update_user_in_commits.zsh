@@ -40,7 +40,7 @@ if [ $# -eq 0 ] || [ -z "$1" ]  || [ -z "$2" ] ; then
     echo
 else
     iolduseremail=$1
-    inewuseremail=$1
+    inewuseremail=$2
     ioldusername=$3
     inewusername=$4
 fi
@@ -56,6 +56,10 @@ git config --local --unset-all user.name
 git config --local --unset-all user.email
 git config --local --replace-all user.name "$newusername"
 git config --local --replace-all user.email "$newuseremail"
+
+echo
+echo "NEW USER EMAIL: $newuseremail"
+echo
 
 #git log -10
 
