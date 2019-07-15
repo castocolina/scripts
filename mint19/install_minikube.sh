@@ -3,7 +3,6 @@ BASEDIR=$(dirname "$0")
 sudo echo "Test sudo"
 
 export SEPARATOR="========================================================================================================================"
-# http://sourabhbajaj.com/mac-setup/
 
 export COMPLETION_KUBECTX=$HOME/.completion-kubectx.zsh;
 export COMPLETION_KUBENS=$HOME/.completion-kubens.zsh;
@@ -11,16 +10,15 @@ export COMPLETION_KUBENS=$HOME/.completion-kubens.zsh;
 echo -n "UPDATE? (y/n) > "
 read to_update
 
-if is_true $to_update ; then
-    sudo aptitude update -y
-if
+source $BASEDIR/install_func.zsh
+source $MY_SH_CFG_FILE
+
+is_true $to_update && sudo aptitude update -y
 
 echo ""
 echo $SEPARATOR
 echo ">>>>> INSTAL K8 Developer Utilities ................"
 echo $SEPARATOR
-source $BASEDIR/install_func.zsh
-source $MY_SH_CFG_FILE
 
 egrep --color 'vmx|svm' /proc/cpuinfo
 
@@ -43,6 +41,19 @@ exist_pkg bash-completion || sudo aptitude install -y bash-completion
   curl -Lo skaffold https://storage.googleapis.com/skaffold/releases/latest/skaffold-linux-amd64;
   chmod +x skaffold;
   sudo mv skaffold /usr/local/bin;
+}
+
+(is_false $to_update && exist_cmd kubeseal) || {
+  echo "INSTALL KUBESEAL";
+  release=$(curl --silent "https://api.github.com/repos/bitnami-labs/sealed-secrets/releases/latest" | sed -n 's/.*"tag_name": *"\([^"]*\)".*/\1/p')
+  
+  curl -Lo kubeseal https://github.com/bitnami-labs/sealed-secrets/releases/download/$release/kubeseal-linux-amd64;
+  chmod +x kubeseal;
+  sudo mv kubeseal /usr/local/bin;
+
+  curl -Lo kubeseal-v0.5.1 https://github.com/bitnami-labs/sealed-secrets/releases/download/v0.5.1/kubeseal-linux-amd64;
+  chmod +x kubeseal-v0.5.1;
+  sudo mv kubeseal-v0.5.1 /usr/local/bin;
 }
 
 (is_false $to_update && exist_cmd kubectl) || {
@@ -143,9 +154,6 @@ EOF
   find_append $MY_SH_CFG_FILE "$KUBENS_COMMENT" "$KUBENS_CONFIG"
   source $MY_SH_CFG_FILE
 fi
-
-# minikube start --alsologtostderr --v=3  --memory 4096 --cpus 3 -p $PROFILE_NAME 
-
 
 printf ":: $SEPARATOR\n kubectl: "
 kubectl version
