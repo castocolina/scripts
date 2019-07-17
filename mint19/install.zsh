@@ -107,8 +107,12 @@ EOF
   source $MY_SH_CFG_FILE
 }
 
-exist_cmd "node" || {
-  nvm install 6 && nvm install 8 && nvm install 10 && nvm install node && nvm use 8
+(is_false $to_update && exist_cmd "node") || {
+  nvm install 8 && nvm install 10 && nvm install node && nvm use 8
+
+  NODE_CONFIG="export PATH=\"$(which node):\$PATH\""
+  find_append $MY_SH_CFG_FILE $NODE_CONFIG "$NODE_CONFIG"
+  source $MY_SH_CFG_FILE
 }
 exist_cmd yarn || brew install yarn --without-node
 exist_cmd react-native || npm install -g react-native
@@ -122,32 +126,13 @@ printf "\n$SEPARATOR\n >>>>> JAVA / ANDROID\n"
 exist_dir "$HOME/.sdkman/candidates/java/current/" || sdk install java 8.0.191-oracle
 exist_cmd mvn || sdk install maven 3.6.0
 exist_cmd gradle || sdk install gradle 5.1
+
+
 #Android SDK Tools
-down_uncompress "tools" "tools" "Android SDK Tools" "$FILE_ANDROID_TOOLS" "$URL_ANDROID_TOOLS" "$HOME/Android/Sdk" && {
-  ANDROID_SDK_CONFIG=$(cat <<'EOF'
 
-export ANDROID_SDK="$HOME/Android/Sdk"
-export ANDROID_SDK_HOME="$ANDROID_SDK"
-export ANDROID_SDK_ROOT="$ANDROID_SDK"
-export ANDROID_TOOLS="$ANDROID_SDK/tools"
-export ANDROID_PLATFORM_TOOLS="$ANDROID_SDK/platform-tools"
-export PATH="$ANDROID_PLATFORM_TOOLS:$ANDROID_TOOLS:$ANDROID_TOOLS/bin:$PATH"
-
-EOF
-);
-  echo "$ANDROID_SDK_CONFIG ----"
-  find_append $MY_SH_CFG_FILE "ANDROID_SDK_HOME=" "$ANDROID_SDK_CONFIG"
-  source $MY_SH_CFG_FILE
-  echo
-  which sdkmanager
-  echo
-
-  mkdir -p $ANDROID_SDK/.android/
-  ANDROID_REPO_PREFIX="### User Sources for Android SDK Manager"
-  ANDROID_REPOSITORIES="$ANDROID_REPO_PREFIX\n# $(date "+%a %b %d %T %Z %Y") count=0\n"
-  printf "\n===> ANDROID repositories.cfg\n$ANDROID_REPOSITORIES ----\n\n"
-  find_append $ANDROID_SDK/.android/repositories.cfg "$ANDROID_REPO_PREFIX" "$ANDROID_REPOSITORIES"
-
+INSTALL_ANDROID_PACK='-1'
+function install_android_packages(){
+  export INSTALL_ANDROID_PACK='0'
   yes | sdkmanager --licenses || true
   yes | sdkmanager --update --verbose --sdk_root="$ANDROID_SDK"
 
@@ -173,7 +158,44 @@ EOF
       "build-tools;27.0.3" --verbose --sdk_root="$ANDROID_SDK"
   yes | sdkmanager "platforms;android-28" "sources;android-28" "system-images;android-28;google_apis_playstore;x86" \
       "build-tools;28.0.3" "system-images;android-28;android-wear;x86" --verbose --sdk_root="$ANDROID_SDK"
+  yes | sdkmanager "platforms;android-29" "system-images;android-29;default;x86" "system-images;android-29;google_apis;x86" \
+      "build-tools;29.0.1" "system-images;android-29;google_apis_playstore;x86" --verbose --sdk_root="$ANDROID_SDK"
+}
 
+down_uncompress "tools" "tools" "Android SDK Tools" "$FILE_ANDROID_TOOLS" "$URL_ANDROID_TOOLS" "$HOME/Android/Sdk" && {
+  ANDROID_SDK_CONFIG=$(cat <<'EOF'
+
+export ANDROID_SDK="$HOME/Android/Sdk"
+export ANDROID_SDK_HOME="$ANDROID_SDK"
+export ANDROID_SDK_ROOT="$ANDROID_SDK"
+export ANDROID_TOOLS="$ANDROID_SDK/tools"
+export ANDROID_PLATFORM_TOOLS="$ANDROID_SDK/platform-tools"
+export PATH="$ANDROID_PLATFORM_TOOLS:$ANDROID_TOOLS:$ANDROID_TOOLS/bin:$PATH"
+
+EOF
+);
+  echo "$ANDROID_SDK_CONFIG ----"
+  find_append $MY_SH_CFG_FILE "ANDROID_SDK_HOME=" "$ANDROID_SDK_CONFIG"
+  source $MY_SH_CFG_FILE
+  echo
+  which sdkmanager
+  echo
+
+  mkdir -p $ANDROID_SDK/.android/
+  ANDROID_REPO_PREFIX="### User Sources for Android SDK Manager"
+  ANDROID_REPOSITORIES="$ANDROID_REPO_PREFIX\n# $(date "+%a %b %d %T %Z %Y") count=0\n"
+  printf "\n===> ANDROID repositories.cfg\n$ANDROID_REPOSITORIES ----\n\n"
+  find_append $ANDROID_SDK/.android/repositories.cfg "$ANDROID_REPO_PREFIX" "$ANDROID_REPOSITORIES"
+
+  install_android_packages;
+}
+
+function putzero(){
+  export INSTALL_ANDROID_PACK='0'
+}
+
+(is_false $to_update || [ $INSTALL_ANDROID_PACK = "0" ] ) || {
+  install_android_packages;
 }
 
 printf "\n$SEPARATOR\n >>>>> OTHERS ANDROIDS DEPS \n"
