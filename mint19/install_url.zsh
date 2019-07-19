@@ -1,5 +1,7 @@
 #!/bin/zsh
+BASEDIR=$(dirname "$0")
 
+source $BASEDIR/install_func.zsh
 source /etc/os-release
 source /etc/lsb-release
 
@@ -105,6 +107,11 @@ URL_DATAGRIP="https://download-cf.jetbrains.com/datagrip/$FILE_DATAGRIP"
 VERSION_JMETER=4.0
 FILE_JMETER="apache-jmeter-$VERSION_JMETER.tgz"
 URL_JMETER="http://www.us.apache.org/dist//jmeter/binaries/$FILE_JMETER"
+
+REPO_NAME_RN_DEBUGGER="jhen0409/react-native-debugger"
+VERSION_RN_DEBUGGER=$(get_github_latest_release $REPO_NAME_RN_DEBUGGER);
+SVERSION_RN_DEBUGGER="${VERSION_RN_DEBUGGER:1}";
+URL_RN_DEBUGGER="https://github.com/$REPO_NAME_RN_DEBUGGER/releases/download/$VERSION_RN_DEBUGGER/react-native-debugger_${SVERSION_RN_DEBUGGER}_amd64.deb"
 
 # REPOSITORIES
 

@@ -126,14 +126,15 @@ exist_cmd yarn || brew install yarn --without-node
 
 (exist_cmd nodemon || is_false $to_update) || npm i -g nodemon
 
-# exist_cmd watchman || download_install_watchman
-# exist_cmd watchman && is_true $to_update && download_install_watchman;
-
 exist_cmd watchman || brew install watchman;
 exist_cmd watchman && is_true $to_update && brew upgrade watchman;
 
-# sudo npm config delete prefix
+function download_install_rn_debugger(){
+  install_deb react-native-debugger "RN Debugger" "rn_debugger.deb" "$URL_RN_DEBUGGER"
+}
 #exist_cmd react-native-debugger || brew cask install react-native-debugger
+exist_cmd react-native-debugger || download_install_rn_debugger
+exist_cmd react-native-debugger && is_true $to_update && download_install_rn_debugger;
 
 printf "\n$SEPARATOR\n >>>>> JAVA / ANDROID\n"
 
