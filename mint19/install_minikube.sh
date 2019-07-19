@@ -117,6 +117,20 @@ EOF
   find_append $MY_SH_CFG_FILE "$KUBECTL_COMMENT" "$KUBECTL_CONFIG"
   source $MY_SH_CFG_FILE
 
+#### SKAFFOLD COMPLETION
+SKAFFOLD_COMMENT="#SKAFFOLD load config"
+SKAFFOLD_CONFIG=$(cat << EOF
+
+$SKAFFOLD_COMMENT
+source <(skaffold completion zsh)
+
+EOF
+);
+    
+echo "   $SKAFFOLD_CONFIG ----"
+find_append $MY_SH_CFG_FILE "$SKAFFOLD_COMMENT" "$SKAFFOLD_CONFIG"
+source $MY_SH_CFG_FILE
+
 #### KUBECTX COMPLETION
 if [ ! -f "$COMPLETION_KUBECTX" ] ; then
   rm -rf $COMPLETION_KUBECTX
