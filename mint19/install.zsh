@@ -1,5 +1,5 @@
 #!/bin/zsh
-
+BASEDIR=$(dirname "$0")
 sudo echo "Test sudo"
 
 export SEPARATOR="========================================================================================================================"
@@ -10,8 +10,8 @@ echo $SEPARATOR
 echo ">>>>> UPDATE ................"
 echo $SEPARATOR
 
-source install_func.zsh
-source install_url.zsh
+source $BASEDIR/install_func.zsh
+source $BASEDIR/install_url.zsh
 source $MY_SH_CFG_FILE
 
 echo -n "UPDATE? (y/n) > "
@@ -65,6 +65,9 @@ exist_cmd "brew" || {
   brew install hello
 }
 
+export HOMEBREW_NO_AUTO_UPDATE=1
+find_append $MY_SH_CFG_FILE "HOMEBREW_NO_AUTO_UPDATE" "export HOMEBREW_NO_AUTO_UPDATE=1\n"
+
 printf "\n$SEPARATOR\n >>>>> ZSH\n"
 exist_cmd "zsh" || {
   printf "\n ::: Install ZSH for linux ...\n"
@@ -115,15 +118,42 @@ EOF
   source $MY_SH_CFG_FILE
 }
 exist_cmd yarn || brew install yarn --without-node
-exist_cmd react-native || npm install -g react-native
-exist_cmd create-react-native-app || npm install -g create-react-native-app
-exist_cmd nodemon || npm install -g nodemon
+
+(exist_cmd react-native || is_false $to_update) || npm i -g react-native
+(exist_cmd create-react-native-app || is_false $to_update) || npm i -g create-react-native-app
+
+(exist_cmd nodemon || is_false $to_update) || npm i -g nodemon
+
+function download_install_watchman(){
+  git_down_update $URL_WATCHMAN $REPO_NAME_WATCHMAN;
+  LAST_VERSION=get_github_latest_release $REPO_NAME_WATCHMAN
+  CURR_DIR=$(pwd);
+  cd $INSTALL_DIR/$REPO_NAME_WATCHMAN;
+  git checkout -f $LAST_VERSION  # the latest stable release
+  ./autogen.sh;
+  ./configure;
+  make;
+  sudo make install;
+  cd $CURR_DIR;
+}
+
+exist_cmd watchman || download_install_watchman
+exist_cmd watchman && is_true $to_update && download_install_watchman;
+
 # sudo npm config delete prefix
 #exist_cmd react-native-debugger || brew cask install react-native-debugger
 
 printf "\n$SEPARATOR\n >>>>> JAVA / ANDROID\n"
 
 exist_dir "$HOME/.sdkman/candidates/java/current/" || sdk install java 8.0.191-oracle
+JAVA_HOME_TEXT=$(cat <<'EOF'
+export JAVA_HOME="$HOME/.sdkman/candidates/java/current/"
+export JDK_HOME="$JAVA_HOME"
+export JRE_HOME="$JAVA_HOME"
+
+EOF
+);
+find_append $MY_SH_CFG_FILE "export JAVA_HOME=" "$JAVA_HOME_TEXT"
 exist_cmd mvn || sdk install maven 3.6.0
 exist_cmd gradle || sdk install gradle 5.1
 
@@ -360,7 +390,7 @@ down_install4j "soapUI-5" "soapUI v5" "$FILE_SOAPUI5" "$URL_SOAPUI5"
 #exist_cmd robo-3t || brew cask install robo-3t
 
 find_append ~/.zshrc "source $MY_SH_CFG_FILE" "\n\n### Personal shell config \nsource $MY_SH_CFG_FILE"
-source install_alias.sh
+source $BASEDIR/install_alias.sh
 
 echo
 sudo aptitude clean

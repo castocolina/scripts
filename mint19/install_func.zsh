@@ -201,3 +201,25 @@ function down_install4j(){
 
   cd $CURR_DIR
 }
+
+function git_down_update(){
+  GIT_URL=$1
+  REPO_NAME=$2
+  DOWN_PATH="$INSTALL_DIR/$REPO_NAME"
+  echo "$GIT_URL ........... >> $REPO_NAME"
+  if [ ! -f "$DOWN_PATH" ]; then
+    git clone --progress -v $GIT_URL "$DOWN_PATH"
+  else
+    git -C "$DOWN_PATH" pull --all --progress -v
+  fi
+}
+
+function get_github_latest_release(){
+  repo_name=$1
+   return $(curl --silent "https://api.github.com/repos/$repo_name/releases/latest" \
+    | sed -n 's/.*"tag_name": *"\([^"]*\)".*/\1/p')
+}
+
+function get_os(){
+  return $(uname -s | tr '[:upper:]' '[:lower:]');
+}
