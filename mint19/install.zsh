@@ -68,6 +68,8 @@ exist_cmd "brew" || {
 export HOMEBREW_NO_AUTO_UPDATE=1
 find_append $MY_SH_CFG_FILE "HOMEBREW_NO_AUTO_UPDATE" "export HOMEBREW_NO_AUTO_UPDATE=1\n"
 
+exist_cmd brew && is_true $to_update && brew update;
+
 printf "\n$SEPARATOR\n >>>>> ZSH\n"
 exist_cmd "zsh" || {
   printf "\n ::: Install ZSH for linux ...\n"
@@ -124,21 +126,11 @@ exist_cmd yarn || brew install yarn --without-node
 
 (exist_cmd nodemon || is_false $to_update) || npm i -g nodemon
 
-function download_install_watchman(){
-  git_down_update $URL_WATCHMAN $REPO_NAME_WATCHMAN;
-  LAST_VERSION=get_github_latest_release $REPO_NAME_WATCHMAN
-  CURR_DIR=$(pwd);
-  cd $INSTALL_DIR/$REPO_NAME_WATCHMAN;
-  git checkout -f $LAST_VERSION  # the latest stable release
-  ./autogen.sh;
-  ./configure;
-  make;
-  sudo make install;
-  cd $CURR_DIR;
-}
+# exist_cmd watchman || download_install_watchman
+# exist_cmd watchman && is_true $to_update && download_install_watchman;
 
-exist_cmd watchman || download_install_watchman
-exist_cmd watchman && is_true $to_update && download_install_watchman;
+exist_cmd watchman || brew install watchman;
+exist_cmd watchman && is_true $to_update && brew upgrade watchman;
 
 # sudo npm config delete prefix
 #exist_cmd react-native-debugger || brew cask install react-native-debugger
@@ -401,7 +393,7 @@ echo ":: $SEPARATOR"
 echo ":: $SEPARATOR"
 echo ":: $SEPARATOR"
 uname -a
-printf ":: $SEPARATOR\n BREW: "
+printf ":: $SEPARATOR\n BREW:\n "
 brew list --versions
 echo ":: $SEPARATOR"
 sdk version

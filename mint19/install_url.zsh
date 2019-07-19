@@ -106,9 +106,6 @@ VERSION_JMETER=4.0
 FILE_JMETER="apache-jmeter-$VERSION_JMETER.tgz"
 URL_JMETER="http://www.us.apache.org/dist//jmeter/binaries/$FILE_JMETER"
 
-REPO_NAME_WATCHMAN="facebook/watchman"
-URL_WATCHMAN="https://github.com/facebook/watchman.git"
-
 # REPOSITORIES
 
 if [ ! -f "/etc/apt/sources.list.d/sublime-text.list" ]; then

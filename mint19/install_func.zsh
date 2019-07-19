@@ -206,8 +206,8 @@ function git_down_update(){
   GIT_URL=$1
   REPO_NAME=$2
   DOWN_PATH="$INSTALL_DIR/$REPO_NAME"
-  echo "$GIT_URL ........... >> $REPO_NAME"
-  if [ ! -f "$DOWN_PATH" ]; then
+  echo "$GIT_URL ........... >> $DOWN_PATH"
+  if [ ! -d "$DOWN_PATH" ]; then
     git clone --progress -v $GIT_URL "$DOWN_PATH"
   else
     git -C "$DOWN_PATH" pull --all --progress -v
@@ -215,9 +215,12 @@ function git_down_update(){
 }
 
 function get_github_latest_release(){
-  repo_name=$1
-   return $(curl --silent "https://api.github.com/repos/$repo_name/releases/latest" \
-    | sed -n 's/.*"tag_name": *"\([^"]*\)".*/\1/p')
+  REPO_NAME=$1
+  FULL_URL="https://api.github.com/repos/$REPO_NAME/releases/latest"
+  echo $FULL_URL
+  RELEASE=$(curl --silent $FULL_URL | sed -n 's/.*"tag_name": *"\([^"]*\)".*/\1/p')
+  echo "$REPO_NAME REV: $RELEASE"
+  echo $RELEASE
 }
 
 function get_os(){
