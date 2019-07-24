@@ -68,8 +68,6 @@ exist_cmd "brew" || {
 export HOMEBREW_NO_AUTO_UPDATE=1
 find_append $MY_SH_CFG_FILE "HOMEBREW_NO_AUTO_UPDATE" "export HOMEBREW_NO_AUTO_UPDATE=1\n"
 
-exist_cmd brew && is_true $to_update && brew update;
-
 printf "\n$SEPARATOR\n >>>>> ZSH\n"
 exist_cmd "zsh" || {
   printf "\n ::: Install ZSH for linux ...\n"
@@ -325,7 +323,8 @@ down_uncompress "eclipse-installer" "eclipse-installer" "Eclipse Installer" "$FI
 }
 
 #POSTMAN
-# rm -rfv $INSTALL_DIR/postman/
+delete_confirm "postman" "Postman"
+
 down_uncompress "postman" "Postman" "Postman" "$FILE_POSTMAN" "$URL_POSTMAN" && {
   ICON_PATH="$INSTALL_DIR/postman/app/resources/app/assets/icon.png";
   EXEC="$INSTALL_DIR/postman/Postman";
@@ -383,7 +382,7 @@ down_install4j "soapUI-5" "soapUI v5" "$FILE_SOAPUI5" "$URL_SOAPUI5"
 #exist_cmd robo-3t || brew cask install robo-3t
 
 find_append ~/.zshrc "source $MY_SH_CFG_FILE" "\n\n### Personal shell config \nsource $MY_SH_CFG_FILE"
-source $BASEDIR/install_alias.sh
+source $BASEDIR/install_alias.zsh
 
 echo
 sudo aptitude clean

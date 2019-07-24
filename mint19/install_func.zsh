@@ -38,6 +38,15 @@ function install_deb(){
   cd $CURR_DIR
 }
 
+function delete_confirm(){
+  FOLDER_NAME=$1; NAME=$2; FINAL_TARGET_DIR=$3;
+  APP_TARGET=${FINAL_TARGET_DIR:-$INSTALL_DIR}
+  echo -n "DELETE $NAME? (y/n) > "
+  read to_delete
+
+  is_true $to_delete && [ -d "$APP_TARGET/$FOLDER_NAME" ] && rm -rf $APP_TARGET/$FOLDER_NAME/
+}
+
 function down_uncompress(){
   CURR_DIR=$(pwd)
   mkdir -p $TMP_INSTALL_DIR; cd $TMP_INSTALL_DIR

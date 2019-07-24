@@ -50,7 +50,7 @@ FILE_VAGRANT="vagrant_${VERSION_VAGRANT}_x86_64.deb"
 URL_VAGRANT="https://releases.hashicorp.com/vagrant/$VERSION_VAGRANT/$FILE_VAGRANT"
 
 #https://www.getpostman.com/app/download/linux64
-VERSION_POSTMAN=6.7.1
+VERSION_POSTMAN=7.3.4
 FILE_POSTMAN="postman-linux-x64-$VERSION_POSTMAN.tar.gz"
 URL_POSTMAN="https://dl.pstmn.io/download/latest/linux64"
 
