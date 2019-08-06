@@ -43,17 +43,13 @@ exist_pkg bash-completion || sudo aptitude install -y bash-completion
   sudo mv skaffold /usr/local/bin;
 }
 
-(is_false $to_update && exist_cmd kubeseal) || {
+(is_false $to_update && exist_cmd kubeseal ) || {
   echo "INSTALL KUBESEAL";
-  release=$(curl --silent "https://api.github.com/repos/bitnami-labs/sealed-secrets/releases/latest" | sed -n 's/.*"tag_name": *"\([^"]*\)".*/\1/p')
-  
+  release=$(get_github_latest_release "bitnami-labs/sealed-secrets" "v0.8.0")
+  echo "VERSION ($release)"
   curl -Lo kubeseal https://github.com/bitnami-labs/sealed-secrets/releases/download/$release/kubeseal-linux-amd64;
   chmod +x kubeseal;
   sudo mv kubeseal /usr/local/bin;
-
-  curl -Lo kubeseal-v0.5.1 https://github.com/bitnami-labs/sealed-secrets/releases/download/v0.5.1/kubeseal-linux-amd64;
-  chmod +x kubeseal-v0.5.1;
-  sudo mv kubeseal-v0.5.1 /usr/local/bin;
 }
 
 (is_false $to_update && exist_cmd kubectl) || {
@@ -170,11 +166,13 @@ EOF
 fi
 
 printf ":: $SEPARATOR\n kubectl: "
-kubectl version
+kubectl version --client --short
 printf ":: $SEPARATOR\n minikube: "
 minikube version
 printf ":: $SEPARATOR\n skaffold: "
 skaffold version
+printf ":: $SEPARATOR\n "
+kubeseal --version
 printf ":: $SEPARATOR\n "
 
 echo

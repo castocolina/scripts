@@ -225,9 +225,10 @@ function git_down_update(){
 
 function get_github_latest_release(){
   REPO_NAME=$1
+  DEFAULT=$2
   FULL_URL="https://api.github.com/repos/$REPO_NAME/releases/latest"
   RELEASE=$(curl --silent $FULL_URL | sed -n 's/.*"tag_name": *"\([^"]*\)".*/\1/p')
-  echo $RELEASE;
+  echo ${RELEASE:-$DEFAULT};
 }
 
 function get_os(){
