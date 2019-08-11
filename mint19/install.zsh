@@ -3,7 +3,6 @@ BASEDIR=$(dirname "$0")
 sudo echo "Test sudo"
 
 export SEPARATOR="========================================================================================================================"
-# http://sourabhbajaj.com/mac-setup/
 
 echo ""
 echo $SEPARATOR
@@ -246,8 +245,9 @@ exist_pkg brave-browser || { sudo apt install brave-browser; }
 
 printf "\n$SEPARATOR\n >>>>> OTHERS\n"
 exist_cmd tree || brew install tree
+exist_cmd tree && is_true $to_update && brew upgrade tree;
 exist_cmd vim || sudo aptitude install vim -y
-exist_cmd go || brew install golang
+exist_cmd vim && is_true $to_update && brew upgrade vim;
 
 printf "\n$SEPARATOR\n >>>>> DOCKER\n"
 # sudo aptitude remove -y docker-ce
@@ -418,7 +418,7 @@ printf ":: $SEPARATOR\n NPM: "
 npm --version
 printf ":: $SEPARATOR\n NODE: "
 node --version
-printf ":: $SEPARATOR\n Android SDK Manager"
+printf ":: $SEPARATOR\n Android SDK Manager: "
 sdkmanager --version
 printf ":: $SEPARATOR\n "
 
