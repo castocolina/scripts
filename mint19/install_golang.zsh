@@ -32,10 +32,18 @@ EOF
 
   curl https://raw.githubusercontent.com/golang/dep/master/install.sh | sh
 
+  go get -u -v github.com/rakyll/gotest
+
   #Go debugger
   go get -u -v github.com/go-delve/delve/cmd/dlv
   # Go lint
   go get -u -v github.com/golangci/golangci-lint/cmd/golangci-lint
+
+  go get -u -v github.com/ramya-rao-a/go-outline
+  go get -u -v github.com/rogpeppe/godef
+  go get -u -v github.com/uudashr/gopkgs/cmd/gopkgs
+  go get -u -v github.com/sqs/goreturns
+
 };
 
 

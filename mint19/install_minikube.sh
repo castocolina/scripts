@@ -75,7 +75,7 @@ EOF
 );
     
   echo "   $KUBE_PS1_CONFIG ----"
-  find_append $MY_SH_CFG_FILE "$KUBE_PS1_COMMENT" "$KUBE_PS1_CONFIG"
+  #find_append $MY_SH_CFG_FILE "$KUBE_PS1_COMMENT" "$KUBE_PS1_CONFIG"
   source $MY_SH_CFG_FILE
 }
 exist_cmd kube-prompt || {
@@ -96,7 +96,7 @@ EOF
 );
     
   echo "   $MINIKUBE_CONFIG ----"
-  find_append $MY_SH_CFG_FILE "$MINIKUBE_COMMENT" "$MINIKUBE_CONFIG"
+  #find_append $MY_SH_CFG_FILE "$MINIKUBE_COMMENT" "$MINIKUBE_CONFIG"
   source $MY_SH_CFG_FILE
 
 #### KUBECTL COMPLETION
@@ -124,7 +124,7 @@ EOF
 );
     
 echo "   $SKAFFOLD_CONFIG ----"
-find_append $MY_SH_CFG_FILE "$SKAFFOLD_COMMENT" "$SKAFFOLD_CONFIG"
+# find_append $MY_SH_CFG_FILE "$SKAFFOLD_COMMENT" "$SKAFFOLD_CONFIG"
 source $MY_SH_CFG_FILE
 
 #### KUBECTX COMPLETION
@@ -142,7 +142,7 @@ EOF
 );
     
   echo "   $KUBECTX_CONFIG ----"
-  find_append $MY_SH_CFG_FILE "$KUBECTX_COMMENT" "$KUBECTX_CONFIG"
+  # find_append $MY_SH_CFG_FILE "$KUBECTX_COMMENT" "$KUBECTX_CONFIG"
   source $MY_SH_CFG_FILE
 fi
 
@@ -161,7 +161,7 @@ EOF
 );
     
   echo "   $KUBENS_CONFIG ----"
-  find_append $MY_SH_CFG_FILE "$KUBENS_COMMENT" "$KUBENS_CONFIG"
+  # find_append $MY_SH_CFG_FILE "$KUBENS_COMMENT" "$KUBENS_CONFIG"
   source $MY_SH_CFG_FILE
 fi
 
