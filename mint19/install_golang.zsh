@@ -35,14 +35,21 @@ EOF
   go get -u -v github.com/rakyll/gotest
 
   #Go debugger
-  go get -u -v github.com/go-delve/delve/cmd/dlv
+  go get -u -v github.com/go-delve/delve/cmd/dlv;
   # Go lint
-  go get -u -v github.com/golangci/golangci-lint/cmd/golangci-lint
+  go get -u -v github.com/golangci/golangci-lint/cmd/golangci-lint;
 
-  go get -u -v github.com/ramya-rao-a/go-outline
-  go get -u -v github.com/rogpeppe/godef
-  go get -u -v github.com/uudashr/gopkgs/cmd/gopkgs
-  go get -u -v github.com/sqs/goreturns
+  go get -u -v github.com/ramya-rao-a/go-outline;
+  go get -u -v github.com/rogpeppe/godef;
+  go get -u -v github.com/uudashr/gopkgs/cmd/gopkgs;
+  go get -u -v github.com/sqs/goreturns;
+  go get -u -v github.com/mdempsky/gocode;
+  go get -u -v github.com/vektra/mockery;
+  go get -u -v github.com/golang/mock/gomock;
+  go get -u -v github.com/matryer/moq;
+  go get -u -v golang.org/x/tools/cmd/gorename;
+
+  go install github.com/golang/mock/mockgen;
 
 };
 

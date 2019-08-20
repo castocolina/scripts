@@ -25,6 +25,7 @@ code --install-extension esbenp.prettier-vscode
 code --install-extension redhat.vscode-yaml
 code --install-extension ms-azuretools.vscode-docker
 code --install-extension ms-kubernetes-tools.vscode-kubernetes-tools
+code --install-extension ms-azuretools.vscode-azureterraform
 
 # eamodio.gitlens
 # josin.kusto-syntax-highlighting

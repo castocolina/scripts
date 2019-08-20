@@ -38,6 +38,11 @@ exist_pkg linux-headers-$(uname -r) || sudo aptitude install -y linux-headers-$(
 exist_pkg apt-transport-https || sudo aptitude install -y apt-transport-https
 exist_pkg ca-certificates || sudo aptitude install -y ca-certificates
 exist_pkg software-properties-common || sudo aptitude install -y software-properties-common
+
+# sudo apt-get install gcc-8 g++-8 -y && 
+# sudo update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-8 60 --slave /usr/bin/g++ g++ /usr/bin/g++-8 && 
+# sudo update-alternatives --config gcc
+
 exist_pkg git || sudo aptitude install -y git
 exist_pkg dkms || sudo aptitude install -y dkms
 exist_pkg xclip || sudo aptitude install -y xclip
