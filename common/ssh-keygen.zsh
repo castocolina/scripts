@@ -21,8 +21,11 @@ if [ ! -f "$SSH_KEYFILE" ] ; then
     echo "CREATE SSH KEY FOR $SSH_KEYFILE"
 
     ssh-keygen -t rsa -f $SSH_KEYFILE -b 4096 -C $SSH_KEYNAME
-        chmod 600 $SSH_KEYNAME
+    chmod 600 $SSH_KEYNAME
     chmod 600 $SSH_KEYNAME.pub
+    if [ "$SSH_KEYNAME" != "id_rsa" ]; then
+        ln -s $SSH_KEYNAME id_rsa
+    fi
 fi
 
 eval `ssh-agent`
