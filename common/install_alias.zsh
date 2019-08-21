@@ -16,18 +16,20 @@ exist_cmd docker &&
     fi
 }
 
-ALIAS_PBCOPY="alias pbcopy='xclip -selection clipboard'"
-if ! grep -q "$ALIAS_PBCOPY" $MY_SH_CFG_FILE; then
-    echo "" >> $MY_SH_CFG_FILE
-    echo "$ALIAS_PBCOPY" >> $MY_SH_CFG_FILE
-    echo "PBCOPY ALIAS"
-fi
+MY_OS=$(get_os)
+if [ "$MY_OS" = "linux" ]; then
+    ALIAS_PBCOPY="alias pbcopy='xclip -selection clipboard'"
+    if ! grep -q "$ALIAS_PBCOPY" $MY_SH_CFG_FILE; then
+        echo "" >> $MY_SH_CFG_FILE
+        echo "$ALIAS_PBCOPY" >> $MY_SH_CFG_FILE
+        echo "PBCOPY ALIAS"
+    fi
 
-ALIAS_PBPASTE="alias pbpaste='xclip -selection clipboard -o'"
-if ! grep -q "$ALIAS_PBPASTE" $MY_SH_CFG_FILE; then
-    echo "" >> $MY_SH_CFG_FILE
-    echo "$ALIAS_PBPASTE" >> $MY_SH_CFG_FILE
-    echo "PBPASTE ALIAS"
+    ALIAS_PBPASTE="alias pbpaste='xclip -selection clipboard -o'"
+    if ! grep -q "$ALIAS_PBPASTE" $MY_SH_CFG_FILE; then
+        echo "" >> $MY_SH_CFG_FILE
+        echo "$ALIAS_PBPASTE" >> $MY_SH_CFG_FILE
+        echo "PBPASTE ALIAS"
+    fi
 fi
-
 
