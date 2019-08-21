@@ -2,6 +2,8 @@
 
 export MY_SH_CFG_FILE=~/.zshrc4cco
 touch $MY_SH_CFG_FILE
+export TMP_INSTALL_DIR=/tmp/installers
+export INSTALL_DIR=$HOME/opt
 
 function exist_cmd() {
   CMD=$1
@@ -12,10 +14,6 @@ function exist_cmd() {
   # echo $return_cd;
   return $return_cd;
 }
-
-
-TMP_INSTALL_DIR=/tmp/installers
-export INSTALL_DIR=$HOME/opt
 
 function delete_confirm(){
   FOLDER_NAME=$1; NAME=$2; FINAL_TARGET_DIR=$3;
