@@ -76,6 +76,7 @@ exist_cmd kube-prompt || {
   unzip kube-prompt_v1.0.6_$(echo $MY_OS)_amd64.zip
   chmod +x kube-prompt
   sudo mv ./kube-prompt /usr/local/bin/kube-prompt
+  rm -rf kube-prompt_v1.0.6_$(echo $MY_OS)_amd64.zip
 }
 
 printf ":: $SEPARATOR\n kubectl: "
