@@ -1,6 +1,7 @@
 #!/bin/zsh
 
-export MY_SH_CFG_FILE=~/.zshrc4cco
+export REL_MY_SH_CFG_FILE=.zshrc4$USER
+export MY_SH_CFG_FILE=~/$REL_MY_SH_CFG_FILE
 touch $MY_SH_CFG_FILE
 export TMP_INSTALL_DIR=/tmp/installers
 export INSTALL_DIR=$HOME/opt

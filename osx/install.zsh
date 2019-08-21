@@ -85,8 +85,8 @@ brew install tree
 brew install ack
 brew install vim
 
-#find_append ~/.zshrc "source $MY_SH_CFG_FILE" "\n\n### Personal shell config \nsource $MY_SH_CFG_FILE"
-#source $BASEDIR../common/install_alias.zsh
+find_append ~/.zshrc "source $HOME/$REL_MY_SH_CFG_FILE" "\n\n### Personal shell config \nsource $MY_SH_CFG_FILE"
+source $BASEDIR/../common/install_alias.zsh
 
 echo ":: $SEPARATOR"
 echo ":: $SEPARATOR"

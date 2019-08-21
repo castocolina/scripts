@@ -28,6 +28,8 @@ fi
 
 
 exist_cmd code && is_true $to_update && {
+	
+	code --install-extension eamodio.gitlens
 	code --install-extension ms-vscode.go
 	code --install-extension Equinusocio.vsc-material-theme
 

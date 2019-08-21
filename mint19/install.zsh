@@ -39,6 +39,8 @@ exist_pkg apt-transport-https || sudo aptitude install -y apt-transport-https
 exist_pkg ca-certificates || sudo aptitude install -y ca-certificates
 exist_pkg software-properties-common || sudo aptitude install -y software-properties-common
 
+exist_pkg bash-completion || sudo aptitude install -y bash-completion
+
 # sudo apt-get install gcc-8 g++-8 -y && 
 # sudo update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-8 60 --slave /usr/bin/g++ g++ /usr/bin/g++-8 && 
 # sudo update-alternatives --config gcc
