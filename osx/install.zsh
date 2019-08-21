@@ -64,6 +64,8 @@ exist_cmd zsh || {
       suspicious-package;
 }
 
+brew tap caskroom/fonts && brew cask install font-source-code-pro
+
 brew cask install keybase
 brew cask install datagrip
 brew cask install virtualbox

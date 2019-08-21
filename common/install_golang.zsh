@@ -10,7 +10,6 @@ echo ">>>>> UPDATE ................"
 echo $SEPARATOR
 
 source $BASEDIR/install_func.zsh
-source $BASEDIR/install_url.zsh
 source $MY_SH_CFG_FILE
 
 echo -n "UPDATE? (y/n) > "
