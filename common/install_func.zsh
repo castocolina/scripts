@@ -130,5 +130,5 @@ function get_github_latest_release(){
 }
 
 function get_os(){
-  return $(uname -s | tr '[:upper:]' '[:lower:]');
+  echo $(uname -s | tr '[:upper:]' '[:lower:]');
 }
