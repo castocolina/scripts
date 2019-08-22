@@ -56,32 +56,56 @@ INSTALL_ANDROID_PACK='-1'
 function install_android_packages(){
   export INSTALL_ANDROID_PACK='0'
   yes | sdkmanager --licenses || true
-  yes | sdkmanager --update --verbose --sdk_root="$ANDROID_SDK"
+  yes | sdkmanager --update --sdk_root="$ANDROID_SDK"
 
   printf "\n$SEPARATOR\n >>>>> INSTALL REPOS\n"
-  yes | sdkmanager "extras;google;m2repository" "extras;android;m2repository" --verbose --sdk_root="$ANDROID_SDK"
+  yes | sdkmanager "extras;google;m2repository" "extras;android;m2repository" --sdk_root="$ANDROID_SDK"
 
   printf "\n$SEPARATOR\n >>>>> INSTALL TOOLS\n"
-  yes | sdkmanager "tools" "platform-tools" --verbose --sdk_root="$ANDROID_SDK"
+  yes | sdkmanager "tools" "platform-tools" --sdk_root="$ANDROID_SDK"
 
-  printf "\n$SEPARATOR\n >>>>> INSTALL EMULATOR, DOCS, NDK\n"
-  yes | sdkmanager "emulator" --verbose --sdk_root="$ANDROID_SDK"
-  yes | sdkmanager "docs" --verbose --sdk_root="$ANDROID_SDK"
-  yes | sdkmanager "ndk-bundle" --verbose --sdk_root="$ANDROID_SDK"
+  printf "\n$SEPARATOR\n >>>>> INSTALL NDK\n"
+  yes | sdkmanager "ndk-bundle" --sdk_root="$ANDROID_SDK"
 
-  printf "\n$SEPARATOR\n >>>>> INSTALL PLATFORM, SOURCES, IMAGES\n"
-  yes | sdkmanager "platforms;android-24" "sources;android-24" "system-images;android-24;google_apis_playstore;x86" \
-      "build-tools;24.0.3" --verbose --sdk_root="$ANDROID_SDK"
-  yes | sdkmanager "platforms;android-25" "sources;android-25" "system-images;android-25;google_apis_playstore;x86" \
-      "build-tools;25.0.3" "system-images;android-25;android-wear;x86" --verbose --sdk_root="$ANDROID_SDK"
-  yes | sdkmanager "platforms;android-26" "sources;android-26" "system-images;android-26;google_apis_playstore;x86" \
-      "build-tools;26.0.3" --verbose --sdk_root="$ANDROID_SDK"
-  yes | sdkmanager "platforms;android-27" "sources;android-27" "system-images;android-27;google_apis_playstore;x86" \
-      "build-tools;27.0.3" --verbose --sdk_root="$ANDROID_SDK"
-  yes | sdkmanager "platforms;android-28" "sources;android-28" "system-images;android-28;google_apis_playstore;x86" \
-      "build-tools;28.0.3" "system-images;android-28;android-wear;x86" --verbose --sdk_root="$ANDROID_SDK"
-  yes | sdkmanager "platforms;android-29" "system-images;android-29;default;x86" "system-images;android-29;google_apis;x86" \
-      "build-tools;29.0.1" "system-images;android-29;google_apis_playstore;x86" --verbose --sdk_root="$ANDROID_SDK"
+  printf "\n$SEPARATOR\n >>>>> INSTALL PLATFORMs\n"
+  yes | sdkmanager "platforms;android-24" --sdk_root="$ANDROID_SDK"
+  yes | sdkmanager "platforms;android-25" --sdk_root="$ANDROID_SDK"
+  yes | sdkmanager "platforms;android-26" --sdk_root="$ANDROID_SDK"
+  yes | sdkmanager "platforms;android-27" --sdk_root="$ANDROID_SDK"
+  yes | sdkmanager "platforms;android-28" --sdk_root="$ANDROID_SDK"
+  yes | sdkmanager "platforms;android-29" --sdk_root="$ANDROID_SDK"
+
+  printf "\n$SEPARATOR\n >>>>> INSTALL BUIL-TOOLS\n"
+  yes | sdkmanager "build-tools;24.0.3" --sdk_root="$ANDROID_SDK"
+  yes | sdkmanager "build-tools;25.0.3" --sdk_root="$ANDROID_SDK"
+  yes | sdkmanager "build-tools;26.0.3" --sdk_root="$ANDROID_SDK"
+  yes | sdkmanager "build-tools;27.0.3" --sdk_root="$ANDROID_SDK"
+  yes | sdkmanager "build-tools;28.0.3" --sdk_root="$ANDROID_SDK"
+  yes | sdkmanager "build-tools;29.0.1" --sdk_root="$ANDROID_SDK"
+
+  printf "\n$SEPARATOR\n >>>>> INSTALL SOURCES\n"
+  yes | sdkmanager "sources;android-24" --sdk_root="$ANDROID_SDK"
+  yes | sdkmanager "sources;android-25" --sdk_root="$ANDROID_SDK"
+  yes | sdkmanager "sources;android-26" --sdk_root="$ANDROID_SDK"
+  yes | sdkmanager "sources;android-27" --sdk_root="$ANDROID_SDK"
+  yes | sdkmanager "sources;android-28" --sdk_root="$ANDROID_SDK"
+  #No sources for android-29
+  yes | sdkmanager "sources;android-29" --sdk_root="$ANDROID_SDK"
+
+  printf "\n$SEPARATOR\n >>>>> INSTALL DOCS\n"
+  yes | sdkmanager "docs" --sdk_root="$ANDROID_SDK"
+
+  printf "\n$SEPARATOR\n >>>>> INSTALL EMULATOR\n"
+  yes | sdkmanager "emulator" --sdk_root="$ANDROID_SDK"
+
+  printf "\n$SEPARATOR\n >>>>> INSTALL IMAGES\n"
+  yes | sdkmanager "system-images;android-24;google_apis_playstore;x86" --sdk_root="$ANDROID_SDK"
+  yes | sdkmanager "system-images;android-25;google_apis_playstore;x86" --sdk_root="$ANDROID_SDK"
+  yes | sdkmanager "system-images;android-26;google_apis_playstore;x86" --sdk_root="$ANDROID_SDK"
+  yes | sdkmanager "system-images;android-27;google_apis_playstore;x86" --sdk_root="$ANDROID_SDK"
+  yes | sdkmanager "system-images;android-28;google_apis_playstore;x86" "system-images;android-28;android-wear;x86" --sdk_root="$ANDROID_SDK"
+  yes | sdkmanager "system-images;android-29;google_apis_playstore;x86" --sdk_root="$ANDROID_SDK"
+
 }
 
 #https://dl.google.com/android/repository/sdk-tools-darwin-4333796.zip
@@ -119,14 +143,18 @@ EOF
   install_android_packages;
 }
 
+is_true $to_update && {
+  printf "\n$SEPARATOR\n >>>>> UPDATE INSTALLED PACKAGES\n";
+  sdkmanager --update --sdk_root="$ANDROID_SDK";
+}
 
-printf ":: $SEPARATOR\n JAVA: "
+printf "\n\n:: $SEPARATOR\n JAVA: "
 java -version 
 printf ":: $SEPARATOR\n MVN: "
 mvn -version
+printf ":: $SEPARATOR\n Gradle: "
+gradle -version
 printf ":: $SEPARATOR\n Android SDK Manager: "
 sdkmanager --version
 printf ":: $SEPARATOR\n "
-
 echo
-
