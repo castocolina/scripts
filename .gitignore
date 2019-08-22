@@ -3,5 +3,5 @@
 *.bin
 *.zip
 .DS_Store
-
+.gradle
 

@@ -10,14 +10,14 @@ read to_update
 source $BASEDIR/install_func.zsh
 source $MY_SH_CFG_FILE
 
-is_true $to_update && sudo aptitude update -y
+MY_OS=$(get_os)
+[ "$MY_OS" = "linux" ] && is_true $to_update && sudo aptitude update -y
 
 echo ""
 echo $SEPARATOR
 echo ">>>>> INSTAL K8 Developer Utilities ................"
 echo $SEPARATOR
 
-MY_OS=$(get_os)
 
 if [ "$MY_OS" = "darwin" ]; then
   sysctl kern.hv_support
@@ -53,8 +53,8 @@ if [ "$MY_OS" = "linux" ]; then
 fi
 
 (is_false $to_update && exist_cmd kubectl) || {
+  echo "INSTALL KUBECTL";
   if [ "$MY_OS" = "linux" ]; then
-    echo "INSTALL KUBECTL";
     sudo apt-get install -y apt-transport-https;
     sudo apt-get install -y kubectl;
   fi
@@ -104,11 +104,13 @@ exist_cmd kube-prompt || {
   rm -rf kube-prompt_v1.0.6_$(echo $MY_OS)_amd64.zip
 }
 
-docker run hello-world
+printf "\n\n:: $SEPARATOR\n "
 docker -v
 docker-compose -v
+docker run hello-world
+docker image rm docker run hello-world
 
-printf ":: $SEPARATOR\n kubectl: "
+printf "\n:: $SEPARATOR\n kubectl: "
 kubectl version --client --short
 printf ":: $SEPARATOR\n minikube: "
 minikube version
