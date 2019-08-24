@@ -108,7 +108,7 @@ printf "\n\n:: $SEPARATOR\n "
 docker -v
 docker-compose -v
 docker run hello-world
-docker image rm docker run hello-world
+docker image rm -f hello-world
 
 printf "\n:: $SEPARATOR\n kubectl: "
 kubectl version --client --short
