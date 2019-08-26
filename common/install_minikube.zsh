@@ -107,6 +107,12 @@ exist_cmd kube_ps1 || {
   brew install kube-ps1;
 }
 
+CONFIG_KUBE_PS1=$(cat <<'EOF'
+PROMPT='$(kube_ps1)'$PROMPT
+EOF
+);
+find_append $MY_SH_CFG_FILE "PROMPT='$(kube_ps1)'" "$CONFIG_KUBE_PS1"
+
 exist_cmd kube-prompt || {
   curl -fSLO "https://github.com/c-bata/kube-prompt/releases/download/v1.0.6/kube-prompt_v1.0.6_$(echo $MY_OS)_amd64.zip";
   unzip kube-prompt_v1.0.6_$(echo $MY_OS)_amd64.zip
