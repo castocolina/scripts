@@ -6,7 +6,7 @@ export SEPARATOR="==============================================================
 
 echo ""
 echo $SEPARATOR
-echo ">>>>> UPDATE ................"
+echo ">>>>> INSTALL EXCLUSIVE LINUX ................"
 echo $SEPARATOR
 
 source $BASEDIR/install_func.zsh
@@ -21,24 +21,16 @@ if is_true $to_update ; then
     sudo aptitude update -y
     sudo aptitude install linux-headers-$(uname -r) -y
     exist_cmd pip && sudo -H pip install --upgrade pip;
-    exist_cmd brew && brew update --force
-    exist_cmd sdk && sdk selfupdate force
-    exist_cmd sdkmanager && sdkmanager --update
 fi
 
 printf "\n$SEPARATOR\n >>>>>  ESSENTIALS\n"
-exist_pkg "build-essential" || {
-  printf "\n ::: Install build-essential ...\n"
-  sudo aptitude install build-essential -y
-}
-
+exist_pkg build-essential || sudo aptitude install build-essential -y
 exist_pkg linux-image-extra-virtual || sudo aptitude install -y linux-image-extra-virtual
 # exist_pkg linux-image-extra-$(uname -r) || sudo aptitude install -y linux-image-extra-$(uname -r)
 exist_pkg linux-headers-$(uname -r) || sudo aptitude install -y linux-headers-$(uname -r)
 exist_pkg apt-transport-https || sudo aptitude install -y apt-transport-https
 exist_pkg ca-certificates || sudo aptitude install -y ca-certificates
 exist_pkg software-properties-common || sudo aptitude install -y software-properties-common
-
 exist_pkg bash-completion || sudo aptitude install -y bash-completion
 
 # sudo apt-get install gcc-8 g++-8 -y && 
@@ -83,52 +75,7 @@ exist_cmd "zsh" || {
   sh -c "$(curl -fsSL https://raw.githubusercontent.com/robbyrussell/oh-my-zsh/master/tools/install.sh)"
 }
 
-
-printf "\n$SEPARATOR\n >>>>> SDK\n"
-exist_cmd sdk || {
-  curl -s "https://get.sdkman.io" | bash
-
-  SDK_CONFIG=$(cat <<'EOF'
-
-#THIS MUST BE AT THE END OF THE FILE FOR SDKMAN TO WORK!!!
-[[ -s "$HOME/.sdkman/bin/sdkman-init.sh" ]] && source "$HOME/.sdkman/bin/sdkman-init.sh"
-EOF
-);
-  
-  echo "$SDK_CONFIG ----"
-  find_append $MY_SH_CFG_FILE ".sdkman/bin/sdkman-init.sh" "$SDK_CONFIG"
-  source $MY_SH_CFG_FILE
-  sdk version
-  sdk selfupdate force
-}
-
 printf "\n$SEPARATOR\n >>>>> NODE.js\n"
-exist_cmd "nvm" || {
-  brew install nvm
-  NVM_CONFIG=$(cat <<'EOF'
-export NVM_DIR="$HOME/.nvm"
-[ -s "/home/linuxbrew/.linuxbrew/opt/nvm/nvm.sh" ] && . "/home/linuxbrew/.linuxbrew/opt/nvm/nvm.sh"  # This loads nvm
-[ -s "/home/linuxbrew/.linuxbrew/opt/nvm/etc/bash_completion" ] && . "/home/linuxbrew/.linuxbrew/opt/nvm/etc/bash_completion"  # This loads nvm bash_completion
-EOF
-);
-  echo "$NVM_CONFIG ----"
-  find_append $MY_SH_CFG_FILE "NVM_DIR=" "$NVM_CONFIG"
-  source $MY_SH_CFG_FILE
-}
-
-(is_false $to_update && exist_cmd "node") || {
-  nvm install 8 && nvm install 10 && nvm install node && nvm use 8
-
-  NODE_CONFIG="export PATH=\"$(which node):\$PATH\""
-  find_append $MY_SH_CFG_FILE $NODE_CONFIG "$NODE_CONFIG"
-  source $MY_SH_CFG_FILE
-}
-exist_cmd yarn || brew install yarn --without-node
-
-(exist_cmd react-native || is_false $to_update) || npm i -g react-native
-(exist_cmd create-react-native-app || is_false $to_update) || npm i -g create-react-native-app
-
-(exist_cmd nodemon || is_false $to_update) || npm i -g nodemon
 
 exist_cmd watchman || brew install watchman;
 exist_cmd watchman && is_true $to_update && brew upgrade watchman;
@@ -136,23 +83,8 @@ exist_cmd watchman && is_true $to_update && brew upgrade watchman;
 function download_install_rn_debugger(){
   install_deb react-native-debugger "RN Debugger" "rn_debugger.deb" "$URL_RN_DEBUGGER"
 }
-#exist_cmd react-native-debugger || brew cask install react-native-debugger
 exist_cmd react-native-debugger || download_install_rn_debugger
 exist_cmd react-native-debugger && is_true $to_update && download_install_rn_debugger;
-
-printf "\n$SEPARATOR\n >>>>> JAVA / ANDROID\n"
-
-exist_dir "$HOME/.sdkman/candidates/java/current/" || sdk install java 8.0.191-oracle
-JAVA_HOME_TEXT=$(cat <<'EOF'
-export JAVA_HOME="$HOME/.sdkman/candidates/java/current/"
-export JDK_HOME="$JAVA_HOME"
-export JRE_HOME="$JAVA_HOME"
-
-EOF
-);
-find_append $MY_SH_CFG_FILE "export JAVA_HOME=" "$JAVA_HOME_TEXT"
-exist_cmd mvn || sdk install maven 3.6.0
-exist_cmd gradle || sdk install gradle 5.1
 
 printf "\n$SEPARATOR\n >>>>> OTHERS ANDROIDS DEPS \n"
 exist_pkg cpu-checker || sudo aptitude install -y cpu-checker
@@ -214,7 +146,6 @@ install_deb google-chrome "Google Chrome" "$FILE_GCHROME" "$URL_GCHROME"
 install_deb atom "Atom" "$FILE_ATOM" "$URL_ATOM"
 install_deb code "VS Code" "$FILE_VSCODE" "$URL_VSCODE"
 install_deb gitkraken "GitKraken" "$FILE_GITKRAKEN" "$URL_GITKRAKEN"
-install_deb vagrant "Vagrant" "$FILE_VAGRANT" "$URL_VAGRANT"
 install_deb masterpdfeditor5 "Master PDF Editor" "$FILE_MASTER_PDF" "$URL_MASTER_PDF"
 install_deb virtualbox "Virtual Box" "$FILE_VB" "$URL_VB"
 install_deb slack "Slack" "$FILE_SLACK" "$URL_SLACK"
@@ -300,8 +231,6 @@ echo ":: $SEPARATOR"
 echo ":: $SEPARATOR"
 echo ":: $SEPARATOR"
 uname -a
-printf ":: $SEPARATOR\n BREW:\n "
-brew list --versions
 echo ":: $SEPARATOR"
 sdk version
 sdk current
@@ -311,8 +240,6 @@ echo ":: $SEPARATOR"
 python --version
 echo ":: $SEPARATOR"
 go version
-echo ":: $SEPARATOR"
-java -version
 echo ":: $SEPARATOR"
 git --version
 

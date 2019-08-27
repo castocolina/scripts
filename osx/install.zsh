@@ -6,7 +6,7 @@ export SEPARATOR="==============================================================
 
 echo ""
 echo $SEPARATOR
-echo ">>>>> UPDATE ................"
+echo ">>>>> INSTALL EXCLUSIVE OSX ................"
 echo $SEPARATOR
 
 source $BASEDIR/../common/install_func.zsh
@@ -32,7 +32,7 @@ exist_cmd brew || {
 	brew tap caskroom/versions
 	brew doctor
 	brew update --force
-  	brew install hello
+  brew install hello
 }
 
 export HOMEBREW_NO_AUTO_UPDATE=1

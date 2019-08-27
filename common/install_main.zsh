@@ -28,10 +28,8 @@ EOF
   sdk selfupdate force
 }
 
-(is_true $to_update && exist_cmd sdk) && {
-  sdk selfupdate force
-}
-
+(is_true $to_update && exist_cmd sdk) && sdk selfupdate force
+(is_true $to_update && exist_cmd brew) && brew update --force
 
 uname -a
 printf ":: $SEPARATOR\n BREW:\n "
