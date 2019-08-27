@@ -186,35 +186,6 @@ exist_cmd tree && is_true $to_update && brew upgrade tree;
 exist_cmd vim || sudo aptitude install vim -y
 exist_cmd vim && is_true $to_update && brew upgrade vim;
 
-printf "\n$SEPARATOR\n >>>>> DOCKER\n"
-# sudo aptitude remove -y docker-ce
-exist_cmd docker ||
-{
-  sudo apt-get remove docker docker-engine docker.io -y
-  sudo aptitude install -y docker-ce
-  echo "$SEPARATOR"
-  sudo usermod -aG docker $USER
-  sudo docker run hello-world
-  sudo update-grub
-  sudo ufw status
-  sudo systemctl enable docker
-  # /etc/default/ufw /etc/sysconfig/ufw
-  #       DEFAULT_FORWARD_POLICY="ACCEPT"
-  #sudo ufw allow 2376/tcp
-  #sudo ufw reload
-
-  #Edit the /etc/NetworkManager/NetworkManager.conf file.
-  #Comment out the dns=dnsmasq line by adding a # character to the beginning of the line.
-  # dns=dnsmasq
-  sudo sed -i '/dns=dnsmasq/c\#dns=dnsmasq.' /etc/NetworkManager/NetworkManager.conf
-  #Save and close the file.
-  #Restart both NetworkManager and Docker. As an alternative, you can reboot your system.
-  sudo restart network-manager
-  sudo restart docker
-}
-#sudo -H pip install docker-compose
-exist_cmd docker-compose || sudo -H pip install docker-compose
-
 printf "\n$SEPARATOR\n >>>>> GUI\n"
 exist_cmd meld ca-certificates|| { sudo apt install -y meld; }
 exist_cmd filezilla ca-certificates|| { sudo apt install -y filezilla; }
