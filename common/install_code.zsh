@@ -4,18 +4,18 @@ sudo echo "Test sudo"
 
 export SEPARATOR="========================================================================================================================"
 
-echo ""
+echo
 echo $SEPARATOR
-echo ">>>>> UPDATE ................"
+echo ">>>>> VSCODE ................"
 echo $SEPARATOR
 
 source $BASEDIR/install_func.zsh
 source $MY_SH_CFG_FILE
+MY_OS=$(get_os)
 
 echo -n "UPDATE? (y/n) > "
 read to_update
 
-MY_OS=$(get_os)
 if [ "$MY_OS" = "darwin" ]; then
 VSCODE_CONFIG=$(cat <<'EOF'
 # Add Visual Studio Code (code)

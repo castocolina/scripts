@@ -2,7 +2,6 @@
 
 BASEDIR=$(dirname "$0")
 source $BASEDIR/install_func.zsh
-MY_SH_CFG_FILE=~/.zshrc4cco
 touch $MY_SH_CFG_FILE
 
 #ALIASES

@@ -4,18 +4,18 @@ sudo echo "Test sudo"
 
 export SEPARATOR="========================================================================================================================"
 
-echo ""
+echo
 echo $SEPARATOR
-echo ">>>>> UPDATE ................"
+echo ">>>>> NODEJS ................"
 echo $SEPARATOR
 
 source $BASEDIR/install_func.zsh
 source $MY_SH_CFG_FILE
+MY_OS=$(get_os)
 
 echo -n "UPDATE? (y/n) > "
 read to_update
 
-MY_OS=$(get_os)
 
 if [ "$MY_OS" = "darwin" ]; then
   # default for osx 9152
@@ -42,7 +42,7 @@ nvm install node;
 nvm use 8;
 
 rm -rf $HOME/.yarn
-exist_cmd yarn || curl -o- -fSL https://yarnpkg.com/install.sh | bash -s -- --rc
+(exist_cmd yarn || is_false $to_update) || curl -o- -fSL https://yarnpkg.com/install.sh | bash -s -- --rc
 
 (exist_cmd create-react-native-app || is_false $to_update) || npm i -g create-react-native-app
 (exist_cmd nodemon || is_false $to_update) || npm i -g nodemon
@@ -50,8 +50,8 @@ exist_cmd yarn || curl -o- -fSL https://yarnpkg.com/install.sh | bash -s -- --rc
 (exist_cmd tslint || is_false $to_update) || npm i -g tslint
 (exist_cmd nodemon || is_false $to_update) || npm i -g nodemon
 (exist_cmd jest || is_false $to_update) || npm i -g jest
+(which rnpm || is_false $to_update) || npm i -g rnpm
 sudo npm config delete prefix
-
 
 
 echo ":: $SEPARATOR"

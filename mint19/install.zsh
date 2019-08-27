@@ -154,7 +154,6 @@ find_append $MY_SH_CFG_FILE "export JAVA_HOME=" "$JAVA_HOME_TEXT"
 exist_cmd mvn || sdk install maven 3.6.0
 exist_cmd gradle || sdk install gradle 5.1
 
-
 printf "\n$SEPARATOR\n >>>>> OTHERS ANDROIDS DEPS \n"
 exist_pkg cpu-checker || sudo aptitude install -y cpu-checker
 exist_pkg qemu-kvm || sudo aptitude install -y qemu-kvm
@@ -316,19 +315,6 @@ echo ":: $SEPARATOR"
 java -version
 echo ":: $SEPARATOR"
 git --version
-printf ":: $SEPARATOR\n DOCKER: "
-docker -v
-printf ":: $SEPARATOR\n DOCKER-COMPOSE: "
-docker-compose -v
-printf ":: $SEPARATOR\n NVM: "
-nvm --version
-printf ":: $SEPARATOR\n NPM: "
-npm --version
-printf ":: $SEPARATOR\n NODE: "
-node --version
-printf ":: $SEPARATOR\n Android SDK Manager: "
-sdkmanager --version
-printf ":: $SEPARATOR\n "
 
 echo
 

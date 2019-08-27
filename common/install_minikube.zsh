@@ -4,14 +4,17 @@ sudo echo "Test sudo"
 
 export SEPARATOR="========================================================================================================================"
 
-echo -n "UPDATE? (y/n) > "
-read to_update
+echo
+echo $SEPARATOR
+echo ">>>>> MINIKUBE ................"
+echo $SEPARATOR
 
 source $BASEDIR/install_func.zsh
 source $MY_SH_CFG_FILE
-
 MY_OS=$(get_os)
-[ "$MY_OS" = "linux" ] && is_true $to_update && sudo aptitude update -y
+
+echo -n "UPDATE? (y/n) > "
+read to_update
 
 echo ""
 echo $SEPARATOR

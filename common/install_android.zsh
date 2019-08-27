@@ -4,31 +4,19 @@ sudo echo "Test sudo"
 
 export SEPARATOR="========================================================================================================================"
 
-echo -n "UPDATE? (y/n) > "
-read to_update
+echo
+echo $SEPARATOR
+echo ">>>>> ANDROID ................"
+echo $SEPARATOR
 
 source $BASEDIR/install_func.zsh
 source $MY_SH_CFG_FILE
-
-is_true $to_update && sudo aptitude update -y
-
-echo ""
-echo $SEPARATOR
-echo ">>>>> INSTAL K8 Developer Utilities ................"
-echo $SEPARATOR
-
 MY_OS=$(get_os)
 
+echo -n "UPDATE? (y/n) > "
+read to_update
+
 printf "\n$SEPARATOR\n >>>>> JAVA\n"
-
-if [ "$MY_OS" = "darwin" ]; then
-  echo "OSX"
-fi
-if [ "$MY_OS" = "linux" ]; then
-  echo "LINUX"
-
-fi
-
 (exist_cmd java ) || {
   if [ "$MY_OS" = "linux" ]; then
     exist_dir "$HOME/.sdkman/candidates/java/current/" || sdk install java 8.0.191-oracle
