@@ -4,7 +4,7 @@ sudo echo "Test sudo"
 
 export SEPARATOR="========================================================================================================================"
 
-echo ""
+echo
 echo $SEPARATOR
 echo ">>>>> INSTALL EXCLUSIVE LINUX ................"
 echo $SEPARATOR
@@ -49,33 +49,8 @@ $exist_setuptools || sudo -H pip install setuptools
 
 exist_cmd corkscrew || { sudo apt install -y corkscrew; }
 
-printf "\n$SEPARATOR\n >>>>>  BREW\n"
-exist_cmd "brew" || {
-  printf "\n ::: Install BREW for linux ...\n"
-  sh -c "$(curl -fsSL https://raw.githubusercontent.com/Linuxbrew/install/master/install.sh)"
-  test -d ~/.linuxbrew && eval $(~/.linuxbrew/bin/brew shellenv)
-  test -d /home/linuxbrew/.linuxbrew && eval $(/home/linuxbrew/.linuxbrew/bin/brew shellenv)
-  test -r ~/.bash_profile && echo "eval \$($(brew --prefix)/bin/brew shellenv)" >>~/.bash_profile
-  echo "eval \$($(brew --prefix)/bin/brew shellenv)" >>$MY_SH_CFG_FILE
-
-  source $MY_SH_CFG_FILE
-  brew update --force
-  brew install hello
-}
-
 export HOMEBREW_NO_AUTO_UPDATE=1
 find_append $MY_SH_CFG_FILE "HOMEBREW_NO_AUTO_UPDATE" "export HOMEBREW_NO_AUTO_UPDATE=1\n"
-
-printf "\n$SEPARATOR\n >>>>> ZSH\n"
-exist_cmd "zsh" || {
-  printf "\n ::: Install ZSH for linux ...\n"
-  rm -rf $HOME/.oh-my-zsh
-  sudo aptitude install zsh -y
-  #oh-my-zsh
-  sh -c "$(curl -fsSL https://raw.githubusercontent.com/robbyrussell/oh-my-zsh/master/tools/install.sh)"
-}
-
-printf "\n$SEPARATOR\n >>>>> NODE.js\n"
 
 exist_cmd watchman || brew install watchman;
 exist_cmd watchman && is_true $to_update && brew upgrade watchman;

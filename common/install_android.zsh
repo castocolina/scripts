@@ -91,7 +91,8 @@ function install_android_packages(){
   yes | sdkmanager "system-images;android-25;google_apis_playstore;x86" --sdk_root="$ANDROID_SDK"
   yes | sdkmanager "system-images;android-26;google_apis_playstore;x86" --sdk_root="$ANDROID_SDK"
   yes | sdkmanager "system-images;android-27;google_apis_playstore;x86" --sdk_root="$ANDROID_SDK"
-  yes | sdkmanager "system-images;android-28;google_apis_playstore;x86" "system-images;android-28;android-wear;x86" --sdk_root="$ANDROID_SDK"
+  yes | sdkmanager "system-images;android-28;google_apis_playstore;x86" \
+                   "system-images;android-28;android-wear;x86" --sdk_root="$ANDROID_SDK"
   yes | sdkmanager "system-images;android-29;google_apis_playstore;x86" --sdk_root="$ANDROID_SDK"
 
 }

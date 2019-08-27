@@ -4,7 +4,7 @@ sudo echo "Test sudo"
 
 export SEPARATOR="========================================================================================================================"
 
-echo ""
+echo
 echo $SEPARATOR
 echo ">>>>> INSTALL EXCLUSIVE OSX ................"
 echo $SEPARATOR
@@ -23,48 +23,6 @@ defaults write com.apple.screencapture location $HOME/Pictures/screenshots/ && k
 xcode-select --install
 exist_cmd gcc || xcode-select -p /Library/Developer/CommandLineTools
 sudo xcodebuild -license accept
-
-printf "\n$SEPARATOR\n >>>>>  BREW\n"
-
-exist_cmd brew || {
-	/usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
-	brew tap caskroom/cask
-	brew tap caskroom/versions
-	brew doctor
-	brew update --force
-  brew install hello
-}
-
-export HOMEBREW_NO_AUTO_UPDATE=1
-find_append $MY_SH_CFG_FILE "HOMEBREW_NO_AUTO_UPDATE" "export HOMEBREW_NO_AUTO_UPDATE=1\n"
-
-printf "\n$SEPARATOR\n >>>>> iTerm/ZSH\n"
-
-exist_cmd zsh || {
-    echo "INSTALLING..."
-    brew cask install iterm2;
-
-    brew install zsh;
-    sh -c "$(curl -fsSL https://raw.githubusercontent.com/robbyrussell/oh-my-zsh/master/tools/install.sh)";
-    chsh -s /bin/zsh;
-    source ~/.zshrc;
-    curl -L https://iterm2.com/shell_integration/zsh -o ~/.iterm2_shell_integration.zsh;
-    source ~/.iterm2_shell_integration.zsh;
-
-    #These plugins add support for the corresponding file type to Mac Quick Look 
-    #(In Finder, mark a file and press Space to start Quick Look).
-    brew cask install \
-      qlcolorcode \
-      qlstephen \
-      qlmarkdown \
-      quicklook-json \
-      qlprettypatch \
-      quicklook-csv \
-      webpquicklook \
-      suspicious-package;
-}
-
-brew tap caskroom/fonts && brew cask install font-source-code-pro
 
 brew cask install keybase
 brew cask install datagrip

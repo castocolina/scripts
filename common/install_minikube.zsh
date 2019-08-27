@@ -16,7 +16,7 @@ MY_OS=$(get_os)
 echo -n "UPDATE? (y/n) > "
 read to_update
 
-echo ""
+echo
 echo $SEPARATOR
 echo ">>>>> INSTAL K8 Developer Utilities ................"
 echo $SEPARATOR
