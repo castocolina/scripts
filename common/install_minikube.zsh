@@ -2,16 +2,14 @@
 BASEDIR=$(dirname "$0")
 sudo echo "Test sudo"
 
-export SEPARATOR="========================================================================================================================"
+source $BASEDIR/install_func.zsh
+source $MY_SH_CFG_FILE
+MY_OS=$(get_os)
 
 echo
 echo $SEPARATOR
 echo ">>>>> MINIKUBE ................"
 echo $SEPARATOR
-
-source $BASEDIR/install_func.zsh
-source $MY_SH_CFG_FILE
-MY_OS=$(get_os)
 
 echo -n "UPDATE? (y/n) > "
 read to_update
@@ -24,7 +22,8 @@ echo $SEPARATOR
 
 if [ "$MY_OS" = "darwin" ]; then
   sysctl kern.hv_support
-  brew cask install docker
+  exist_cmd docker || brew cask install docker
+  exist_cmd docker && is_true $to_update && brew cask upgrade docker
 fi
 if [ "$MY_OS" = "linux" ]; then
   egrep --color 'vmx|svm' /proc/cpuinfo
@@ -106,9 +105,10 @@ fi
 exist_cmd kubectx || brew install kubectx
 exist_cmd kubectx && is_true $to_update && brew upgrade kubectx
 
-exist_cmd kube_ps1 || {
+brew list kube-ps1 || {
   brew install kube-ps1;
 }
+brew list kube-ps1 && is_true $to_update && brew upgrade kube-ps1
 
 CONFIG_KUBE_PS1=$(cat <<'EOF'
 PROMPT='$(kube_ps1)'$PROMPT
@@ -116,12 +116,19 @@ EOF
 );
 find_append $MY_SH_CFG_FILE "PROMPT='$(kube_ps1)'" "$CONFIG_KUBE_PS1"
 
-exist_cmd kube-prompt || {
-  curl -fSLO "https://github.com/c-bata/kube-prompt/releases/download/v1.0.6/kube-prompt_v1.0.6_$(echo $MY_OS)_amd64.zip";
-  unzip kube-prompt_v1.0.6_$(echo $MY_OS)_amd64.zip
+(exist_cmd kube-prompt1&& is_false $to_update ) || {
+  echo "INSTALL KUBE-PROMPT";
+  release=$(get_github_latest_release "c-bata/kube-prompt" "v1.0.6")
+
+  FILE_NAME="kube-prompt_$(echo $release)_$(echo $MY_OS)_amd64.zip"
+  FILE_URL="https://github.com/c-bata/kube-prompt/releases/download/$release/$FILE_NAME"
+  echo "VERSION ($release) --> $FILE_URL"
+
+  curl -fSLO "$FILE_URL";
+  unzip $FILE_NAME
   chmod +x kube-prompt
   sudo mv ./kube-prompt /usr/local/bin/kube-prompt
-  rm -rf kube-prompt_v1.0.6_$(echo $MY_OS)_amd64.zip
+  rm -rf $FILE_NAME
 }
 
 printf "\n\n:: $SEPARATOR\n "

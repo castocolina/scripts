@@ -2,15 +2,14 @@
 BASEDIR=$(dirname "$0")
 sudo echo "Test sudo"
 
-export SEPARATOR="========================================================================================================================"
+source $BASEDIR/install_func.zsh
+source $MY_SH_CFG_FILE
 
 echo
 echo $SEPARATOR
 echo ">>>>> MAIN INSTALLER ................"
 echo $SEPARATOR
 
-source $BASEDIR/install_func.zsh
-source $MY_SH_CFG_FILE
 MY_OS=$(get_os)
 
 echo -n "UPDATE? (y/n) > "

@@ -2,16 +2,14 @@
 BASEDIR=$(dirname "$0")
 sudo echo "Test sudo"
 
-export SEPARATOR="========================================================================================================================"
+source $BASEDIR/install_func.zsh
+source $MY_SH_CFG_FILE
+MY_OS=$(get_os)
 
 echo
 echo $SEPARATOR
 echo ">>>>> NODEJS ................"
 echo $SEPARATOR
-
-source $BASEDIR/install_func.zsh
-source $MY_SH_CFG_FILE
-MY_OS=$(get_os)
 
 echo -n "UPDATE? (y/n) > "
 read to_update

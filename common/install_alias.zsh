@@ -1,6 +1,7 @@
-#!/bin/bash
-
+#!/bin/zsh
 BASEDIR=$(dirname "$0")
+sudo echo "Test sudo"
+
 source $BASEDIR/install_func.zsh
 touch $MY_SH_CFG_FILE
 

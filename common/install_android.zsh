@@ -2,22 +2,21 @@
 BASEDIR=$(dirname "$0")
 sudo echo "Test sudo"
 
-export SEPARATOR="========================================================================================================================"
+source $BASEDIR/install_func.zsh
+source $MY_SH_CFG_FILE
+MY_OS=$(get_os)
 
 echo
 echo $SEPARATOR
 echo ">>>>> ANDROID ................"
 echo $SEPARATOR
 
-source $BASEDIR/install_func.zsh
-source $MY_SH_CFG_FILE
-MY_OS=$(get_os)
-
 echo -n "UPDATE? (y/n) > "
 read to_update
 
+
 printf "\n$SEPARATOR\n >>>>> JAVA\n"
-(exist_cmd java ) || {
+(exist_cmd java) || {
   if [ "$MY_OS" = "linux" ]; then
     exist_dir "$HOME/.sdkman/candidates/java/current/" || sdk install java 8.0.191-oracle
     JAVA_HOME_TEXT=$(cat <<'EOF'
@@ -32,7 +31,10 @@ EOF
 
 # JAVA_PATH=$(readlink $(which java))
 if [ "$MY_OS" = "darwin" ]; then
-  brew cask install adoptopenjdk/openjdk/adoptopenjdk8
+  brew cask info adoptopenjdk/openjdk/adoptopenjdk8 || {
+    brew cask install adoptopenjdk/openjdk/adoptopenjdk8
+  }
+  exist_cmd java && is_true $to_update && brew cask upgrade adoptopenjdk/openjdk/adoptopenjdk8
 fi
 
 exist_cmd mvn || sdk install maven
