@@ -22,22 +22,25 @@ if [ "$MY_OS" = "darwin" ]; then
   sudo sysctl -w kern.maxfilesperproc=524288;
 fi
 
-release=$(get_github_latest_release "nvm-sh/nvm" "v0.34.0")
-curl -fSLo- https://raw.githubusercontent.com/nvm-sh/nvm/$release/install.sh | bash
+(is_false $to_update && exist_cmd nvm) || || {
+  release=$(get_github_latest_release "nvm-sh/nvm" "v0.34.0")
+  curl -fSLo- https://raw.githubusercontent.com/nvm-sh/nvm/$release/install.sh | bash
+
 
 NVM_CONFIG=$(cat <<'EOF'
 export NVM_DIR="$HOME/.nvm"
 [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
 EOF
 );
-find_append $MY_SH_CFG_FILE "NVM_DIR=" "$NVM_CONFIG"
-source $MY_SH_CFG_FILE
-nvm --version
 
-nvm install 8;
-nvm install 10;
-nvm install node;
-nvm use 8;
+  find_append $MY_SH_CFG_FILE "NVM_DIR=" "$NVM_CONFIG"
+  source $MY_SH_CFG_FILE
+
+  nvm install 8;
+  nvm install 10;
+  nvm install node;
+  nvm use 8;
+}
 
 rm -rf $HOME/.yarn
 (exist_cmd yarn || is_false $to_update) || curl -o- -fSL https://yarnpkg.com/install.sh | bash -s -- --rc

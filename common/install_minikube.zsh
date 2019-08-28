@@ -114,9 +114,9 @@ CONFIG_KUBE_PS1=$(cat <<'EOF'
 PROMPT='$(kube_ps1)'$PROMPT
 EOF
 );
-find_append $MY_SH_CFG_FILE "PROMPT='$(kube_ps1)'" "$CONFIG_KUBE_PS1"
+find_append $MY_SH_CFG_FILE "$CONFIG_KUBE_PS1" "$CONFIG_KUBE_PS1"
 
-(exist_cmd kube-prompt1&& is_false $to_update ) || {
+(exist_cmd kube-prompt && is_false $to_update ) || {
   echo "INSTALL KUBE-PROMPT";
   release=$(get_github_latest_release "c-bata/kube-prompt" "v1.0.6")
 
