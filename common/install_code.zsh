@@ -36,6 +36,7 @@ exist_cmd code && is_true $to_update && {
 	code --install-extension Equinusocio.vsc-material-theme
 	code --install-extension PKief.material-icon-theme
 
+	code --install-extension dbaeumer.vscode-eslint
 	code --install-extension EditorConfig.EditorConfig
 	code --install-extension esbenp.prettier-vscode
 
