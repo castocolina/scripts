@@ -1,5 +1,12 @@
 #!/bin/zsh
 
+function exist_pkg() {
+  PKG=$1
+  { dpkg -s $PKG >/dev/null 2>&1 && echo "'$PKG' is INSTALLED!" && return_cd=0; } || \
+  { echo >&2 "I require '$PKG' but it's not installed."; return_cd=1; }
+  return $return_cd;
+}
+
 function install_deb(){
   
   CURR_DIR=$(pwd)

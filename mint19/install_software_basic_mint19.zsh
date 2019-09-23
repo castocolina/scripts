@@ -3,7 +3,7 @@ BASEDIR=$(dirname "$0")
 sudo echo "Test sudo"
 
 source $BASEDIR/install_func.zsh
-source $BASEDIR/..common/install_func.zsh
+source $BASEDIR/../common/install_func.zsh
 source $BASEDIR/install_url.zsh
 source $MY_SH_CFG_FILE
 
