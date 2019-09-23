@@ -40,14 +40,6 @@ if [ "$MY_OS" = "linux" ]; then
     sudo update-grub
     sudo ufw status
     sudo systemctl enable docker
-    #Edit the /etc/NetworkManager/NetworkManager.conf file.
-    #Comment out the dns=dnsmasq line by adding a # character to the beginning of the line.
-    # dns=dnsmasq
-    sudo sed -i '/dns=dnsmasq/c\#dns=dnsmasq.' /etc/NetworkManager/NetworkManager.conf
-    #Save and close the file.
-    #Restart both NetworkManager and Docker. As an alternative, you can reboot your system.
-    sudo restart network-manager
-    sudo restart docker
   }
   #sudo -H pip install docker-compose
   exist_cmd docker-compose || sudo -H pip install docker-compose
@@ -62,6 +54,21 @@ if [ "$MY_OS" = "darwin" ]; then
     && sudo mv docker-machine-driver-hyperkit /usr/local/bin/ \
     && sudo chown root:wheel /usr/local/bin/docker-machine-driver-hyperkit \
     && sudo chmod u+s /usr/local/bin/docker-machine-driver-hyperkit
+  }
+fi
+
+if [ "$MY_OS" = "linux" ]; then
+  (is_false $to_update && exist_cmd docker-machine-driver-kvm2) || {
+    echo "INSTALL KVM2";
+
+    sudo apt install ebtables dnsmasq firewalld -y
+    sudo systemctl restart libvirtd
+
+    # install kvm2 driver
+    curl -LO https://storage.googleapis.com/minikube/releases/latest/docker-machine-driver-kvm2 && \
+    sudo install docker-machine-driver-kvm2 /usr/local/bin/
+    rm -rf docker-machine-driver-kvm2
+
   }
 fi
 
