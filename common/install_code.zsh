@@ -28,23 +28,23 @@ fi
 
 exist_cmd code && is_true $to_update && {
 	
-	code --install-extension -f wholroyd.hcl
-	code --install-extension -f ms-azuretools.vscode-azureterraform
+	code --install-extension wholroyd.hcl
+	code --install-extension ms-azuretools.vscode-azureterraform
 
-	code --install-extension -f eamodio.gitlens
-	code --install-extension -f ms-vscode.go
-	code --install-extension -f Equinusocio.vsc-material-theme
-	code --install-extension -f PKief.material-icon-theme
+	code --install-extension eamodio.gitlens
+	code --install-extension ms-vscode.go
+	code --install-extension Equinusocio.vsc-material-theme
+	code --install-extension PKief.material-icon-theme
 
-	code --install-extension -f dbaeumer.vscode-eslint
-	code --install-extension -f EditorConfig.EditorConfig
-	code --install-extension -f esbenp.prettier-vscode
+	code --install-extension dbaeumer.vscode-eslint
+	code --install-extension EditorConfig.EditorConfig
+	code --install-extension esbenp.prettier-vscode
 
-	code --install-extension -f ms-python.python
+	code --install-extension ms-python.python
 
-	code --install-extension -f redhat.vscode-yaml
-	code --install-extension -f ms-azuretools.vscode-docker
-	code --install-extension -f ms-kubernetes-tools.vscode-kubernetes-tools
+	code --install-extension redhat.vscode-yaml
+	code --install-extension ms-azuretools.vscode-docker
+	code --install-extension ms-kubernetes-tools.vscode-kubernetes-tools
 }
 
 # eamodio.gitlens
