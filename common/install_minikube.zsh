@@ -19,6 +19,9 @@ echo $SEPARATOR
 echo ">>>>> INSTAL K8 Developer Utilities ................"
 echo $SEPARATOR
 
+if is_true $to_update && [ "$MY_OS" = "linux" ]; then
+    sudo aptitude update -y
+fi
 
 if [ "$MY_OS" = "darwin" ]; then
   sysctl kern.hv_support
@@ -107,6 +110,14 @@ fi
   curl -fSLo skaffold https://storage.googleapis.com/skaffold/releases/latest/skaffold-$MY_OS-amd64;
   chmod +x skaffold;
   sudo mv skaffold /usr/local/bin;
+}
+
+(is_false $to_update && exist_cmd helm ) || {
+  echo "INSTALL HELM";
+  release=$(get_github_latest_release "helm/helm" "v3.0.0-rc.3")
+  echo "VERSION ($release)"
+  curl -L https://git.io/get_helm.sh | bash
+  helm init
 }
 
 exist_cmd kubectx || brew install kubectx
