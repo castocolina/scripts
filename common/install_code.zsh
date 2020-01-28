@@ -4,6 +4,7 @@ sudo echo "Test sudo"
 
 source $BASEDIR/install_func.zsh
 source $MY_SH_CFG_FILE
+VS_CODE_PATH_OSX="Visual Studio Code.app"
 MY_OS=$(get_os)
 
 echo
@@ -21,9 +22,20 @@ VSCODE_CONFIG=$(cat <<'EOF'
 export PATH="$PATH:/Applications/Visual Studio Code.app/Contents/Resources/app/bin";
 EOF
 );
-	find_append $MY_SH_CFG_FILE "Visual Studio Code.app" "$VSCODE_CONFIG"
+	find_append $MY_SH_CFG_FILE "$VS_CODE_PATH_OSX" "$VSCODE_CONFIG"
 	source $MY_SH_CFG_FILE
 fi
+
+exist_cmd code || {
+	if [ "$MY_OS" = "darwin" ]; then
+		echo "Download for OSX"
+		source $BASEDIR/../osx/install_url.zsh
+		source $BASEDIR/../osx/install_func.zsh
+		download_remote_file $FILE_VSCODE $URL_VSCODE
+		uncompress_file $TMP_INSTALL_DIR/$FILE_VSCODE
+		move_to_apps "$TMP_INSTALL_DIR/$VS_CODE_PATH_OSX"
+	fi
+}
 
 
 exist_cmd code && is_true $to_update && {
