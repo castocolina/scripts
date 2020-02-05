@@ -40,6 +40,7 @@ exist_cmd code || {
 
 exist_cmd code && is_true $to_update && {
 	
+	code --install-extension googlecloudtools.cloudcode
 	code --install-extension wholroyd.hcl
 	code --install-extension ms-azuretools.vscode-azureterraform
 
@@ -58,10 +59,3 @@ exist_cmd code && is_true $to_update && {
 	code --install-extension ms-azuretools.vscode-docker
 	code --install-extension ms-kubernetes-tools.vscode-kubernetes-tools
 }
-
-# eamodio.gitlens
-# josin.kusto-syntax-highlighting
-# ms-mssql.mssql
-# PKief.material-icon-theme
-# rogalmic.zsh-debug
-
