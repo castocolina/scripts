@@ -17,6 +17,11 @@ function install_dmg2() {
     set +x
 }
 
+function move_to_apps(){
+  FNAME=$1;
+  sudo mv -v $FNAME /Applications
+}
+
 function install_dmg(){
   
   CURR_DIR=$(pwd)

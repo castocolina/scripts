@@ -30,6 +30,42 @@ function delete_confirm(){
   is_true $to_delete && [ -d "$APP_TARGET/$FOLDER_NAME" ] && rm -rf $APP_TARGET/$FOLDER_NAME/
 }
 
+function download_remote_file(){
+  CURR_DIR=$(pwd)
+  mkdir -p $TMP_INSTALL_DIR; cd $TMP_INSTALL_DIR
+  #file name, url
+  FNAME=$1; URL=$2;
+
+  echo
+  echo $SEPARATOR
+  echo "DOWNLOAD ............. $FNAME"
+  echo $SEPARATOR
+  if [ ! -f "$FNAME" ]; then
+      echo "    $URL"
+      curl -o "$FNAME" -fSL $URL
+  fi
+
+  ls -la $TMP_INSTALL_DIR
+  cd $CURR_DIR
+  return $return_cd;
+}
+
+function uncompress_file(){
+  FNAME=$1;
+  APP_TARGET=${2:-$TMP_INSTALL_DIR}
+  echo "UNCOMPRESS ............. $FNAME"
+  if [[ $FNAME == *.tar.gz ]] || [[ $FNAME == *.tgz ]]; then
+      tar -zxf $FNAME
+  fi
+
+  if [[ $FNAME == *.zip ]]; then
+    unzip -q $FNAME -d $APP_TARGET
+  fi
+
+  ls -la $FNAME
+  ls -la $APP_TARGET
+}
+
 function down_uncompress(){
   CURR_DIR=$(pwd)
   mkdir -p $TMP_INSTALL_DIR; cd $TMP_INSTALL_DIR

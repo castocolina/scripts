@@ -4,6 +4,7 @@ sudo echo "Test sudo"
 
 source $BASEDIR/install_func.zsh
 source $MY_SH_CFG_FILE
+VS_CODE_PATH_OSX="Visual Studio Code.app"
 MY_OS=$(get_os)
 
 echo
@@ -21,35 +22,40 @@ VSCODE_CONFIG=$(cat <<'EOF'
 export PATH="$PATH:/Applications/Visual Studio Code.app/Contents/Resources/app/bin";
 EOF
 );
-	find_append $MY_SH_CFG_FILE "Visual Studio Code.app" "$VSCODE_CONFIG"
+	find_append $MY_SH_CFG_FILE "$VS_CODE_PATH_OSX" "$VSCODE_CONFIG"
 	source $MY_SH_CFG_FILE
 fi
+
+exist_cmd code || {
+	if [ "$MY_OS" = "darwin" ]; then
+		echo "Download for OSX"
+		source $BASEDIR/../osx/install_url.zsh
+		source $BASEDIR/../osx/install_func.zsh
+		download_remote_file $FILE_VSCODE $URL_VSCODE
+		uncompress_file $TMP_INSTALL_DIR/$FILE_VSCODE
+		move_to_apps "$TMP_INSTALL_DIR/$VS_CODE_PATH_OSX"
+	fi
+}
 
 
 exist_cmd code && is_true $to_update && {
 	
-	code --install-extension -f wholroyd.hcl
-	code --install-extension -f ms-azuretools.vscode-azureterraform
+	code --install-extension googlecloudtools.cloudcode
+	code --install-extension wholroyd.hcl
+	code --install-extension ms-azuretools.vscode-azureterraform
 
-	code --install-extension -f eamodio.gitlens
-	code --install-extension -f ms-vscode.go
-	code --install-extension -f Equinusocio.vsc-material-theme
-	code --install-extension -f PKief.material-icon-theme
+	code --install-extension eamodio.gitlens
+	code --install-extension ms-vscode.go
+	code --install-extension Equinusocio.vsc-material-theme
+	code --install-extension PKief.material-icon-theme
 
-	code --install-extension -f dbaeumer.vscode-eslint
-	code --install-extension -f EditorConfig.EditorConfig
-	code --install-extension -f esbenp.prettier-vscode
+	code --install-extension dbaeumer.vscode-eslint
+	code --install-extension EditorConfig.EditorConfig
+	code --install-extension esbenp.prettier-vscode
 
-	code --install-extension -f ms-python.python
+	code --install-extension ms-python.python
 
-	code --install-extension -f redhat.vscode-yaml
-	code --install-extension -f ms-azuretools.vscode-docker
-	code --install-extension -f ms-kubernetes-tools.vscode-kubernetes-tools
+	code --install-extension redhat.vscode-yaml
+	code --install-extension ms-azuretools.vscode-docker
+	code --install-extension ms-kubernetes-tools.vscode-kubernetes-tools
 }
-
-# eamodio.gitlens
-# josin.kusto-syntax-highlighting
-# ms-mssql.mssql
-# PKief.material-icon-theme
-# rogalmic.zsh-debug
-
