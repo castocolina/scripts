@@ -88,10 +88,10 @@ VERSION_MONGODB_4=4.0.5
 FILE_MONGODB_4="mongodb-linux-x86_64-ubuntu1804-$VERSION_MONGODB_4.tgz"
 URL_MONGODB_4="http://downloads.mongodb.org/linux/$FILE_MONGODB_4"
 
-#https://download.studio3t.com/studio-3t/linux/2018.6.1/studio-3t-linux-x64.tar.gz
-VERSION_ROBO_STUDIO_3T=2018.6.1
-FILE_ROBO_STUDIO_3T="studio-3t-linux-x64.tar.gz"
-URL_ROBO_STUDIO_3T="https://download.studio3t.com/studio-3t/linux/$VERSION_ROBO_STUDIO_3T/$FILE_ROBO_STUDIO_3T"
+#https://download-test.robomongo.org/linux/robo3t-1.3.1-linux-x86_64-7419c406.tar.gz
+VERSION_ROBO_STUDIO_3T=1.3.1-linux-x86_64-7419c406
+FILE_ROBO_STUDIO_3T="robo3t-$VERSION_ROBO_STUDIO_3T.tar.gz"
+URL_ROBO_STUDIO_3T="https://download-test.robomongo.org/linux/$FILE_ROBO_STUDIO_3T"
 
 #https://download-cf.jetbrains.com/idea/ideaIC-2017.2.3-no-jdk.tar.gz
 VERSION_INTELLIJ_C=2017.2.5-no-jdk
