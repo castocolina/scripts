@@ -49,7 +49,7 @@ VERSION_VAGRANT=2.2.2
 FILE_VAGRANT="vagrant_${VERSION_VAGRANT}_x86_64.deb"
 URL_VAGRANT="https://releases.hashicorp.com/vagrant/$VERSION_VAGRANT/$FILE_VAGRANT"
 
-#https://www.getpostman.com/app/download/linux64
+#https://www.getpostman.com/app/download/linux64f
 VERSION_POSTMAN=7.3.4
 FILE_POSTMAN="postman-linux-x64-$VERSION_POSTMAN.tar.gz"
 URL_POSTMAN="https://dl.pstmn.io/download/latest/linux64"
@@ -93,9 +93,9 @@ VERSION_ROBO_STUDIO_3T=1.3.1-linux-x86_64-7419c406
 FILE_ROBO_STUDIO_3T="robo3t-$VERSION_ROBO_STUDIO_3T.tar.gz"
 URL_ROBO_STUDIO_3T="https://download-test.robomongo.org/linux/$FILE_ROBO_STUDIO_3T"
 
-#https://download-cf.jetbrains.com/idea/ideaIC-2017.2.3-no-jdk.tar.gz
-VERSION_INTELLIJ_C=2017.2.5-no-jdk
-FILE_INTELLIJ_C="ideaIC-$VERSION_INTELLIJ_C.tar.gz"
+#https://download-cf.jetbrains.com/idea/ideaIC-2020.2.tar.gz
+VERSION_INTELLIJ_C=2020.2
+FILE_INTELLIJ_C="ideaIC-${VERSION_INTELLIJ_C}.tar.gz"
 URL_INTELLIJ_C="https://download-cf.jetbrains.com/idea/$FILE_INTELLIJ_C"
 
 #https://download-cf.jetbrains.com/datagrip/datagrip-2017.2.2.tar.gz

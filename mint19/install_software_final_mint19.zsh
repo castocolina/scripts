@@ -3,7 +3,7 @@ BASEDIR=$(dirname "$0")
 sudo echo "Test sudo"
 
 source $BASEDIR/install_func.zsh
-source $BASEDIR/..common/install_func.zsh
+source $BASEDIR/../common/install_func.zsh
 source $BASEDIR/install_url.zsh
 source $MY_SH_CFG_FILE
 
@@ -79,6 +79,32 @@ down_uncompress "android-studio-ide" "android-studio" "Android Studio IDE" "$FIL
   create_sc "android-studio" "Android Studio IDE" "Android" "$VERSION_ANDROID_STUDIO" \
     "$EXEC" "Development" "Java, Android, IDE" "$ICON_PATH" "128";
 }
+
+if [ ! -d "$HOME/opt/IntelliJ-CE" ] ; then
+    echo
+    echo $SEPARATOR
+    echo "IntelliJ CE INSTALLER ............."
+    echo $SEPARATOR
+    if [ ! -f "$FILE_INTELLIJ_C" ]; then
+        echo "    $URL_INTELLIJ_C"
+        curl -o $FILE_INTELLIJ_C -fSL $URL_INTELLIJ_C
+    fi
+    mkdir -p $HOME/opt/IntelliJ-CE
+    tar -zxf $FILE_INTELLIJ_C
+    mv idea-IC*/* $HOME/opt/IntelliJ-CE/
+    rm -rf idea-IC*/
+
+    EXEC="$HOME/opt/IntelliJ-CE/bin/idea.sh"
+    ICON="$HOME/opt/IntelliJ-CE/bin/idea.png"
+
+    cp $HOME/opt/IntelliJ-CE/bin/idea64.vmoptions $HOME/opt/IntelliJ-CE/bin/idea64.vmoptions.original
+    sed -i 's/-Xms.*/-Xms256m/' "$HOME/opt/IntelliJ-CE/bin/idea64.vmoptions"
+    sed -i 's/-Xmx.*/-Xmx1024m/' "$HOME/opt/IntelliJ-CE/bin/idea64.vmoptions"
+
+    create_sc "idea-ce" "IDEA IntelliJ Community Edition" "JetBrains" "$VERSION_INTELLIJ_C" \
+    "$EXEC" "Development" "Java, JEE, JSE, IDE, Groovy, Scala, Android" \
+    "$ICON" "128"
+fi
 
 printf "\n$SEPARATOR\n >>>>> MULTIMEDIA\n"
 exist_cmd ffmpeg || { sudo apt install -y ffmpeg; }
@@ -195,7 +221,7 @@ down_install4j "soapUI-5" "soapUI v5" "$FILE_SOAPUI5" "$URL_SOAPUI5"
 #exist_cmd robo-3t || brew cask install robo-3t
 
 find_append ~/.zshrc "source $MY_SH_CFG_FILE" "\n\n### Personal shell config \nsource $MY_SH_CFG_FILE"
-source $BASEDIR/install_alias.zsh
+# source $BASEDIR/install_alias.zsh
 
 echo
 sudo aptitude clean
@@ -219,4 +245,3 @@ echo ":: $SEPARATOR"
 git --version
 
 echo
-
