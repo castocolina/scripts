@@ -58,7 +58,10 @@ git config --local --replace-all user.name "$newusername"
 git config --local --replace-all user.email "$newuseremail"
 
 echo
+echo "NEW OLD EMAIL: $olduseremail"
+echo "NEW OLD NAME: '$oldusername'"
 echo "NEW USER EMAIL: $newuseremail"
+echo "NEW USER NAME: '$newusername'"
 echo
 
 #git log -10
@@ -82,4 +85,4 @@ git filter-branch -f --env-filter '
 
 echo
 echo "============================================= "
-git --no-pager log -5
+git --no-pager log -3
