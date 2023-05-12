@@ -1,4 +1,4 @@
-#!/bin/zsh
+#!/bin/bash
 BASEDIR=$(dirname "$0")
 sudo echo "Test sudo"
 
@@ -66,4 +66,3 @@ sudo apt autoremove -y -f
 echo
 
 echo
-

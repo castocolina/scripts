@@ -1,4 +1,4 @@
-#!/bin/zsh
+#!/bin/bash
 BASEDIR=$(dirname "$0")
 
 #https://update.code.visualstudio.com/1.41.1/darwin/stable

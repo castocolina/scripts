@@ -1,10 +1,10 @@
-#!/bin/zsh
+#!/bin/bash
 BASEDIR=$(dirname "$0")
 sudo echo "Test sudo"
 
-source $BASEDIR/install_func.zsh
-source $BASEDIR/../common/install_func.zsh
-source $BASEDIR/install_url.zsh
+source $BASEDIR/install_func.sh
+source $BASEDIR/../common/install_func.sh
+source $BASEDIR/install_url.sh
 source $MY_SH_CFG_FILE
 
 echo
@@ -215,13 +215,13 @@ down_uncompress "DataGrip" "DataGrip-*" "DataGrip" "$FILE_DATAGRIP" "$URL_DATAGR
 }
 
 # rm -rfv $HOME/soapUI-*
-down_install4j "soapUI-4" "soapUI v4" "$FILE_SOAPUI4" "$URL_SOAPUI4"
+# down_install4j "soapUI-4" "soapUI v4" "$FILE_SOAPUI4" "$URL_SOAPUI4"
 down_install4j "soapUI-5" "soapUI v5" "$FILE_SOAPUI5" "$URL_SOAPUI5"
 
 #exist_cmd robo-3t || brew cask install robo-3t
 
 find_append ~/.zshrc "source $MY_SH_CFG_FILE" "\n\n### Personal shell config \nsource $MY_SH_CFG_FILE"
-# source $BASEDIR/install_alias.zsh
+# source $BASEDIR/install_alias.sh
 
 echo
 sudo aptitude clean

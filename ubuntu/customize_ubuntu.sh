@@ -1,4 +1,4 @@
-#!/bin/zsh
+#!/bin/bash
 
 # Customize switch workspace down/up (unused). Because disable vscode copy down/up line
 # Base on https://askubuntu.com/questions/315625/how-to-disable-the-shortcut-ctrl-alt-arrow-in-gnome-3-8

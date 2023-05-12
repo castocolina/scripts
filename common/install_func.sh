@@ -1,11 +1,11 @@
-#!/bin/zsh
+#!/bin/bash
 
 export REL_MY_SH_CFG_FILE=.zshrc4$USER
 export MY_SH_CFG_FILE=~/$REL_MY_SH_CFG_FILE
 export SEPARATOR="-- ============================================================================================== --"
 
 if [ ! -f "$MY_SH_CFG_FILE" ] ; then
-  echo "#!/bin/zsh" > $MY_SH_CFG_FILE
+  echo "#!/bin/bash" > $MY_SH_CFG_FILE
 fi
 touch $MY_SH_CFG_FILE
 export TMP_INSTALL_DIR=/tmp/installers

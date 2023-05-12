@@ -1,8 +1,8 @@
-#!/bin/zsh
+#!/bin/bash
 BASEDIR=$(dirname "$0")
 sudo echo "Test sudo"
 
-source $BASEDIR/install_func.zsh
+source $BASEDIR/install_func.sh
 source $MY_SH_CFG_FILE
 VS_CODE_PATH_OSX="Visual Studio Code.app"
 MY_OS=$(get_os)
@@ -29,8 +29,8 @@ fi
 exist_cmd code || {
 	if [ "$MY_OS" = "darwin" ]; then
 		echo "Download for OSX"
-		source $BASEDIR/../osx/install_url.zsh
-		source $BASEDIR/../osx/install_func.zsh
+		source $BASEDIR/../osx/install_url.sh
+		source $BASEDIR/../osx/install_func.sh
 		download_remote_file $FILE_VSCODE $URL_VSCODE
 		uncompress_file $TMP_INSTALL_DIR/$FILE_VSCODE
 		move_to_apps "$TMP_INSTALL_DIR/$VS_CODE_PATH_OSX"

@@ -18,11 +18,11 @@ brew update
 brew cask install iterm2
 brew install zsh
 sh -c "$(curl -fsSL https://raw.githubusercontent.com/robbyrussell/oh-my-zsh/master/tools/install.sh)"
-chsh -s /bin/zsh
+chsh -s /bin/bash
 source ~/.zshrc
 curl -L https://iterm2.com/shell_integration/zsh \
--o ~/.iterm2_shell_integration.zsh
-source ~/.iterm2_shell_integration.zsh
+-o ~/.iterm2_shell_integration.sh
+source ~/.iterm2_shell_integration.sh
 
 #These plugins add support for the corresponding file type to Mac Quick Look 
 #(In Finder, mark a file and press Space to start Quick Look).

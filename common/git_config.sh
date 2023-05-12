@@ -1,4 +1,4 @@
-#!/bin/zsh
+#!/bin/bash
 
 echo "========================================="
 echo "GIT LOCAL REPO CONFIG"

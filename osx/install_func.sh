@@ -1,4 +1,4 @@
-#!/bin/zsh
+#!/bin/bash
 
 function install_dmg2() {
     set -x

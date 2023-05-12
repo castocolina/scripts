@@ -1,4 +1,4 @@
-#!/bin/zsh
+#!/bin/bash
 BASEDIR=$(dirname "$0")
 sudo echo "Test sudo"
 
@@ -9,9 +9,9 @@ echo $SEPARATOR
 echo ">>>>> INSTALL EXCLUSIVE OSX ................"
 echo $SEPARATOR
 
-source $BASEDIR/../common/install_func.zsh
-source $BASEDIR/install_func.zsh
-source $BASEDIR/install_url.zsh
+source $BASEDIR/../common/install_func.sh
+source $BASEDIR/install_func.sh
+source $BASEDIR/install_url.sh
 source $MY_SH_CFG_FILE
 
 echo -n "UPDATE? (y/n) > "
@@ -44,7 +44,7 @@ brew install ack
 brew install vim
 
 find_append ~/.zshrc "source $HOME/$REL_MY_SH_CFG_FILE" "\n\n### Personal shell config \nsource $MY_SH_CFG_FILE"
-source $BASEDIR/../common/install_alias.zsh
+source $BASEDIR/../common/install_alias.sh
 
 echo ":: $SEPARATOR"
 echo ":: $SEPARATOR"

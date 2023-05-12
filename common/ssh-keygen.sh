@@ -1,4 +1,4 @@
-#!/bin/zsh
+#!/bin/bash
 
 SEPARATOR="---------------------"
 SSH_KEYNAME="id_rsa"
@@ -20,16 +20,16 @@ SSH_KEYFILE="$HOME/.ssh/$FILE_ALPHAN_NAME"
 if [ ! -f "$SSH_KEYFILE" ] ; then
     echo "CREATE SSH KEY FOR $SSH_KEYFILE"
 
-    ssh-keygen -t rsa -f $SSH_KEYFILE -b 4096 -C $SSH_KEYNAME
-    chmod 600 $SSH_KEYNAME
-    chmod 600 $SSH_KEYNAME.pub
-    if [ "$SSH_KEYNAME" != "id_rsa" ]; then
-        ln -s $SSH_KEYNAME id_rsa
+    ssh-keygen -t rsa -f $SSH_KEYFILE -b 4096 -C $SSH_KEYFILE
+    chmod 600 $SSH_KEYFILE
+    chmod 600 $SSH_KEYFILE.pub
+    if [ "$SSH_KEYFILE" != "id_rsa" ]; then
+        ln -s $SSH_KEYFILE id_rsa
     fi
 fi
 
 eval `ssh-agent`
-ssh-add -K $SSH_KEYFILE
+ssh-add $SSH_KEYFILE
 
 echo
 echo "PUBLIC KEYS..."
@@ -53,6 +53,7 @@ fi
 
 if ! grep -q "UseKeychain" $sshcfile; then
     echo "CFG UseKeychain"
+    echo "IgnoreUnknown UseKeychain" >> $sshcfile
     echo "Host *" >> $sshcfile
     echo "    UseKeychain yes" >> $sshcfile
     echo "" >> $sshcfile
@@ -88,19 +89,27 @@ cat $sshcfile
 echo $SEPARATOR
 echo
 
+read
+echo
+echo $SEPARATOR
+echo
+
 echo
 echo "TEST GH   ssh -T git@github.com"
 echo $SEPARATOR
+ssh -T git@github.com -i $SSH_KEYFILE.pub
 ssh -T git@github.com
 
 echo
 echo "TEST BB   ssh -T git@bitbucket.org"
 echo $SEPARATOR
+ssh -T git@bitbucket.org -i $SSH_KEYFILE.pub
 ssh -T git@bitbucket.org
 echo
 
 echo
 echo "TEST GL   ssh -T git@gitlab.com"
 echo $SEPARATOR
+ssh -T git@gitlab.com -i $SSH_KEYFILE.pub
 ssh -T git@gitlab.com
 echo

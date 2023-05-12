@@ -1,10 +1,10 @@
-#!/bin/zsh
+#!/bin/bash
 BASEDIR=$(dirname "$0")
 sudo echo "Test sudo"
 
-source $BASEDIR/install_func.zsh
+source $BASEDIR/install_func.sh
 source $MY_SH_CFG_FILE
-source $BASEDIR/../common/install_func.zsh
+source $BASEDIR/../common/install_func.sh
 
 echo
 echo $SEPARATOR

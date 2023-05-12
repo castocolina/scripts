@@ -1,8 +1,8 @@
-#!/bin/zsh
+#!/bin/bash
 BASEDIR=$(dirname "$0")
 sudo echo "Test sudo"
 
-source $BASEDIR/install_func.zsh
+source $BASEDIR/install_func.sh
 source $MY_SH_CFG_FILE
 MY_OS=$(get_os)
 

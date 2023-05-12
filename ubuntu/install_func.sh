@@ -1,4 +1,4 @@
-#!/bin/zsh
+#!/bin/bash
 
 function exist_pkg() {
   PKG=$1

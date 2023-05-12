@@ -1,7 +1,7 @@
-#!/bin/zsh
+#!/bin/bash
 BASEDIR=$(dirname "$0")
 
-source $BASEDIR/install_func.zsh
+source $BASEDIR/install_func.sh
 source /etc/os-release
 source /etc/lsb-release
 
