@@ -68,20 +68,37 @@ echo
 
 git filter-branch -f --env-filter '
     
-    [ -n "$olduseremail" ] && [ -n "$newuseremail" ] && [ "$GIT_AUTHOR_EMAIL" = "$olduseremail" ] && \
-    GIT_AUTHOR_EMAIL=$newuseremail; export GIT_AUTHOR_EMAIL;
+    if [ -n "$olduseremail" ] && [ -n "$newuseremail" ] && [ "$GIT_AUTHOR_EMAIL" = "$olduseremail" ]; then
+      GIT_AUTHOR_EMAIL=$newuseremail; 
+      export GIT_AUTHOR_EMAIL; 
+      echo "AUTHOR EMAIL = $GIT_AUTHOR_EMAIL"
+    fi
 
-    [ -n "$olduseremail" ] && [ -n "$newuseremail" ] && [ "$GIT_COMMITTER_EMAIL" = "$olduseremail" ] && \
-    GIT_COMMITTER_EMAIL=$newuseremail; export GIT_COMMITTER_EMAIL;
+    if [ -n "$olduseremail" ] && [ -n "$newuseremail" ] && [ "$GIT_COMMITTER_EMAIL" = "$olduseremail" ]; then
+      GIT_COMMITTER_EMAIL=$newuseremail; 
+      export GIT_COMMITTER_EMAIL; 
+      echo "COMMITER EMAIL = $GIT_COMMITTER_EMAIL"
+    fi
     
-    [ -n "$oldname" ] && [ -n "$newusername" ] && [ "$GIT_AUTHOR_NAME" = "$oldname" ] && \
-    GIT_AUTHOR_NAME=$newusername; export GIT_AUTHOR_NAME;
+    if [ -n "$oldusername" ] && [ -n "$newusername" ] && [ "$GIT_AUTHOR_NAME" = "$oldusername" ]; then
+      GIT_AUTHOR_NAME=$newusername; 
+      export GIT_AUTHOR_NAME; 
+      echo "AUTHOR NAME = $GIT_AUTHOR_NAME";
+    fi
     
-    [ -n "$oldname" ] && [ -n "$newusername" ] && [ "$GIT_COMMITTER_NAME" = "$oldname" ] && \
-    GIT_COMMITTER_NAME=$newusername; export GIT_COMMITTER_NAME;
-
+    if [ -n "$oldusername" ] && [ -n "$newusername" ] && [ "$GIT_COMMITTER_NAME" = "$oldusername" ] ; then
+      GIT_COMMITTER_NAME=$newusername; 
+      export GIT_COMMITTER_NAME; 
+      echo "COMMITER NAME = $GIT_COMMITTER_NAME"
+    fi
     
 ' HEAD
+
+echo 
+echo "GIT_AUTHOR_EMAIL: $GIT_AUTHOR_EMAIL"
+echo "GIT_COMMITTER_EMAIL: '$GIT_COMMITTER_EMAIL'"
+echo "GIT_AUTHOR_NAME: $GIT_AUTHOR_NAME"
+echo "GIT_COMMITTER_NAME: '$GIT_COMMITTER_NAME'"
 
 echo
 echo "============================================= "
